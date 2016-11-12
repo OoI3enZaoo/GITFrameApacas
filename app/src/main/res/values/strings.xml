@@ -3,4 +3,5 @@
     <string name="app_id">1724525574468249</string>
     <string name="reset_password"><u>Reset password</u></string>
     <string name="skip"><u>skip</u></string>
+    <string name="action_settings">Settings</string>
 </resources>

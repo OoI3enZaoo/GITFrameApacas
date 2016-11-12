@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto" tools:context="com.admin.gitframeapacas.SignUpActivity">
 
 
     <ImageView
@@ -78,15 +78,15 @@
         android:layout_marginTop="8dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Create account"
         android:theme="@style/ThemeOverlay.MyDarkButton"
-        app:layout_constraintRight_toRightOf="@+id/editText3"
-        app:layout_constraintLeft_toLeftOf="@+id/editText3"
         app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="@+id/editText3"
+        app:layout_constraintRight_toRightOf="@+id/editText3"
         app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
 </android.support.constraint.ConstraintLayout>
