@@ -1,6 +1,9 @@
 package com.admin.gitframeapacas;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,12 +48,26 @@ public class FeedProfileFragment extends Fragment {
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity().getBaseContext(), country[i], Toast.LENGTH_SHORT ).show();
-                Log.i("benben",country[i]);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                switch (position){
+                    case 0:
+                        Intent intent = new Intent(getActivity(),HistoryActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(getActivity().getBaseContext(), country[position], Toast.LENGTH_SHORT ).show();
+                        Log.i("benben",country[position]);
+                        break;
+                    case 1:
+                        Toast.makeText(getActivity().getBaseContext(), country[position], Toast.LENGTH_SHORT ).show();
+                        Log.i("benben",country[position]);
+                        break;
+                    default:
+                        Toast.makeText(getActivity().getBaseContext(), country[position], Toast.LENGTH_SHORT ).show();
+                        Log.i("benben",country[position]);
+                        break;
+                }
             }
         });
-
         return v;
     }
 }
