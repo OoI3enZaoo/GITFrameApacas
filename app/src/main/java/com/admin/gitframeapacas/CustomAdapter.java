@@ -1,6 +1,7 @@
 package com.admin.gitframeapacas;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +51,10 @@ public class CustomAdapter extends BaseAdapter {
         i1 = (ImageView) row.findViewById(R.id.imgIcon);
         title = (TextView) row.findViewById(R.id.txtTitle);
         title.setText(Title[position]);
+        Typeface normalStyle = Typeface.defaultFromStyle(Typeface.NORMAL);
+        title.setTypeface(normalStyle);
         title.setTextSize(16);
         i1.setImageResource(imge[position]);
-
         return (row);
     }
 
