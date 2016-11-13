@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
