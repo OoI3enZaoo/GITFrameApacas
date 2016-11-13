@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:id="@+id/activity_history"
     tools:context="com.admin.gitframeapacas.HistoryActivity">
+
+
     <ProgressBar
         android:id="@+id/process"
         style="@style/Widget.AppCompat.TextView.SpinnerItem"
@@ -22,4 +24,14 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"></ProgressBar>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        android:layout_width="368dp"
+        android:layout_height="195dp"
+        tools:listitem="@layout/item_histoy"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+
+    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>
