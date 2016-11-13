@@ -13,10 +13,7 @@
             android:value="@string/app_id"/>
 
         <activity
-            android:name=".MainActivity"
-
-
-            >
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,8 +22,6 @@
         </activity>
         <activity android:name=".HomeActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".SignUpActivity"></activity>
-
-
     </application>
 
 </manifest>
