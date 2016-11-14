@@ -3,15 +3,18 @@ package com.admin.gitframeapacas;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -29,7 +32,7 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Hisroty");
+        toolbar.setTitle("History");
         setSupportActionBar(toolbar);
 
         recyclerview = (RecyclerView) findViewById(R.id.historyRecyclerView);
@@ -66,16 +69,36 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
 
+            case R.id.action_search:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_history, menu);
+        return true;
+    }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView location;
         TextView status;
+        ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
             Log.d("ben","5");
             location = (TextView) itemView.findViewById(R.id.location);
             status = (TextView) itemView.findViewById(R.id.status);
+            image = (ImageView) HistoryActivity.this.findViewById(R.id.weather);
         }
 
 
@@ -83,6 +106,7 @@ public class HistoryActivity extends AppCompatActivity {
         public void onClick(View view) {
             int position = getAdapterPosition();
             Log.d("click","Click: " + position);
+            Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -27,8 +27,8 @@ public class FeedProfileFragment extends Fragment {
     ListView listView1;
     String [] country = new String[] {
             "India",
-            "Japan",
-            "Pakistan"
+            "Notification",
+            "Reward"
     };
     public FeedProfileFragment(){
 
