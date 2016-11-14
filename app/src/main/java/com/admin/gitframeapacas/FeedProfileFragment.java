@@ -41,7 +41,7 @@ public class FeedProfileFragment extends Fragment {
 
 
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
-        String[] textString = {"ประวัติการเข้าชม", "การแจ้งเตือน", "รางวัล"};
+        String[] textString = {"History", "Notification", "Reward"};
         int[] drawableIds = {R.drawable.ic_tap_history, R.drawable.ic_tap_notification, R.drawable.ic_tap_giftcad};
         CustomAdapter adapter = new CustomAdapter(v.getContext(), textString, drawableIds);
         listView1 = (ListView) v.findViewById(R.id.menu_setting);
@@ -54,8 +54,7 @@ public class FeedProfileFragment extends Fragment {
                     case 0:
                         Intent intent = new Intent(getActivity(),HistoryActivity.class);
                         startActivity(intent);
-                        Toast.makeText(getActivity().getBaseContext(), country[position], Toast.LENGTH_SHORT ).show();
-                        Log.i("benben",country[position]);
+
                         break;
                     case 1:
                         Toast.makeText(getActivity().getBaseContext(), country[position], Toast.LENGTH_SHORT ).show();

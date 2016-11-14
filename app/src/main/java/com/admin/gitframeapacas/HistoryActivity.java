@@ -27,12 +27,17 @@ public class HistoryActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Hisroty");
+        setSupportActionBar(toolbar);
+
         recyclerview = (RecyclerView) findViewById(R.id.historyRecyclerView);
         //recyclerview.setHasFixedSize(true);
         recyclerview.setAdapter(new RecyclrViewAdapter());
         recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //recyclerview.setItemAnimator(new DefaultItemAnimator());
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d("ben","1");
     }
 
@@ -56,7 +61,7 @@ public class HistoryActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             Log.d("ben","4");
-            return 10;
+            return 20;
         }
     }
 

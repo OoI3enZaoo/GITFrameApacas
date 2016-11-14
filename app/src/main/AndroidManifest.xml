@@ -20,9 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomeActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".HomeActivity" android:theme="@style/AppTheme.NoActionBar"> </activity>
+        <activity android:name=".HistoryActivity" android:theme="@style/AppTheme.NoActionBar"
+
+            android:parentActivityName=".HistoryActivity"
+            ></activity>
         <activity android:name=".SignUpActivity"></activity>
-        <activity android:name=".HistoryActivity"></activity>
+
     </application>
 
 </manifest>

@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:tool="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_history"
-    tools:context="com.admin.gitframeapacas.HistoryActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".HistoryActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp">
 
-    <ProgressBar
-        android:id="@+id/process"
-        style="@style/Widget.AppCompat.TextView.SpinnerItem"
-        android:layout_width="64dp"
-        android:layout_gravity="center"
-        android:layout_height="90dp"
-        tool:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        tool:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        tool:layout_constraintLeft_toLeftOf="parent"
-        tool:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"></ProgressBar>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
-        android:layout_width="368dp"
-        android:layout_height="195dp"
-        tools:listitem="@layout/item_histoy"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_histoy">
 
     </android.support.v7.widget.RecyclerView>
-</android.support.constraint.ConstraintLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+
