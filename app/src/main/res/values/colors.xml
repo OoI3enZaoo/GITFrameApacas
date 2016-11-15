@@ -10,4 +10,8 @@
     <color name="colour_dark_blue">#ff000066</color>
     <color name="colour_dark_green">#ff006600</color>
 
+    <color name="black">#000</color>
+    <color name="orange">#FA0</color>
+    <color name="white">#FFF</color>
+
 </resources>
