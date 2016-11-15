@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+        <item android:title="การจัดการ">
+        <menu>
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_tap_history"
@@ -14,5 +16,9 @@
             android:id="@+id/nav_reward"
             android:icon="@drawable/ic_tap_giftcad"
             android:title="รางวัล" />
+        </menu>
+        </item>
+        <item android:title="รายการโปรด"> </item>
+
 
 </menu>

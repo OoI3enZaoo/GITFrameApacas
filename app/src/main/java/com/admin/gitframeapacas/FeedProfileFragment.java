@@ -21,7 +21,7 @@ import android.widget.Toast;
 /**
  * Created by Admin on 13/11/2559.
  */
-
+/*
 public class FeedProfileFragment extends Fragment {
 
     ListView listView1;
@@ -70,4 +70,4 @@ public class FeedProfileFragment extends Fragment {
         return v;
     }
 }
-
+*/

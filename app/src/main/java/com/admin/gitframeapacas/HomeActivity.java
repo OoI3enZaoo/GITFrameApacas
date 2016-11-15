@@ -17,6 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 
 /**
@@ -26,6 +30,8 @@ import android.view.MenuItem;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_map);
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
+
+
 
        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -86,6 +94,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(getApplicationContext(), "my Profile", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -107,10 +122,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_history) {
             Intent intent = new Intent(getApplicationContext(),HistoryActivity.class);
                     startActivity(intent);
+            Toast.makeText(this, "HistoryActivity", Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.nav_notification) {
+            Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_reward) {
 
+            Toast.makeText(this, "RewardActivity", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -165,7 +184,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Show 3 total pages.
             return 2;
         }
-       /* @Override
+        @Override
 
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -177,7 +196,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 //    return "Profile";
             }
             return null;
-        }*/
+        }
     }
 
 }
