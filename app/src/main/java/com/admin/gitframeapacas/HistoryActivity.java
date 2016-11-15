@@ -32,6 +32,7 @@ public class HistoryActivity extends AppCompatActivity {
     RecyclerView recyclerview;
     Toolbar toolbar;
     ImageButton fabButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -50,10 +51,8 @@ public class HistoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        Log.d("ben","1");
+        Log.d("ben", "1");
     }
-
-
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,13 +76,13 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
-    public class RecyclrViewAdapter extends  RecyclerView.Adapter<ViewHolder>{
+    public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            Log.d("ben","2");
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_histoy,parent,false);
+            Log.d("ben", "2");
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_histoy, parent, false);
             return new ViewHolder(v);
         }
 
@@ -91,12 +90,13 @@ public class HistoryActivity extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
 
             //holder.location.setText("สนามหลวง");
-           // holder.status.setText("อากาศเยี่ยมยอด");
-            Log.d("ben","3");
+            // holder.status.setText("อากาศเยี่ยมยอด");
+            Log.d("ben", "3");
         }
+
         @Override
         public int getItemCount() {
-            Log.d("ben","4");
+            Log.d("ben", "4");
             return 10;
         }
     }
@@ -109,12 +109,13 @@ public class HistoryActivity extends AppCompatActivity {
         TextView status;
         ImageView image;
         CustomGauge gauge;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            Log.d("ben","5");
+            Log.d("ben", "5");
             location = (TextView) itemView.findViewById(R.id.location);
             status = (TextView) itemView.findViewById(R.id.status);
-            gauge = (CustomGauge)itemView.findViewById(R.id.gauge);
+            gauge = (CustomGauge) itemView.findViewById(R.id.gauge);
         }
 
 
@@ -125,7 +126,6 @@ public class HistoryActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
         }*/
     }
-
 
 
 }

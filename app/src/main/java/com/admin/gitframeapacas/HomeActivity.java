@@ -27,10 +27,9 @@ import android.widget.Toast;
  * Created by Admin on 12/11/2559.
  */
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
 
 
     @Override
@@ -53,11 +52,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
 
 
-
-       tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()) {
+                switch (tab.getPosition()) {
                     case 0:
                         mViewPager.setCurrentItem(0);
                         toolbar.setTitle("Home");
@@ -111,8 +109,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
         }
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -120,8 +120,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_history) {
-            Intent intent = new Intent(getApplicationContext(),HistoryActivity.class);
-                    startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+            startActivity(intent);
             Toast.makeText(this, "HistoryActivity", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_notification) {
@@ -149,13 +149,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
-
 
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -173,8 +173,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     return new FeedHomeFragment();
                 case 1:
                     return new FeedMapFragment();
-               // case 2:
-                   // return new FeedProfileFragment();
+                // case 2:
+                // return new FeedProfileFragment();
             }
             return null;
         }
@@ -184,15 +184,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Show 3 total pages.
             return 2;
         }
+
         @Override
 
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                   return "Home";
+                    return "Home";
                 case 1:
                     return "MAP";
-              //  case 2:
+                //  case 2:
                 //    return "Profile";
             }
             return null;

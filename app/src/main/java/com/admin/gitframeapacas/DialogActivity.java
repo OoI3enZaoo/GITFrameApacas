@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 
 
-
 public class DialogActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 

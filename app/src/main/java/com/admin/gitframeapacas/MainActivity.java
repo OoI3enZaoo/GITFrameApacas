@@ -1,13 +1,15 @@
 package com.admin.gitframeapacas;
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import com.facebook.FacebookSdk;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +22,17 @@ public class MainActivity extends AppCompatActivity{
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),HomeActivity.class);
+                Intent intent = new Intent(view.getContext(), HomeActivity.class);
                 startActivity(intent);
             }
         });
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),SignUpActivity.class);
+                Intent intent = new Intent(view.getContext(), SignUpActivity.class);
                 startActivity(intent);
             }
         });
+
     }
 }
