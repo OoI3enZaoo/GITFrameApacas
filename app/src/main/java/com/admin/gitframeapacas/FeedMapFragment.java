@@ -13,17 +13,26 @@ import android.view.ViewGroup;
  * Created by Admin on 12/11/2559.
  */
 
-public class FeedMapFragment extends Fragment {
+public class FeedMapFragment extends Fragment  {
+
+
+
     public FeedMapFragment(){
 
 
     }
 
 
-    @Override
+
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View v = inflater.inflate(R.layout.fragment_map, container, false);;
+
+        return v;
 
     }
+
+
+
+
 }
