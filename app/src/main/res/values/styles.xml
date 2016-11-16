@@ -27,7 +27,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.NoActionBar2">
+    <style name="AppTheme.Menu">
         <item name="colorPrimary">#78909C</item>
         <item name="colorPrimaryDark">#546E7A</item>
         <item name="colorAccent">#78909C</item>

@@ -1,6 +1,7 @@
 package com.admin.gitframeapacas;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,7 +52,7 @@ public class FeedHomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView recyclerview = (RecyclerView) v.findViewById(R.id.recyclerView_recom);
 
-        TextView text = (TextView)v.findViewById(R.id.txtLocation);
+        TextView text = (TextView) v.findViewById(R.id.txtLocation);
         text.setFocusable(true);
         text.setFocusableInTouchMode(true);
         text.requestFocus();
@@ -75,6 +76,7 @@ public class FeedHomeFragment extends Fragment {
         };
         TextView testID = (TextView) v.findViewById(R.id.txtID);
         testID.setText("UserId: " + uid);
+
         /*TextView txt1= (TextView) v.findViewById(R.id.txt1);
         TextView txt2 = (TextView) v.findViewById(R.id.txt2);
         TextView txt3 = (TextView) v.findViewById(R.id.txt3);
@@ -82,6 +84,7 @@ public class FeedHomeFragment extends Fragment {
 
         return v;
     }
+
 
     public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -112,8 +115,6 @@ public class FeedHomeFragment extends Fragment {
         ImageView imgRecom;
 
 
-
-
         public ViewHolder(View itemView) {
             super(itemView);
             Log.d("ben", "5");
@@ -130,4 +131,6 @@ public class FeedHomeFragment extends Fragment {
             Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

@@ -38,6 +38,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
 
     String UID;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,12 +155,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
                 return true;
 
             case R.id.action_help:
-                Intent intent2 = new Intent(getApplicationContext(),HelpActivity.class);
+                Intent intent2 = new Intent(getApplicationContext(), HelpActivity.class);
                 startActivity(intent2);
                 return true;
             case R.id.action_logout:
@@ -178,7 +179,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void signOut() {
+    public void signOut() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage(R.string.logout);
         alert.setCancelable(false);
@@ -226,9 +227,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return 2;
         }
 
-        @Override
+       /* @Override
 
-        public CharSequence getPageTitle(int position) {
+      public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
                     return "Home";
@@ -238,7 +239,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 //    return "Profile";
             }
             return null;
-        }
+        }*/
     }
 
 }

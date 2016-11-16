@@ -1,5 +1,7 @@
 package com.admin.gitframeapacas;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +31,7 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    RecyclerView recyclerview;
+
     Toolbar toolbar;
     ImageButton fabButton;
 
@@ -43,13 +45,12 @@ public class HistoryActivity extends AppCompatActivity {
         toolbar.setTitle("History");
         setSupportActionBar(toolbar);
 
-        recyclerview = (RecyclerView) findViewById(R.id.historyRecyclerView);
+
         //recyclerview.setHasFixedSize(true);
-        recyclerview.setAdapter(new RecyclrViewAdapter());
-        recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        new HistoryTask().execute();
+
         //recyclerview.setItemAnimator(new DefaultItemAnimator());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         Log.d("ben", "1");
     }
@@ -58,9 +59,16 @@ public class HistoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(intent);
                 return true;
 
-            case R.id.action_search:
+            case R.id.action_help:
+                Intent intent2 = new Intent(getApplicationContext(), HelpActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.action_logout:
+                new HomeActivity().signOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -75,6 +83,28 @@ public class HistoryActivity extends AppCompatActivity {
         return true;
     }
 
+    public class HistoryTask extends AsyncTask<String, Void, String> {
+
+        RecyclerView recyclerview;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            recyclerview = (RecyclerView) findViewById(R.id.historyRecyclerView);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            recyclerview.setAdapter(new RecyclrViewAdapter());
+            recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
+    }
 
     public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -101,9 +131,7 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-
-    public static class ViewHolder extends RecyclerView.ViewHolder
-            //implements View.OnClickListener
+    public static class ViewHolder extends RecyclerView.ViewHolder//implements View.OnClickListener
     {
         TextView location;
         TextView status;

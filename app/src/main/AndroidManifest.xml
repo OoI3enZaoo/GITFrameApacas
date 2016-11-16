@@ -36,12 +36,12 @@
         <activity
             android:name=".HelpActivity"
             android:parentActivityName=".HelpActivity"
-            android:theme="@style/AppTheme.NoActionBar2"></activity>
+            android:theme="@style/AppTheme.Menu"></activity>
 
         <activity
             android:name=".SettingActivity"
             android:parentActivityName=".SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar2"></activity>
+            android:theme="@style/AppTheme.Menu"></activity>
 
 
     </application>
