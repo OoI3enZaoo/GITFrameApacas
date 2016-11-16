@@ -1,5 +1,6 @@
 package com.admin.gitframeapacas;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,11 +88,15 @@ public class HistoryActivity extends AppCompatActivity {
     public class HistoryTask extends AsyncTask<String, Void, String> {
 
         RecyclerView recyclerview;
+        ProgressBar process;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            process = (ProgressBar) findViewById(R.id.processHistory);
             recyclerview = (RecyclerView) findViewById(R.id.historyRecyclerView);
+            process.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -103,6 +109,7 @@ public class HistoryActivity extends AppCompatActivity {
             super.onPostExecute(s);
             recyclerview.setAdapter(new RecyclrViewAdapter());
             recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            process.setVisibility(View.GONE);
         }
     }
 

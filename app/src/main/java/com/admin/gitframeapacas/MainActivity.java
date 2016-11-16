@@ -60,6 +60,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), HomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ID","Login");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -70,14 +73,14 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        TextView btnReset = (TextView) findViewById(R.id.btnReset);
+      /*  TextView btnReset = (TextView) findViewById(R.id.btnReset);
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 signOut();
             }
-        });
+        });*/
 
     }
 

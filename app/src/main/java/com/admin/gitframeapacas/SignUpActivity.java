@@ -25,6 +25,9 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(view.getContext(),HomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ID","Login");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

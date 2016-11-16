@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager mViewPager;
     private FirebaseAuth mAuth;
 
-    String UID;
+    String UID = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +58,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_map);
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
         mAuth = FirebaseAuth.getInstance();
-
         Intent intent = getIntent();
         UID = intent.getStringExtra("ID").toString();
-
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -111,10 +109,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(), "my Profile", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
-
 
     @Override
     public void onBackPressed() {
