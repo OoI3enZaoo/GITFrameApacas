@@ -154,12 +154,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-
+                Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+                startActivity(intent);
                 return true;
 
             case R.id.action_help:
-                Intent intent = new Intent(getApplicationContext(),HelpActivity.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(getApplicationContext(),HelpActivity.class);
+                startActivity(intent2);
                 return true;
             case R.id.action_logout:
                 signOut();
