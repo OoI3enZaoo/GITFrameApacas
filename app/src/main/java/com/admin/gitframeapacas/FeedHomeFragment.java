@@ -1,6 +1,8 @@
 package com.admin.gitframeapacas;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
@@ -16,6 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -29,9 +34,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FeedHomeFragment extends Fragment {
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private static final String TAG = "AnonymousAuth";
+    private String uid;
 
-    public FeedHomeFragment() {
-
+    public FeedHomeFragment(String name) {
+        this.uid = name;
 
     }
 
@@ -41,9 +50,31 @@ public class FeedHomeFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView recyclerview = (RecyclerView) v.findViewById(R.id.recyclerView_recom);
+
+        TextView text = (TextView)v.findViewById(R.id.txtLocation);
+        text.setFocusable(true);
+        text.setFocusableInTouchMode(true);
+        text.requestFocus();
         //recyclerview.setHasFixedSize(true);
         recyclerview.setAdapter(new RecyclrViewAdapter());
         recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d(TAG, "ID: " + user.getUid());
+                } else {
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+
+            }
+        };
+        TextView testID = (TextView) v.findViewById(R.id.txtID);
+        testID.setText("UserId: " + uid);
         /*TextView txt1= (TextView) v.findViewById(R.id.txt1);
         TextView txt2 = (TextView) v.findViewById(R.id.txt2);
         TextView txt3 = (TextView) v.findViewById(R.id.txt3);
@@ -79,6 +110,9 @@ public class FeedHomeFragment extends Fragment {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txtRecom;
         ImageView imgRecom;
+
+
+
 
         public ViewHolder(View itemView) {
             super(itemView);

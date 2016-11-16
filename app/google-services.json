@@ -59,6 +59,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "449880622516-n0u4irkakta5pmbn176754eta9397q4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.admin.gitframeapacas",
+            "certificate_hash": "A21D902E518581451FF7858E5F1587B5F71BF010"
+          }
+        },
+        {
           "client_id": "449880622516-3mpmmr2efi912i1tnniv5oorhmcls693.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -73,8 +81,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449880622516-3mpmmr2efi912i1tnniv5oorhmcls693.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

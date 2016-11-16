@@ -1,5 +1,6 @@
 package com.admin.gitframeapacas;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,7 +22,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 
 /**
@@ -30,8 +35,9 @@ import android.widget.Toast;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private FirebaseAuth mAuth;
 
-
+    String UID;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +56,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_map);
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
+        mAuth = FirebaseAuth.getInstance();
+
+        Intent intent = getIntent();
+        UID = intent.getStringExtra("ID").toString();
 
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -83,6 +93,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
         //---drawerlayout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,7 +111,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -129,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_reward) {
 
-            Toast.makeText(this, "RewardActivity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -141,8 +154,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+
                 return true;
-            case R.id.action_search:
+
+            case R.id.action_help:
+                Intent intent = new Intent(getApplicationContext(),HelpActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_logout:
+                signOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -157,6 +177,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void signOut() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setMessage(R.string.logout);
+        alert.setCancelable(false);
+        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mAuth.signOut();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alert.show();
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -170,7 +210,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new FeedHomeFragment();
+                    return new FeedHomeFragment(UID);
                 case 1:
                     return new FeedMapFragment();
                 // case 2:
