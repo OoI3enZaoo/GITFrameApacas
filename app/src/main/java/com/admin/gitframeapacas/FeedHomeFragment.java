@@ -159,6 +159,7 @@ public class FeedHomeFragment extends Fragment {
                 txtPM25.setText("PM2.5: " + calPM25);
                 onAQIChange();
 
+
             }
 
             @Override
@@ -175,6 +176,8 @@ public class FeedHomeFragment extends Fragment {
                 gagueHO2.setValue(rHO2);
                 txtH2O.setText("HO2: " + rHO2);
                 calHO2 = dataSnapshot.getValue(Integer.class);*/
+
+
 
                 calHO2 = dataSnapshot.getValue(Integer.class);
                 mH2O.setValue((int) calHO2);
@@ -201,10 +204,12 @@ public class FeedHomeFragment extends Fragment {
                 calCO = dataSnapshot.getValue(Integer.class);*/
 
                 calCO = dataSnapshot.getValue(Integer.class);
+
                 mCO.setValue((int) calCO);
                 gagueCO.setValue(calCO);
                 txtCO.setText("CO: " + calCO);
                 onAQIChange();
+
             }
 
             @Override
@@ -289,6 +294,8 @@ public class FeedHomeFragment extends Fragment {
         gaugeAQI.setValue((int) result);
         txtAQI.setText("AQI: " + result +" 2");
     }
+
+
 
     public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
