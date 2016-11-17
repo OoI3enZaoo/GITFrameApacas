@@ -11,12 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDvy9_5pebNnaWe9Eywm0Ygb6Efmo1LZew" />
+
+        <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDfsKe2JOoYoKLQCbNsbC0aTsIT8nHMjoU" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -28,10 +28,6 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-/**
- * Created by Admin on 12/11/2559.
- */
-
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -233,6 +229,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
+
                     return new FeedMapFragment();
                 case 1:
                     return new FeedHomeFragment(UID);
