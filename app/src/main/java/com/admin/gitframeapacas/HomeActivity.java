@@ -140,6 +140,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
         }
+        else if (id == R.id.nav_setting) {
+
+            Toast.makeText(this, "SettingActivity", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_help) {
+
+            Toast.makeText(this, "HelpActivity", Toast.LENGTH_SHORT).show();
+            Intent intent2 = new Intent(getApplicationContext(), HelpActivity.class);
+            startActivity(intent2);
+        }
+        else if (id == R.id.nav_logout) {
+
+            Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
+            signOut();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -147,7 +164,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+
+    /*public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
@@ -163,7 +181,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -172,7 +189,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
-    }
+    }*/
 
     public void signOut() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);

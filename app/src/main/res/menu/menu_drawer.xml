@@ -18,7 +18,28 @@
                 android:title="พื้นที่ปัจจุบัน" />
         </menu>
     </item>
-    <item android:title="รายการโปรด"></item>
+
+    <item android:title="อื่นๆ">
+
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="การตั้งค่า" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help_black_24dp"
+                android:title="ช่วยเหลือและความเห็น" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout_24dp"
+                android:title="ออกจากระบบ" />
+        </menu>
+
+    </item>
+
+
+
 
 
 </menu>

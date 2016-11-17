@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -49,7 +50,7 @@ public class FeedHomeFragment extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mAQI = mRootRef.child("aqi");
     DatabaseReference mPM25 = mRootRef.child("pm25");
-    DatabaseReference mH2O = mRootRef.child("h2o");
+    DatabaseReference mHO2 = mRootRef.child("ho2");
     DatabaseReference mCO = mRootRef.child("co");
     DatabaseReference mSO2 = mRootRef.child("so2");
     private CustomGauge gaugeAQI;
@@ -68,11 +69,6 @@ public class FeedHomeFragment extends Fragment {
     //--ปุ่มสำหรับ Random ค่าก๊าซ
     Button btnRandom;
 
-    //--ตัวแปร Random ก๊าซ
-    private int rPM25;
-    private int rCO;
-    private int rHO2;
-    private int rSO2;
 
     //--นำไปรับค่าของแต่ละก๊าซ สำหรับมาคำนวณหาค่า AQI
     int calPM25;
@@ -91,7 +87,6 @@ public class FeedHomeFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView recyclerview = (RecyclerView) v.findViewById(R.id.recyclerView_recom);
-
         TextView text = (TextView) v.findViewById(R.id.txtLocation);
         text.setFocusable(true);
         text.setFocusableInTouchMode(true);
@@ -114,6 +109,7 @@ public class FeedHomeFragment extends Fragment {
 
             }
         };
+
         TextView testID = (TextView) v.findViewById(R.id.txtID);
         testID.setText("UserId: " + uid);
 
@@ -128,33 +124,35 @@ public class FeedHomeFragment extends Fragment {
         gagueCO = (CustomGauge) v.findViewById(R.id.gCO);
         gagueHO2 = (CustomGauge) v.findViewById(R.id.gHO2);
         gagueSO2 = (CustomGauge) v.findViewById(R.id.gSO2);
-        btnRandom = (Button) v.findViewById(R.id.btnRandom);
-        //gaguePM25.setValue(150);
-        Random rand = new Random();
-        rPM25 = rand.nextInt(100) + 1;
-        rHO2 = rand.nextInt(100) + 1;
-        rCO = rand.nextInt(100) + 1;
-        rSO2 = rand.nextInt(100) + 1;
+
+        btnRandom =(Button)v.findViewById(R.id.btnRandom);
+        btnRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Random rand = new Random();
+                int[] index = new int[4];
+                for(int i = 0; i<4; i++){
+                    int mrandom = rand.nextInt(100) + 1;
+                    index[i] = mrandom;
+                }
+                mSO2.setValue(index[0]);
+                mPM25.setValue(index[1]);
+                mHO2.setValue(index[2]);
+                mCO.setValue(index[3]);
+            }
+        });
         return v;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-
         mPM25.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-               /* mPM25.setValue((int) rPM25);
-                gaguePM25.setValue(rPM25);
-                txtPM25.setText("PM2.5: " + rPM25);
-                calPM25 = dataSnapshot.getValue(Integer.class);*/
-
                 calPM25 = dataSnapshot.getValue(Integer.class);
-                mPM25.setValue((int) calPM25);
+                mPM25.setValue( calPM25);
                 gaguePM25.setValue(calPM25);
                 txtPM25.setText("PM2.5: " + calPM25);
                 onAQIChange();
@@ -167,20 +165,12 @@ public class FeedHomeFragment extends Fragment {
 
             }
         });
-        mH2O.addValueEventListener(new ValueEventListener() {
+        mHO2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-             /*   mH2O.setValue((int) rHO2);
-                gagueHO2.setValue(rHO2);
-                txtH2O.setText("HO2: " + rHO2);
-                calHO2 = dataSnapshot.getValue(Integer.class);*/
-
-
-
                 calHO2 = dataSnapshot.getValue(Integer.class);
-                mH2O.setValue((int) calHO2);
+                mHO2.setValue( calHO2);
                 gagueHO2.setValue(calHO2);
                 txtH2O.setText("HO2: " + calHO2);
                 onAQIChange();
@@ -198,39 +188,25 @@ public class FeedHomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-               /* mCO.setValue((int) rCO);
-                gagueCO.setValue(rCO);
-                txtCO.setText("CO: " + rCO);
-                calCO = dataSnapshot.getValue(Integer.class);*/
-
                 calCO = dataSnapshot.getValue(Integer.class);
 
-                mCO.setValue((int) calCO);
+                mCO.setValue( calCO);
                 gagueCO.setValue(calCO);
                 txtCO.setText("CO: " + calCO);
                 onAQIChange();
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-        mSO2.addValueEventListener(new ValueEventListener() {
 
+
+        mSO2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-               /* mSO2.setValue((int) rSO2);
-                gagueSO2.setValue(rSO2);
-                txtSO2.setText("SO2: " + rSO2);
-                 calSO2 = dataSnapshot.getValue(Integer.class);
-                */
-
                 calSO2 = dataSnapshot.getValue(Integer.class);
-                mSO2.setValue((int) calSO2);
+                mSO2.setValue( calSO2);
                 gagueSO2.setValue(calSO2);
                 txtSO2.setText("SO2: " + calSO2);
                 onAQIChange();
@@ -243,56 +219,15 @@ public class FeedHomeFragment extends Fragment {
 
             }
         });
-      /*  btnRandom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Random rand = new Random();
-                rPM25 = rand.nextInt(100) + 1;
-                rCO = rand.nextInt(100) + 1;
-                rHO2 = rand.nextInt(100) + 1;
-                rSO2 = rand.nextInt(100) + 1;
-
-                mPM25.setValue((int) rPM25);
-                mCO.setValue((int) rCO);
-                mH2O.setValue((int) rHO2);
-                mSO2.setValue((int) rSO2);
-
-                int result = (calPM25 + calCO + calHO2 + calSO2) / 4;
-                mAQI.setValue((int) result);
-                gaugeAQI.setValue((int) result);
-                txtAQI.setText("AQI: " + result);
-
-            }
-        });
-*/
-       /* mAQI.addValueEventListener(new ValueEventListener() {
-
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                int result = (calPM25 + calCO + calHO2 + calSO2) / 4;
-                mAQI.setValue((int) result);
-                gaugeAQI.setValue((int) result);
-                txtAQI.setText("AQI: " + result +" 2");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });*/
 
 
     }
     public void onAQIChange(){
 
         int result = (calPM25 + calCO + calHO2 + calSO2) / 4;
-        mAQI.setValue((int) result);
-        gaugeAQI.setValue((int) result);
-        txtAQI.setText("AQI: " + result +" 2");
+        mAQI.setValue( result);
+        gaugeAQI.setValue( result);
+        txtAQI.setText("AQI: " + result);
     }
 
 
@@ -316,7 +251,7 @@ public class FeedHomeFragment extends Fragment {
         @Override
         public int getItemCount() {
 
-            return 3;
+            return 5;
         }
     }
 
