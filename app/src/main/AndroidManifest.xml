@@ -43,6 +43,7 @@
             android:parentActivityName=".SettingActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
+        <activity android:name=".GraphGasActivity"></activity>
 
     </application>
 

@@ -131,7 +131,7 @@ public class FeedHomeFragment extends Fragment {
             public void onClick(View view) {
                 Random rand = new Random();
                 int[] index = new int[4];
-                for(int i = 0; i<4; i++){
+                for (int i = 0; i < 4; i++) {
                     int mrandom = rand.nextInt(100) + 1;
                     index[i] = mrandom;
                 }
@@ -139,6 +139,16 @@ public class FeedHomeFragment extends Fragment {
                 mPM25.setValue(index[1]);
                 mHO2.setValue(index[2]);
                 mCO.setValue(index[3]);
+            }
+        });
+
+        txtAQI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(),GraphGasActivity.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "GraphGasActivity", Toast.LENGTH_SHORT).show();
             }
         });
         return v;

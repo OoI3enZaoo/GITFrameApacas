@@ -54,8 +54,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_map);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_map);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_home);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_near_me);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_tab_about);
+        tabLayout.getTabAt(1).select();
+
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
@@ -67,16 +71,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (tab.getPosition()) {
                     case 0:
                         mViewPager.setCurrentItem(0);
-                        toolbar.setTitle("Home");
-                        break;
-                    case 1:
-                        mViewPager.setCurrentItem(1);
                         toolbar.setTitle("Map");
                         break;
-                    /*case 2:
+                    case 1:
+
+                        mViewPager.setCurrentItem(1);
+                        toolbar.setTitle("Home");
+                        break;
+                    case 2:
                         mViewPager.setCurrentItem(2);
-                        toolbar.setTitle("Profile");
-                        break;*/
+                        toolbar.setTitle("Nearby");
+                        break;
+                    case 3:
+                        mViewPager.setCurrentItem(3);
+                        toolbar.setTitle("About the AQI");
+                        break;
 
                 }
             }
@@ -224,9 +233,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new FeedHomeFragment(UID);
-                case 1:
                     return new FeedMapFragment();
+                case 1:
+                    return new FeedHomeFragment(UID);
+                case 2:
+                    return new FeedNearbyFragment();
+                case 3:
+                    return new FeedAboutAQIFragment();
                 // case 2:
                 // return new FeedProfileFragment();
             }
@@ -236,7 +249,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 4;
         }
 
        /* @Override
