@@ -45,7 +45,7 @@
             android:theme="@style/AppTheme.Menu"></activity>
 
         <activity android:name=".GraphGasActivity"></activity>
-
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

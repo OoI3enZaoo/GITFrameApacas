@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import junit.framework.Test;
+
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -52,8 +54,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_map);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_home);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_near_me);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_tab_about);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_about);
         tabLayout.getTabAt(1).select();
 
         //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
@@ -75,10 +76,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         toolbar.setTitle("Home");
                         break;
                     case 2:
-                        mViewPager.setCurrentItem(2);
-                        toolbar.setTitle("Nearby");
-                        break;
-                    case 3:
                         mViewPager.setCurrentItem(3);
                         toolbar.setTitle("About the AQI");
                         break;
@@ -140,6 +137,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_notification) {
             Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_reward) {
 
@@ -233,9 +232,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     return new FeedMapFragment();
                 case 1:
                     return new FeedHomeFragment(UID);
+
                 case 2:
-                    return new FeedNearbyFragment();
-                case 3:
                     return new FeedAboutAQIFragment();
                 // case 2:
                 // return new FeedProfileFragment();
@@ -246,7 +244,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return 3;
         }
 
        /* @Override

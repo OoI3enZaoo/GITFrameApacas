@@ -5,8 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,6 +73,8 @@ public class FeedHomeFragment extends Fragment {
     Button btnRandom;
 
 
+
+
     //--นำไปรับค่าของแต่ละก๊าซ สำหรับมาคำนวณหาค่า AQI
     int calPM25;
     int calCO;
@@ -94,6 +99,9 @@ public class FeedHomeFragment extends Fragment {
         //recyclerview.setHasFixedSize(true);
         recyclerview.setAdapter(new RecyclrViewAdapter());
         recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+
+
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -139,16 +147,6 @@ public class FeedHomeFragment extends Fragment {
                 mPM25.setValue(index[1]);
                 mHO2.setValue(index[2]);
                 mCO.setValue(index[3]);
-            }
-        });
-
-        txtAQI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(getApplicationContext(),GraphGasActivity.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "GraphGasActivity", Toast.LENGTH_SHORT).show();
             }
         });
         return v;
@@ -287,6 +285,11 @@ public class FeedHomeFragment extends Fragment {
             Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
+
 
 
 }
