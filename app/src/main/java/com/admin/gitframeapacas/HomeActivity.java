@@ -2,8 +2,10 @@ package com.admin.gitframeapacas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,10 +23,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 
 import junit.framework.Test;
@@ -33,9 +38,18 @@ import junit.framework.Test;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+
     private FirebaseAuth mAuth;
 
-    String UID = "";
+    //-- floatingactionMenu&button
+    private FloatingActionsMenu FloattingMenu; // master button
+    private FloatingActionButton floatHow; // how to do button
+    private FloatingActionButton floatChart; //chart button
+
+
+    //-UID for firebase User
+    private String UID = "";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +125,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(), "my Profile", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        //--- floatingactionbutton
+        final FrameLayout frameFloatingActionMenu = (FrameLayout) findViewById(R.id.frameFloating);
+        FloattingMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        FloattingMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameFloatingActionMenu.setBackgroundColor(Color.parseColor("#c0bcc3bb"));
+
+
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameFloatingActionMenu.setBackgroundColor(Color.TRANSPARENT);
+            }
+        });
+
+
+        floatChart = (FloatingActionButton) findViewById(R.id.float_chart);
+        floatChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(HomeActivity.this, "Chart Button has been clicked", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+        floatHow = (FloatingActionButton) findViewById(R.id.float_how);
+        floatHow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(HomeActivity.this, "How to do Button has been clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //---
     }
 
     @Override
@@ -137,26 +188,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_notification) {
             Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_reward) {
 
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-        }
-        else if (id == R.id.nav_setting) {
+        } else if (id == R.id.nav_setting) {
 
             Toast.makeText(this, "SettingActivity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
             startActivity(intent);
-        }
-        else if (id == R.id.nav_help) {
+        } else if (id == R.id.nav_help) {
 
             Toast.makeText(this, "HelpActivity", Toast.LENGTH_SHORT).show();
             Intent intent2 = new Intent(getApplicationContext(), HelpActivity.class);
             startActivity(intent2);
-        }
-        else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
 
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
             signOut();
@@ -228,8 +274,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-
                     return new FeedMapFragment();
+
+
                 case 1:
                     return new FeedHomeFragment(UID);
 

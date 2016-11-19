@@ -38,6 +38,7 @@ import java.util.Random;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
+import static android.support.v7.recyclerview.R.attr.layoutManager;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
@@ -97,8 +98,10 @@ public class FeedHomeFragment extends Fragment {
         text.setFocusableInTouchMode(true);
         text.requestFocus();
         //recyclerview.setHasFixedSize(true);
+        recyclerview.addItemDecoration(new DividerItemDecoration(getActivity()));
         recyclerview.setAdapter(new RecyclrViewAdapter());
         recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
 
 
 
@@ -151,6 +154,8 @@ public class FeedHomeFragment extends Fragment {
         });
         return v;
     }
+
+
 
     @Override
     public void onStart() {

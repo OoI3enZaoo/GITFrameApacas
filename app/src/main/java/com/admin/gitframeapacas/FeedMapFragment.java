@@ -28,6 +28,8 @@ public class FeedMapFragment extends Fragment  {
 
         View v = inflater.inflate(R.layout.fragment_map, container, false);;
 
+
+
         return v;
 
     }
