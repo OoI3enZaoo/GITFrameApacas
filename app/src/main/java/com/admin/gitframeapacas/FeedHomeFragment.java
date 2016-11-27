@@ -47,16 +47,16 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FeedHomeFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private static final String TAG = "AnonymousAuth";
-    private String uid;
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    /*private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private String uid;*/
+    /*DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mAQI = mRootRef.child("aqi");
     DatabaseReference mPM25 = mRootRef.child("pm25");
     DatabaseReference mHO2 = mRootRef.child("ho2");
     DatabaseReference mCO = mRootRef.child("co");
-    DatabaseReference mSO2 = mRootRef.child("so2");
+    DatabaseReference mSO2 = mRootRef.child("so2");*/
     private CustomGauge gaugeAQI;
     private TextView txtAQI;
     private TextView txtCO;
@@ -83,7 +83,7 @@ public class FeedHomeFragment extends Fragment {
     int calSO2;
 
     public FeedHomeFragment(String name) {
-        this.uid = name;
+      //  this.uid = name;
 
     }
 
@@ -106,7 +106,7 @@ public class FeedHomeFragment extends Fragment {
 
 
 
-
+/*
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -122,7 +122,7 @@ public class FeedHomeFragment extends Fragment {
         };
 
         TextView testID = (TextView) v.findViewById(R.id.txtID);
-        testID.setText("UserId: " + uid);
+        testID.setText("UserId: " + uid);*/
 
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
         txtCO = (TextView) v.findViewById(R.id.txtCO);
@@ -136,7 +136,7 @@ public class FeedHomeFragment extends Fragment {
         gagueHO2 = (CustomGauge) v.findViewById(R.id.gHO2);
         gagueSO2 = (CustomGauge) v.findViewById(R.id.gSO2);
 
-        btnRandom =(Button)v.findViewById(R.id.btnRandom);
+     /*   btnRandom =(Button)v.findViewById(R.id.btnRandom);
         btnRandom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,13 +151,13 @@ public class FeedHomeFragment extends Fragment {
                 mHO2.setValue(index[2]);
                 mCO.setValue(index[3]);
             }
-        });
+        });*/
         return v;
     }
 
 
 
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         mPM25.addValueEventListener(new ValueEventListener() {
@@ -243,7 +243,7 @@ public class FeedHomeFragment extends Fragment {
         txtAQI.setText("AQI: " + result);
     }
 
-
+*/
 
     public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 

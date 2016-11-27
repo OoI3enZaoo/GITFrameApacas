@@ -34,12 +34,17 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import junit.framework.Test;
 
+import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+public class HomeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener
+{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
     private FirebaseAuth mAuth;
+
+
 
     //-- floatingactionMenu&button
     private FloatingActionsMenu FloattingMenu; // master button
@@ -56,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
@@ -109,14 +115,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-        //---drawerlayout
+
+
+       ///---drawerlayout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +223,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    /*public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
@@ -239,7 +247,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
-    }*/
+    }
 
     public void signOut() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
