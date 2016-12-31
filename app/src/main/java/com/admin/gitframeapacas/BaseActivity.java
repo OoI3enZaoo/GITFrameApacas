@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
-
+//--hello my name is ben
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
