@@ -28,103 +28,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.firebase.auth.FirebaseAuth;
+import java.util.ArrayList;
 
-import junit.framework.Test;
-
-import it.neokree.materialnavigationdrawer.elements.MaterialAccount;
+import devlight.io.library.ntb.NavigationTabBar;
 
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
-{
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
-    private FirebaseAuth mAuth;
-
-
-
-    //-- floatingactionMenu&button
-    private FloatingActionsMenu FloattingMenu; // master button
-    private FloatingActionButton floatHow; // how to do button
-    private FloatingActionButton floatChart; //chart button
-
-
-    //-UID for firebase User
-    private String UID = "";
-
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
-        setSupportActionBar(toolbar);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_tap_map);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_tap_home);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_about);
-        tabLayout.getTabAt(1).select();
-
-        //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tap_profile);
-        mAuth = FirebaseAuth.getInstance();
-        Intent intent = getIntent();
-        UID = intent.getStringExtra("ID").toString();
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        mViewPager.setCurrentItem(0);
-                        toolbar.setTitle("Map");
-                        break;
-                    case 1:
-
-                        mViewPager.setCurrentItem(1);
-                        toolbar.setTitle("Home");
-                        break;
-                    case 2:
-                        mViewPager.setCurrentItem(3);
-                        toolbar.setTitle("About the AQI");
-                        break;
-
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        initUI();
 
 
-
-
-       ///---drawerlayout
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,56 +53,89 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-
-        //--- floatingactionbutton
-        final FrameLayout frameFloatingActionMenu = (FrameLayout) findViewById(R.id.frameFloating);
-        FloattingMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        FloattingMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                frameFloatingActionMenu.setBackgroundColor(Color.parseColor("#c0bcc3bb"));
-
-
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                frameFloatingActionMenu.setBackgroundColor(Color.TRANSPARENT);
-            }
-        });
-
-
-        floatChart = (FloatingActionButton) findViewById(R.id.float_chart);
-        floatChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Chart Button has been clicked", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-        floatHow = (FloatingActionButton) findViewById(R.id.float_how);
-        floatHow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(HomeActivity.this, "How to do Button has been clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //---
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    private void initUI() {
 
-        }
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(mSectionsPagerAdapter);
+        final String[] colors = getResources().getStringArray(R.array.default_preview);
+        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_home),
+                        Color.parseColor(colors[0]))
+                        //.selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
+                        .title("Home")
+                        .badgeTitle("home sweet home")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_favorite),
+                        Color.parseColor(colors[1]))
+//                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .title("Favorite")
+                        .badgeTitle("Your Favorite :D")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_navigate),
+                        Color.parseColor(colors[2]))
+                        // .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
+                        .title("Navigate")
+                        .badgeTitle("want to go somewhere?")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_about),
+                        Color.parseColor(colors[3]))
+                        // .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .title("About")
+                        .badgeTitle("AQI")
+                        .build()
+        );
+
+        navigationTabBar.setModels(models);
+        navigationTabBar.setViewPager(viewPager, 0);
+        navigationTabBar.setBehaviorEnabled(true);
+        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                navigationTabBar.getModels().get(position).hideBadge();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+
+            }
+        });
+
+        navigationTabBar.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
+                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
+                    navigationTabBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            model.showBadge();
+                        }
+                    }, i * 100);
+                }
+            }
+        }, 500);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -213,7 +165,6 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
 
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -235,7 +186,6 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent2);
                 return true;
             case R.id.action_logout:
-                signOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -247,27 +197,6 @@ public class HomeActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
-    }
-
-    public void signOut() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage(R.string.logout);
-        alert.setCancelable(false);
-        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mAuth.signOut();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alert.show();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -282,16 +211,16 @@ public class HomeActivity extends AppCompatActivity
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new FeedMapFragment();
-
-
+                    return new FeedHomeFragment();
                 case 1:
-                    return new FeedHomeFragment(UID);
-
+                    return new FeedMapFragment();
                 case 2:
+                    return new FeedMapFragment();
+                case 3:
                     return new FeedAboutAQIFragment();
-                // case 2:
-                // return new FeedProfileFragment();
+
+
+
             }
             return null;
         }
@@ -299,22 +228,17 @@ public class HomeActivity extends AppCompatActivity
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
+        }
+ /*       public boolean isViewFromObject(final View view, final Object object) {
+            return view.equals(object);
         }
 
-       /* @Override
-
-      public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Home";
-                case 1:
-                    return "MAP";
-                //  case 2:
-                //    return "Profile";
-            }
-            return null;
+        @Override
+        public void destroyItem(final View container, final int position, final Object object) {
+            ((ViewPager) container).removeView((View) object);
         }*/
-    }
 
+
+    }
 }

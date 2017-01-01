@@ -70,7 +70,6 @@ public class HistoryActivity extends AppCompatActivity {
                 startActivity(intent2);
                 return true;
             case R.id.action_logout:
-                new HomeActivity().signOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

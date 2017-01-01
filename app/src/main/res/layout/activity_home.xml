@@ -24,6 +24,9 @@
         app:menu="@menu/menu_drawer"
         app:theme="@style/AlertDialog.AppCompat" />
 
+
+
+
 </android.support.v4.widget.DrawerLayout>
 
 

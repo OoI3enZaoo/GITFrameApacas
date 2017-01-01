@@ -22,24 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
-import static android.support.v7.recyclerview.R.attr.layoutManager;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Admin on 12/11/2559.
@@ -75,15 +60,7 @@ public class FeedHomeFragment extends Fragment {
 
 
 
-
-    //--นำไปรับค่าของแต่ละก๊าซ สำหรับมาคำนวณหาค่า AQI
-    int calPM25;
-    int calCO;
-    int calHO2;
-    int calSO2;
-
-    public FeedHomeFragment(String name) {
-      //  this.uid = name;
+    public FeedHomeFragment() {
 
     }
 
@@ -100,29 +77,8 @@ public class FeedHomeFragment extends Fragment {
         //recyclerview.setHasFixedSize(true);
         recyclerview.addItemDecoration(new DividerItemDecoration(getActivity()));
         recyclerview.setAdapter(new RecyclrViewAdapter());
-        recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
-
-
-/*
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d(TAG, "ID: " + user.getUid());
-                } else {
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-
-            }
-        };
-
-        TextView testID = (TextView) v.findViewById(R.id.txtID);
-        testID.setText("UserId: " + uid);*/
 
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
         txtCO = (TextView) v.findViewById(R.id.txtCO);
@@ -287,7 +243,7 @@ public class FeedHomeFragment extends Fragment {
         public void onClick(View view) {
             int position = getAdapterPosition();
             Log.d("click", "Click: " + position);
-            Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "click: " + position, Toast.LENGTH_SHORT).show();
         }
     }
 
