@@ -1,46 +1,41 @@
 package com.admin.gitframeapacas;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.arlib.floatingsearchview.FloatingSearchView;
 
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static int aaa;
+    private static DrawerLayout mDrawerLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initUI();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
@@ -53,8 +48,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.searchfragment);
+        FloatingSearchView mSearchView = (FloatingSearchView) myFragment.getView().findViewById(R.id.floating_search_view);
+        mSearchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
+
     }
 
+    /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
+        searchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
+            onAttachSearchViewToDrawer(mSearchView);
+
+    }*/
     private void initUI() {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -69,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         Color.parseColor(colors[0]))
                         //.selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
                         .title("Home")
-                        .badgeTitle("home sweet home")
+                        .badgeTitle("My Home :O")
                         .build()
         );
         models.add(
@@ -78,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         Color.parseColor(colors[1]))
 //                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
                         .title("Favorite")
-                        .badgeTitle("Your Favorite :D")
+                        .badgeTitle("My Favorite :D")
                         .build()
         );
         models.add(
@@ -87,7 +91,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         Color.parseColor(colors[2]))
                         // .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
                         .title("Navigate")
-                        .badgeTitle("want to go somewhere?")
+                        .badgeTitle("go somewhere?")
                         .build()
         );
         models.add(
@@ -150,7 +154,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_reward) {
-
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_setting) {
 
@@ -171,7 +174,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,12 +215,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 case 0:
                     return new FeedHomeFragment();
                 case 1:
-                    return new FeedMapFragment();
+                    return new FeedFavoriteFragment();
                 case 2:
                     return new FeedMapFragment();
                 case 3:
                     return new FeedAboutAQIFragment();
-
 
 
             }

@@ -1,27 +1,17 @@
 package com.admin.gitframeapacas;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
@@ -33,6 +23,13 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 public class FeedHomeFragment extends Fragment {
 
     private static final String TAG = "AnonymousAuth";
+    //-- ตัวแปรสำหรับเกจวัดก๊าซต่างๆ
+    CustomGauge gaguePM25;
+    CustomGauge gagueCO;
+    CustomGauge gagueHO2;
+    CustomGauge gagueSO2;
+    //--ปุ่มสำหรับ Random ค่าก๊าซ
+    Button btnRandom;
     /*private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String uid;*/
@@ -48,15 +45,6 @@ public class FeedHomeFragment extends Fragment {
     private TextView txtPM25;
     private TextView txtSO2;
     private TextView txtH2O;
-
-    //-- ตัวแปรสำหรับเกจวัดก๊าซต่างๆ
-    CustomGauge gaguePM25;
-    CustomGauge gagueCO;
-    CustomGauge gagueHO2;
-    CustomGauge gagueSO2;
-
-    //--ปุ่มสำหรับ Random ค่าก๊าซ
-    Button btnRandom;
 
 
 
@@ -110,6 +98,7 @@ public class FeedHomeFragment extends Fragment {
         });*/
         return v;
     }
+
 
 
 
