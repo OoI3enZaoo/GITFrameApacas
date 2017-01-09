@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
 
         <TextView
-            android:id="@+id/txtStatus_sensor"
+            android:id="@+id/txtlastUpdate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -84,9 +84,9 @@
             app:gaugeStrokeColor="#bdbdbd"
             app:gaugeStrokeWidth="20dp"
             app:gaugeSweepAngle="180"
-            app:layout_constraintLeft_toLeftOf="@+id/txtStatus_sensor"
-            app:layout_constraintRight_toRightOf="@+id/txtStatus_sensor"
-            app:layout_constraintTop_toBottomOf="@+id/txtStatus_sensor" />
+            app:layout_constraintLeft_toLeftOf="@+id/txtlastUpdate"
+            app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/txtlastUpdate" />
 
         <TextView
             android:id="@+id/txtAQI"
@@ -98,8 +98,8 @@
             android:textColor="@color/md_red_400"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@+id/txtStatus_sensor"
-            app:layout_constraintRight_toRightOf="@+id/txtStatus_sensor"
+            app:layout_constraintLeft_toLeftOf="@+id/txtlastUpdate"
+            app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
             app:layout_constraintTop_toTopOf="@+id/gaugeMaster" />
 
         <Button
@@ -109,8 +109,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
             android:text="Random Gas"
-            app:layout_constraintLeft_toLeftOf="@+id/txtStatus_sensor"
-            app:layout_constraintRight_toRightOf="@+id/txtStatus_sensor"
+            app:layout_constraintLeft_toLeftOf="@+id/txtlastUpdate"
+            app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
             app:layout_constraintTop_toBottomOf="@+id/txtAQI" />
 
 

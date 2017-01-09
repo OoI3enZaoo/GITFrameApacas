@@ -1,3 +1,4 @@
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +8,14 @@
     android:weightSum="1"
     tools:context="com.admin.gitframeapacas.DistrictActivity">
 
+    <include
+        layout="@layout/floating"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -25,40 +34,28 @@
         android:id="@+id/txtLocation"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="11dp"
         android:gravity="center"
         android:text="Current location"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:layout_editor_absoluteX="16dp" />
+        tools:layout_editor_absoluteX="4dp" />
 
 
     <TextView
-        android:id="@+id/txtDataBy"
+        android:id="@+id/txtlastUpdate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Data collected by: Myself"
-        android:textSize="17sp"
+        android:text="Last Update: "
+        android:textSize="17dp"
         android:textStyle="normal"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/txtLocation"
         app:layout_constraintRight_toRightOf="@+id/txtLocation"
         app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
-
-    <TextView
-        android:id="@+id/txtStatus_sensor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Sensor: Active"
-        android:textSize="17dp"
-        android:textStyle="normal"
-        app:layout_constraintLeft_toLeftOf="@+id/txtDataBy"
-        app:layout_constraintRight_toRightOf="@+id/txtDataBy"
-        app:layout_constraintTop_toBottomOf="@+id/txtDataBy" />
 
     <pl.pawelkleczkowski.customgauge.CustomGauge
         android:id="@+id/gaugeMaster"
@@ -68,7 +65,9 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -87,22 +86,23 @@
         app:gaugeStrokeColor="#bdbdbd"
         app:gaugeStrokeWidth="20dp"
         app:gaugeSweepAngle="180"
-        app:layout_constraintLeft_toLeftOf="@+id/txtStatus_sensor"
-        app:layout_constraintRight_toRightOf="@+id/txtStatus_sensor"
-        app:layout_constraintTop_toBottomOf="@+id/txtStatus_sensor" />
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintLeft_toLeftOf="@+id/txtLocation"
+        app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
+        app:layout_constraintTop_toBottomOf="@+id/txtlastUpdate" />
 
     <TextView
         android:id="@+id/txtAQI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="77dp"
         android:text="AQI = 36"
         android:textColor="@color/md_red_400"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="@+id/txtStatus_sensor"
-        app:layout_constraintRight_toRightOf="@+id/txtStatus_sensor"
+        app:layout_constraintLeft_toLeftOf="@+id/txtlastUpdate"
+        app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
         app:layout_constraintTop_toTopOf="@+id/gaugeMaster" />
 
     <pl.pawelkleczkowski.customgauge.CustomGauge

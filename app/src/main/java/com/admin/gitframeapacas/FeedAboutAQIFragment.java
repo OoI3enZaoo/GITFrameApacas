@@ -18,7 +18,9 @@ class FeedAboutAQIFragment extends Fragment {
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_aboutaqi, container, false);;
+        View v = inflater.inflate(R.layout.fragment_aboutaqi, container, false);
+
+
         return v;
 
     }

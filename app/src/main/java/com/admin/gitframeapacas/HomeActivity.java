@@ -26,9 +26,11 @@ import devlight.io.library.ntb.NavigationTabBar;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static int aaa;
+    public static int a = 0;
+    static FloatingSearchView searchDistrict;
+    static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -49,14 +51,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 
         Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.searchfragment);
-        FloatingSearchView mSearchView = (FloatingSearchView) myFragment.getView().findViewById(R.id.floating_search_view);
-        mSearchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
+        searchDistrict = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_district);
+        searchDistrict.attachNavigationDrawerToMenuButton(mDrawerLayout);
+
+        searchNavigate = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_navigate);
+        searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
+
+
+
+
 
     }
 
     /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
         searchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
-            onAttachSearchViewToDrawer(mSearchView);
+            onAttachSearchViewToDrawer(searchDistrict);
 
     }*/
     private void initUI() {
@@ -73,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         Color.parseColor(colors[0]))
                         //.selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
                         .title("Home")
-                        .badgeTitle("My Home :O")
+                        .badgeTitle("Home Sweet Home")
                         .build()
         );
         models.add(
@@ -116,6 +125,41 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onPageSelected(final int position) {
                 navigationTabBar.getModels().get(position).hideBadge();
+                switch (position) {
+                    case 0:
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
+                        break;
+
+                    case 1:
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case 2:
+                        if (searchDistrict.getVisibility() == View.VISIBLE) {
+                            searchDistrict.setVisibility(View.GONE);
+                            searchNavigate.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case 3:
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
+
+                        break;
+
+                }
             }
 
             @Override
@@ -203,6 +247,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -213,12 +258,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
+
                     return new FeedHomeFragment();
                 case 1:
+
                     return new FeedFavoriteFragment();
                 case 2:
+
                     return new FeedMapFragment();
                 case 3:
+
                     return new FeedAboutAQIFragment();
 
 

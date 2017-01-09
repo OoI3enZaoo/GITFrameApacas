@@ -96,6 +96,8 @@ public class FeedHomeFragment extends Fragment {
                 mCO.setValue(index[3]);
             }
         });*/
+
+
         return v;
     }
 
