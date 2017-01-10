@@ -57,7 +57,15 @@
             android:parentActivityName=".ProfileActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
-        <activity android:name=".GraphGasActivity"></activity>
+        <activity
+            android:name=".RecommendActivity"
+            android:parentActivityName=".RecommendActivity"
+            android:theme="@style/AppTheme.Menu"></activity>
+        <activity
+            android:name=".GraphGasActivity"
+            android:parentActivityName=".GraphGasActivity"
+            android:theme="@style/AppTheme.Menu"></activity>
+
 
     </application>
 

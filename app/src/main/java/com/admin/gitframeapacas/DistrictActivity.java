@@ -13,15 +13,12 @@ import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 
 import org.eazegraph.lib.charts.BarChart;
-import org.eazegraph.lib.charts.PieChart;
 import org.eazegraph.lib.models.BarModel;
-import org.eazegraph.lib.models.PieModel;
 
 public class DistrictActivity extends AppCompatActivity {
     Toolbar toolbar;
     String DistrictName;
     private FloatingActionButtonPlus mActionButtonPlus;
-    private PieChart mPieChart;
     private BarChart mBarChart;
     private TextView txtLocation;
 
@@ -41,7 +38,6 @@ public class DistrictActivity extends AppCompatActivity {
 
 
         mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.ActionButtonPlus);
-        mPieChart = (PieChart) findViewById(R.id.piechart);
         mBarChart = (BarChart) findViewById(R.id.barchart);
         loadData();
     }
@@ -56,6 +52,8 @@ public class DistrictActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         Toast.makeText(getApplicationContext(), "Tips", Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent(DistrictActivity.this, RecommendActivity.class);
+                        startActivity(intent2);
                         break;
                     case 1:
                         Toast.makeText(getApplicationContext(), "Chart", Toast.LENGTH_SHORT).show();
@@ -71,17 +69,7 @@ public class DistrictActivity extends AppCompatActivity {
             }
         });
 
-        mPieChart.addPieSlice(new PieModel("Freetime", 15, Color.parseColor("#91a7ff")));
-        mPieChart.addPieSlice(new PieModel("Sleep", 25, Color.parseColor("#42bd41")));
-        mPieChart.addPieSlice(new PieModel("Work", 35, Color.parseColor("#fff176")));
-        mPieChart.addPieSlice(new PieModel("Eating", 9, Color.parseColor("#ffb74d")));
-        mPieChart.addPieSlice(new PieModel("Eae", 9, Color.parseColor("#f36c60")));
-        mPieChart.startAnimation();
-        mPieChart.setInnerValueString("50");
-        mPieChart.setInnerValueUnit("AQI");
-        /*mPieChart.setInnerValueSize(40);
-        mPieChart.setUseInnerValue(true);
-*/
+
         mBarChart.addBar(new BarModel("CO", 2.3f, Color.parseColor("#91a7ff")));
         mBarChart.addBar(new BarModel("NO2", 2.f, Color.parseColor("#42bd41")));
         mBarChart.addBar(new BarModel("O3", 3.3f, Color.parseColor("#fff176")));

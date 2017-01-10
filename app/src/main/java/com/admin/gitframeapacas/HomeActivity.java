@@ -58,9 +58,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
 
-
-
-
     }
 
     /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
@@ -127,6 +124,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 navigationTabBar.getModels().get(position).hideBadge();
                 switch (position) {
                     case 0:
+
+
                         if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
