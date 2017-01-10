@@ -1,35 +1,21 @@
 package com.admin.gitframeapacas;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 
-/**
- * Created by Admin on 13/11/2559.
- */
+
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -106,13 +92,13 @@ public class HistoryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            recyclerview.setAdapter(new RecyclrViewAdapter());
-            recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            //  recyclerview.setAdapter(new RecyclrViewAdapter());
+            //  recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             process.setVisibility(View.GONE);
         }
     }
 
-    public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
+   /* public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -135,9 +121,9 @@ public class HistoryActivity extends AppCompatActivity {
             Log.d("ben", "4");
             return 10;
         }
-    }
+    }*/
 
-    public static class ViewHolder extends RecyclerView.ViewHolder//implements View.OnClickListener
+   /* public static class ViewHolder extends RecyclerView.ViewHolder//implements View.OnClickListener
     {
         TextView location;
         TextView status;
@@ -153,13 +139,13 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
 
-      /*  @Override
+        @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
             Log.d("click","Click: " + position);
             Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
-        }*/
-    }
+        }
+    }*/
 
 
 }

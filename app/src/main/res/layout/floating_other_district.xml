@@ -16,12 +16,12 @@
         <com.lzp.floatingactionbuttonplus.FabTagLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tagText="Add to favorite">
+            app:tagText="Tips">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_addfavorite"
+                android:src="@drawable/ic_tips"
                 app:backgroundTint="#468cb7"
                 app:fabSize="mini" />
         </com.lzp.floatingactionbuttonplus.FabTagLayout>
@@ -40,44 +40,44 @@
         </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
 
-        <!--<com.lzp.floatingactionbuttonplus.FabTagLayout
+        <com.lzp.floatingactionbuttonplus.FabTagLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tagText="Send mail">
+            app:tagText="Add to favorite">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_mic_black_24dp"
+                android:src="@drawable/ic_addfavorite"
                 app:backgroundTint="#4BB7A7"
                 app:fabSize="mini" />
         </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
-        <com.lzp.floatingactionbuttonplus.FabTagLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tagText="shopping list">
+        <!-- <com.lzp.floatingactionbuttonplus.FabTagLayout
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             app:tagText="shopping list">
 
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_mic_black_24dp"
-                app:backgroundTint="#ff9800"
-                app:fabSize="mini" />
-        </com.lzp.floatingactionbuttonplus.FabTagLayout>
+             <android.support.design.widget.FloatingActionButton
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:src="@drawable/ic_mic_black_24dp"
+                 app:backgroundTint="#ff9800"
+                 app:fabSize="mini" />
+         </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
-        <com.lzp.floatingactionbuttonplus.FabTagLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tagText="Search this page">
+         <com.lzp.floatingactionbuttonplus.FabTagLayout
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             app:tagText="Search this page">
 
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_mic_black_24dp"
-                app:backgroundTint="#4284E4"
-                app:fabSize="mini" />
-        </com.lzp.floatingactionbuttonplus.FabTagLayout>-->
+             <android.support.design.widget.FloatingActionButton
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:src="@drawable/ic_mic_black_24dp"
+                 app:backgroundTint="#4284E4"
+                 app:fabSize="mini" />
+         </com.lzp.floatingactionbuttonplus.FabTagLayout>-->
 
     </com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus>
 </RelativeLayout>

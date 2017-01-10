@@ -32,13 +32,14 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
     compile 'devlight.io:navigationtabbar:1.2.5'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
-    compile 'com.jjoe64:graphview:4.2.1'
+//    compile 'com.jjoe64:graphview:4.2.1'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     compile 'com.lzp.floatingactionbutton:floatingactionbuttonplus:1.0.0'
+    compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
 
 
 

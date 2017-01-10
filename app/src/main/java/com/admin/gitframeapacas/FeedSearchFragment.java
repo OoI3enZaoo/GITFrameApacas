@@ -413,15 +413,16 @@ public class FeedSearchFragment extends Fragment {
                         if (checkSame[j] != null) {
                             if (checkSame[j].equals(DName)) {
                                 count = 0;
+                                break;
                                 //   Log.i("resultben", "count == 0: " + DName);
                             }
                         }
                     }
-                    checkSame[i] = DName;
                     if (count == 1) {
 
                         sDistrictSuggestions.add(rount2, new DistrictSuggestion(DName + ""));
                         //  Log.i("resultben", "count == 1: " + DName);
+                        checkSame[i] = DName;
                         rount2++;
                     }
                     count = 1;

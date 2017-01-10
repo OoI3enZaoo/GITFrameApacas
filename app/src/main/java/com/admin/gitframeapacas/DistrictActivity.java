@@ -1,6 +1,7 @@
 package com.admin.gitframeapacas;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,18 @@ import android.widget.Toast;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 
+import org.eazegraph.lib.charts.BarChart;
+import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.BarModel;
+import org.eazegraph.lib.models.PieModel;
+
 public class DistrictActivity extends AppCompatActivity {
     Toolbar toolbar;
     String DistrictName;
+    private FloatingActionButtonPlus mActionButtonPlus;
+    private PieChart mPieChart;
+    private BarChart mBarChart;
+    private TextView txtLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,27 +36,60 @@ public class DistrictActivity extends AppCompatActivity {
         toolbar.setTitle(DistrictName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TextView txtLocation = (TextView) findViewById(R.id.txtLocation);
-        txtLocation.setText(DistrictName);
 
-        FloatingActionButtonPlus mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.ActionButtonPlus);
+        txtLocation = (TextView) findViewById(R.id.txtLocation);
+
+
+        mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.ActionButtonPlus);
+        mPieChart = (PieChart) findViewById(R.id.piechart);
+        mBarChart = (BarChart) findViewById(R.id.barchart);
+        loadData();
+    }
+
+    private void loadData() {
+
+        txtLocation.setText(DistrictName);
+        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
             @Override
             public void onItemClick(FabTagLayout tagView, int position) {
                 switch (position) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Add to favorite", Toast.LENGTH_SHORT).show();
-                        break;// first menu(add to favorite)
+                        Toast.makeText(getApplicationContext(), "Tips", Toast.LENGTH_SHORT).show();
+                        break;
                     case 1:
                         Toast.makeText(getApplicationContext(), "Chart", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(DistrictActivity.this, GraphGasActivity.class);
                         startActivity(intent);
-                        break;// second menu(Chart)
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "Add to favorite", Toast.LENGTH_SHORT).show();
+                        break;
 
                 }
 
             }
         });
+
+        mPieChart.addPieSlice(new PieModel("Freetime", 15, Color.parseColor("#91a7ff")));
+        mPieChart.addPieSlice(new PieModel("Sleep", 25, Color.parseColor("#42bd41")));
+        mPieChart.addPieSlice(new PieModel("Work", 35, Color.parseColor("#fff176")));
+        mPieChart.addPieSlice(new PieModel("Eating", 9, Color.parseColor("#ffb74d")));
+        mPieChart.addPieSlice(new PieModel("Eae", 9, Color.parseColor("#f36c60")));
+        mPieChart.startAnimation();
+        mPieChart.setInnerValueString("50");
+        mPieChart.setInnerValueUnit("AQI");
+        /*mPieChart.setInnerValueSize(40);
+        mPieChart.setUseInnerValue(true);
+*/
+        mBarChart.addBar(new BarModel("CO", 2.3f, Color.parseColor("#91a7ff")));
+        mBarChart.addBar(new BarModel("NO2", 2.f, Color.parseColor("#42bd41")));
+        mBarChart.addBar(new BarModel("O3", 3.3f, Color.parseColor("#fff176")));
+        mBarChart.addBar(new BarModel("SO2", 1.1f, Color.parseColor("#ffb74d")));
+        mBarChart.addBar(new BarModel("PM2.5", 20.7f, Color.parseColor("#f36c60")));
+        mBarChart.addBar(new BarModel("Radio", 5.7f, Color.parseColor("#ba68c8")));
+        mBarChart.startAnimation();
+
 
     }
 

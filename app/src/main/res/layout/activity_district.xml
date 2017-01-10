@@ -8,14 +8,6 @@
     android:weightSum="1"
     tools:context="com.admin.gitframeapacas.DistrictActivity">
 
-    <include
-        layout="@layout/floating"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -57,197 +49,27 @@
         app:layout_constraintRight_toRightOf="@+id/txtLocation"
         app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
 
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gaugeMaster"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        app:gaugeDividerColor="#ffeb3b"
-        app:gaugeDividerDrawFirst="false"
-        app:gaugeDividerDrawLast="true"
-        app:gaugeDividerStep="10"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#e51c23"
-        app:gaugePointSize="0"
-        app:gaugePointStartColor="#259b24"
-        app:gaugeStartAngle="180"
-        app:gaugeStartValue="0"
-        app:gaugeStrokeCap="BUTT"
-        app:gaugeStrokeColor="#bdbdbd"
-        app:gaugeStrokeWidth="20dp"
-        app:gaugeSweepAngle="180"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintLeft_toLeftOf="@+id/txtLocation"
-        app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
-        app:layout_constraintTop_toBottomOf="@+id/txtlastUpdate" />
-
-    <TextView
-        android:id="@+id/txtAQI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="77dp"
-        android:text="AQI = 36"
-        android:textColor="@color/md_red_400"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="@+id/txtlastUpdate"
-        app:layout_constraintRight_toRightOf="@+id/txtlastUpdate"
-        app:layout_constraintTop_toTopOf="@+id/gaugeMaster" />
-
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gPM25"
-        android:layout_width="147dp"
-        android:layout_height="148dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="175dp"
-        android:paddingTop="50dp"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#F44336"
-        app:gaugePointSize="0"
-        app:gaugePointStartColor="#8BC34A"
-        app:gaugeStartAngle="220"
-        app:gaugeStartValue="0"
-        app:gaugeStrokeCap="ROUND"
-        app:gaugeStrokeColor="#B2EBF2"
-        app:gaugeStrokeWidth="10dp"
-        app:gaugeSweepAngle="100"
+    <include
+        layout="@layout/gas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gaugeMaster" />
-
-
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gCO"
-        android:layout_width="147dp"
-        android:layout_height="148dp"
-
-
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="8dp"
-        android:paddingBottom="00dp"
-        android:paddingTop="50dp"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#F44336"
-        app:gaugePointSize="0"
-        app:gaugePointStartColor="#8BC34A"
-        app:gaugeStartAngle="220"
-        app:gaugeStartValue="0"
-        app:gaugeStrokeCap="ROUND"
-        app:gaugeStrokeColor="#B2EBF2"
-        app:gaugeStrokeWidth="10dp"
-        app:gaugeSweepAngle="100"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintLeft_toRightOf="@+id/gPM25"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gPM25" />
+        app:layout_constraintTop_toBottomOf="@+id/txtlastUpdate"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gHO2"
-        android:layout_width="147dp"
-        android:layout_height="148dp"
-
-        android:layout_marginTop="8dp"
-        android:paddingBottom="0dp"
-        android:paddingTop="50dp"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#F44336"
-        app:gaugePointSize="0"
-        app:gaugePointStartColor="#8BC34A"
-        app:gaugeStartAngle="220"
-        app:gaugeStartValue="0"
-        app:gaugeStrokeCap="ROUND"
-        app:gaugeStrokeColor="#B2EBF2"
-        app:gaugeStrokeWidth="10dp"
-        app:gaugeSweepAngle="100"
-        app:layout_constraintLeft_toLeftOf="@+id/gPM25"
-        app:layout_constraintTop_toBottomOf="@+id/gPM25" />
-
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gSO2"
-        android:layout_width="147dp"
-        android:layout_height="148dp"
-        android:paddingBottom="00dp"
-        android:paddingTop="50dp"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#F44336"
-        app:gaugePointSize="0"
-        app:gaugePointStartColor="#8BC34A"
-        app:gaugeStartAngle="220"
-        app:gaugeStartValue="0"
-        app:gaugeStrokeCap="ROUND"
-        app:gaugeStrokeColor="#B2EBF2"
-        app:gaugeStrokeWidth="10dp"
-        app:gaugeSweepAngle="100"
-        app:layout_constraintLeft_toLeftOf="@+id/gCO"
-        app:layout_constraintTop_toTopOf="@+id/gHO2" />
-
-
-    <TextView
-        android:id="@+id/txtPM25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="75dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="20"
-        android:textColor="@color/md_red_300"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/gPM25"
-        app:layout_constraintRight_toLeftOf="@+id/gCO"
-        app:layout_constraintTop_toTopOf="@+id/gPM25" />
-
-    <TextView
-        android:id="@+id/txtCO"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="20"
-        android:textColor="@color/md_red_300"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/gCO"
-        app:layout_constraintRight_toRightOf="@+id/gCO"
-        app:layout_constraintTop_toTopOf="@+id/txtPM25" />
-
-    <TextView
-        android:id="@+id/txtH2O"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="20"
-        android:textColor="@color/md_red_300"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/gHO2"
-        app:layout_constraintRight_toRightOf="@+id/gHO2"
-        app:layout_constraintTop_toBottomOf="@+id/gPM25" />
-
-    <TextView
-        android:id="@+id/txtSO2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="20"
-        android:textColor="@color/md_red_300"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/gSO2"
-        app:layout_constraintRight_toRightOf="@+id/gSO2"
-        app:layout_constraintTop_toTopOf="@+id/txtH2O" />
-
+    <include
+        layout="@layout/floating_other_district"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
 

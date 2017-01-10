@@ -37,27 +37,6 @@
         app:layout_constraintTop_toBottomOf="@+id/location"
         tools:layout_editor_absoluteX="8dp" />
 
-    <pl.pawelkleczkowski.customgauge.CustomGauge
-        android:id="@+id/gauge"
-        android:layout_width="147dp"
-        android:layout_height="148dp"
-        android:layout_centerHorizontal="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        app:gaugeEndValue="100"
-        app:gaugePointEndColor="#F44336"
-        app:gaugePointSize="15"
-        app:gaugePointStartColor="#8BC34A"
-        app:gaugeStartAngle="220"
-        app:gaugeStartValue="100"
-        app:gaugeStrokeCap="ROUND"
-        app:gaugeStrokeColor="#B2EBF2"
-        app:gaugeStrokeWidth="10dp"
-        app:gaugeSweepAngle="100"
-        tools:layout_editor_absoluteX="4dp"
-        tools:layout_editor_absoluteY="16dp" />
 
 
 </android.support.constraint.ConstraintLayout>

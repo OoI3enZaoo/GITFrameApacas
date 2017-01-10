@@ -1,20 +1,18 @@
 package com.admin.gitframeapacas;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 
-import com.jjoe64.graphview.GraphView;
+import org.eazegraph.lib.charts.ValueLineChart;
+import org.eazegraph.lib.models.ValueLinePoint;
+import org.eazegraph.lib.models.ValueLineSeries;
+
+/*import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
-import java.util.ArrayList;
-import java.util.Random;
+import com.jjoe64.graphview.series.LineGraphSeries;*/
 
 /**
  * Created by Admin on 17/11/2559.
@@ -22,47 +20,35 @@ import java.util.Random;
 
 public class GraphGasActivity extends AppCompatActivity {
 
+    private ValueLineChart mCubicValueLineChart;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gas);
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        initGraph(graph);
+        mCubicValueLineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
+        loadData();
     }
 
-    public void initGraph(final GraphView graph) {
-
-        Button btn = (Button) findViewById(R.id.btnAddSeries);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                graph.addSeries(new LineGraphSeries(generateData()));
+    private void loadData() {
 
 
+        ValueLineSeries series = new ValueLineSeries();
+        series.setColor(0xFF56B7F1);
+        series.addPoint(new ValueLinePoint("Jan", 2.4f));
+        series.addPoint(new ValueLinePoint("Feb", 3.4f));
+        series.addPoint(new ValueLinePoint("Mar", .4f));
+        series.addPoint(new ValueLinePoint("Apr", 1.2f));
+        series.addPoint(new ValueLinePoint("Mai", 2.6f));
+        series.addPoint(new ValueLinePoint("Jun", 1.0f));
+        series.addPoint(new ValueLinePoint("Jul", 3.5f));
+        series.addPoint(new ValueLinePoint("Aug", 2.4f));
+        series.addPoint(new ValueLinePoint("Sep", 2.4f));
+        series.addPoint(new ValueLinePoint("Oct", 3.4f));
+        series.addPoint(new ValueLinePoint("Nov", .4f));
+        series.addPoint(new ValueLinePoint("Dec", 1.3f));
 
-            }
+        mCubicValueLineChart.addSeries(series);
+        mCubicValueLineChart.startAnimation();
 
-        });
-        btn = (Button) findViewById(R.id.btnClearSeries);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                graph.removeAllSeries();
-            }
-        });
-    }
-
-    private DataPoint[] generateData() {
-        Random rand = new Random();
-        int count = 30;
-        DataPoint[] values = new DataPoint[count];
-        for (int i=0; i<count; i++) {
-            double x = i;
-            double f = rand.nextDouble()*0.15+0.3;
-            double y = Math.sin(i*f+2) + rand.nextDouble()*0.3;
-            DataPoint v = new DataPoint(x, y);
-            values[i] = v;
-        }
-        return values;
     }
 }

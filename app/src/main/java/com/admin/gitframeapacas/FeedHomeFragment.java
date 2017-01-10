@@ -1,19 +1,23 @@
 package com.admin.gitframeapacas;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import pl.pawelkleczkowski.customgauge.CustomGauge;
+import com.lzp.floatingactionbuttonplus.FabTagLayout;
+import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
+
+import org.eazegraph.lib.charts.BarChart;
+import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.BarModel;
+import org.eazegraph.lib.models.PieModel;
+
+
 
 
 /**
@@ -23,31 +27,10 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 public class FeedHomeFragment extends Fragment {
 
     private static final String TAG = "AnonymousAuth";
-    //-- ตัวแปรสำหรับเกจวัดก๊าซต่างๆ
-    CustomGauge gaguePM25;
-    CustomGauge gagueCO;
-    CustomGauge gagueHO2;
-    CustomGauge gagueSO2;
-    //--ปุ่มสำหรับ Random ค่าก๊าซ
-    Button btnRandom;
-    /*private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private String uid;*/
-    /*DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mAQI = mRootRef.child("aqi");
-    DatabaseReference mPM25 = mRootRef.child("pm25");
-    DatabaseReference mHO2 = mRootRef.child("ho2");
-    DatabaseReference mCO = mRootRef.child("co");
-    DatabaseReference mSO2 = mRootRef.child("so2");*/
-    private CustomGauge gaugeAQI;
-    private TextView txtAQI;
-    private TextView txtCO;
-    private TextView txtPM25;
-    private TextView txtSO2;
-    private TextView txtH2O;
 
-
-
+    private PieChart mPieChart;
+    private BarChart mBarChart;
+    private FloatingActionButtonPlus mActionButtonPlus;
     public FeedHomeFragment() {
 
     }
@@ -57,190 +40,59 @@ public class FeedHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        RecyclerView recyclerview = (RecyclerView) v.findViewById(R.id.recyclerView_recom);
-        TextView text = (TextView) v.findViewById(R.id.txtLocation);
-        text.setFocusable(true);
-        text.setFocusableInTouchMode(true);
-        text.requestFocus();
-        //recyclerview.setHasFixedSize(true);
-        recyclerview.addItemDecoration(new DividerItemDecoration(getActivity()));
-        recyclerview.setAdapter(new RecyclrViewAdapter());
-        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPieChart = (PieChart) v.findViewById(R.id.piechart);
+        mBarChart = (BarChart) v.findViewById(R.id.barchart);
+        mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
 
-
-        txtAQI = (TextView) v.findViewById(R.id.txtAQI);
-        txtCO = (TextView) v.findViewById(R.id.txtCO);
-        txtPM25 = (TextView) v.findViewById(R.id.txtPM25);
-        txtSO2 = (TextView) v.findViewById(R.id.txtSO2);
-        txtH2O = (TextView) v.findViewById(R.id.txtH2O);
-
-        gaugeAQI = (CustomGauge) v.findViewById(R.id.gaugeMaster);
-        gaguePM25 = (CustomGauge) v.findViewById(R.id.gPM25);
-        gagueCO = (CustomGauge) v.findViewById(R.id.gCO);
-        gagueHO2 = (CustomGauge) v.findViewById(R.id.gHO2);
-        gagueSO2 = (CustomGauge) v.findViewById(R.id.gSO2);
-
-     /*   btnRandom =(Button)v.findViewById(R.id.btnRandom);
-        btnRandom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Random rand = new Random();
-                int[] index = new int[4];
-                for (int i = 0; i < 4; i++) {
-                    int mrandom = rand.nextInt(100) + 1;
-                    index[i] = mrandom;
-                }
-                mSO2.setValue(index[0]);
-                mPM25.setValue(index[1]);
-                mHO2.setValue(index[2]);
-                mCO.setValue(index[3]);
-            }
-        });*/
-
-
+        loadData();
         return v;
+
     }
 
+    private void loadData() {
 
-
-
-   /* @Override
-    public void onStart() {
-        super.onStart();
-        mPM25.addValueEventListener(new ValueEventListener() {
+        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
+        mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onItemClick(FabTagLayout tagView, int position) {
+                switch (position) {
+                    case 0:
+                        Toast.makeText(getActivity(), "Tips", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toast.makeText(getActivity(), "Chart", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), GraphGasActivity.class);
+                        startActivity(intent);
+                        break;
 
-                calPM25 = dataSnapshot.getValue(Integer.class);
-                mPM25.setValue( calPM25);
-                gaguePM25.setValue(calPM25);
-                txtPM25.setText("PM2.5: " + calPM25);
-                onAQIChange();
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mHO2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                calHO2 = dataSnapshot.getValue(Integer.class);
-                mHO2.setValue( calHO2);
-                gagueHO2.setValue(calHO2);
-                txtH2O.setText("HO2: " + calHO2);
-                onAQIChange();
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        mCO.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                calCO = dataSnapshot.getValue(Integer.class);
-
-                mCO.setValue( calCO);
-                gagueCO.setValue(calCO);
-                txtCO.setText("CO: " + calCO);
-                onAQIChange();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
             }
         });
 
 
-        mSO2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                calSO2 = dataSnapshot.getValue(Integer.class);
-                mSO2.setValue( calSO2);
-                gagueSO2.setValue(calSO2);
-                txtSO2.setText("SO2: " + calSO2);
-                onAQIChange();
+        mPieChart.addPieSlice(new PieModel("Freetime", 15, Color.parseColor("#91a7ff")));
+        mPieChart.addPieSlice(new PieModel("Sleep", 25, Color.parseColor("#42bd41")));
+        mPieChart.addPieSlice(new PieModel("Work", 35, Color.parseColor("#fff176")));
+        mPieChart.addPieSlice(new PieModel("Eating", 9, Color.parseColor("#ffb74d")));
+        mPieChart.addPieSlice(new PieModel("Eae", 9, Color.parseColor("#f36c60")));
+        mPieChart.setInnerValueString("AQI");
+        mPieChart.setEmptyDataText("Fuck");
+        mPieChart.startAnimation();
 
 
-            }
+        /*mPieChart.setInnerValueSize(40);
+        mPieChart.setUseInnerValue(true);*/
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        mBarChart.addBar(new BarModel("CO", 2.3f, Color.parseColor("#91a7ff")));
+        mBarChart.addBar(new BarModel("NO2", 2.f, Color.parseColor("#42bd41")));
+        mBarChart.addBar(new BarModel("O3", 3.3f, Color.parseColor("#fff176")));
+        mBarChart.addBar(new BarModel("SO2", 1.1f, Color.parseColor("#ffb74d")));
+        mBarChart.addBar(new BarModel("PM2.5", 20.7f, Color.parseColor("#f36c60")));
+        mBarChart.addBar(new BarModel("Radio", 5.7f, Color.parseColor("#ba68c8")));
+        mBarChart.startAnimation();
 
     }
-    public void onAQIChange(){
-
-        int result = (calPM25 + calCO + calHO2 + calSO2) / 4;
-        mAQI.setValue( result);
-        gaugeAQI.setValue( result);
-        txtAQI.setText("AQI: " + result);
-    }
-
-*/
-
-    public class RecyclrViewAdapter extends RecyclerView.Adapter<ViewHolder> {
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend, parent, false);
-            return new ViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            //   holder.location.setText("ตลาดไทย");
-            //holder.status.setText("อากาศเยี่ยมยอด");
-        }
-
-        @Override
-        public int getItemCount() {
-
-            return 5;
-        }
-    }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txtRecom;
-        ImageView imgRecom;
-
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            Log.d("ben", "5");
-            txtRecom = (TextView) itemView.findViewById(R.id.txt_recom);
-            imgRecom = (ImageView) itemView.findViewById(R.id.img_recom);
-
-        }
-
-
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            Log.d("click", "Click: " + position);
-            Toast.makeText(getContext(), "click: " + position, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-
 
 
 
