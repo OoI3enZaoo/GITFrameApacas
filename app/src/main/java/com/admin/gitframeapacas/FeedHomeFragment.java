@@ -33,8 +33,7 @@ public class FeedHomeFragment extends Fragment {
     private FloatingActionButtonPlus mActionButtonPlus;
     private CustomGauge gauge;
     private TextView txtAQI;
-    private Button btnTest;
-
+    private Button btnTestAQI;
     public FeedHomeFragment() {
 
     }
@@ -48,7 +47,7 @@ public class FeedHomeFragment extends Fragment {
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
-        btnTest = (Button) v.findViewById(R.id.btnTest);
+        btnTestAQI = (Button) v.findViewById(R.id.btnRandomAQI);
         loadData();
         return v;
 
@@ -57,7 +56,7 @@ public class FeedHomeFragment extends Fragment {
     private void loadData() {
 
         final int[] random = {40, 60, 110, 210, 400};
-        btnTest.setOnClickListener(new View.OnClickListener() {
+        btnTestAQI.setOnClickListener(new View.OnClickListener() {
             int count = 0;
 
             @Override
@@ -92,7 +91,6 @@ public class FeedHomeFragment extends Fragment {
             }
         });
 
-
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
 
@@ -116,13 +114,14 @@ public class FeedHomeFragment extends Fragment {
             }
         });
 
-        mBarChart.addBar(new BarModel("CO", 2.3f, Color.parseColor("#91a7ff")));
-        mBarChart.addBar(new BarModel("NO2", 2.f, Color.parseColor("#42bd41")));
-        mBarChart.addBar(new BarModel("O3", 3.3f, Color.parseColor("#fff176")));
-        mBarChart.addBar(new BarModel("SO2", 1.1f, Color.parseColor("#ffb74d")));
-        mBarChart.addBar(new BarModel("PM2.5", 10.7f, Color.parseColor("#f36c60")));
-        mBarChart.addBar(new BarModel("Radio", 5.7f, Color.parseColor("#ba68c8")));
+        mBarChart.addBar(new BarModel("CO", 2f, Color.parseColor("#91a7ff")));
+        mBarChart.addBar(new BarModel("NO2", 3f, Color.parseColor("#42bd41")));
+        mBarChart.addBar(new BarModel("O3", 4f, Color.parseColor("#fff176")));
+        mBarChart.addBar(new BarModel("SO2", 5f, Color.parseColor("#ffb74d")));
+        mBarChart.addBar(new BarModel("PM2.5", 3f, Color.parseColor("#f36c60")));
+        mBarChart.addBar(new BarModel("Radio", 6f, Color.parseColor("#ba68c8")));
         mBarChart.startAnimation();
+
 
     }
 
