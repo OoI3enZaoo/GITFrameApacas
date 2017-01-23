@@ -24,7 +24,7 @@
 
 
     <EditText
-        android:id="@+id/lblEmail"
+        android:id="@+id/lbl_id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <EditText
-        android:id="@+id/lblPassword"
+        android:id="@+id/lbl_pwd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -47,9 +47,9 @@
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/lblEmail"
-        app:layout_constraintRight_toRightOf="@+id/lblEmail"
-        app:layout_constraintTop_toBottomOf="@+id/lblEmail" />
+        app:layout_constraintLeft_toLeftOf="@+id/lbl_id"
+        app:layout_constraintRight_toRightOf="@+id/lbl_id"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_id" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -60,7 +60,7 @@
         android:theme="@style/ThemeOverlay.MyDarkButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/btnSignup"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toLeftOf="@+id/lblPassword" />
+        app:layout_constraintLeft_toLeftOf="@+id/lbl_pwd" />
 
     <TextView
         android:id="@+id/btnReset"
@@ -94,8 +94,8 @@
         android:text="Sign up"
         android:theme="@style/ThemeOverlay.MyDarkButton"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintRight_toRightOf="@+id/lblPassword"
-        app:layout_constraintTop_toBottomOf="@+id/lblPassword" />
+        app:layout_constraintRight_toRightOf="@+id/lbl_pwd"
+        app:layout_constraintTop_toBottomOf="@+id/lbl_pwd" />
 
     <TextView
         android:id="@+id/txtSkip"

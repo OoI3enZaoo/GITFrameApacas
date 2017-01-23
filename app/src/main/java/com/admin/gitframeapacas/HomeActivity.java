@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
+    String mID;
     //private FirebaseAuth mAuth;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private String type;
@@ -61,6 +63,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         searchNavigate = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_navigate);
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
+
+        Intent intent = getIntent();
+        mID = intent.getStringExtra("ID").toString();
+
         //mAuth = FirebaseAuth.getInstance();
 
        /* Intent intent = getIntent();
@@ -81,6 +87,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             onAttachSearchViewToDrawer(searchDistrict);
 
     }*/
+
+
     private void initUI() {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -226,8 +234,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent2);
         } else if (id == R.id.nav_logout) {
 
-            Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-            //signOut();
+            Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+            DBHelper db = new DBHelper(getApplicationContext());
+            db.deleteContact(1);
+            Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent2);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -282,6 +293,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
           alert.show();
       }
   */
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -295,16 +307,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-
+                    Log.i("ben", "Id: " + mID.toString());
                     return new FeedHomeFragment();
-                case 1:
 
+                case 1:
+                    Log.i("ben", "Id: " + mID.toString());
                     return new FeedFavoriteFragment();
                 case 2:
-
+                    Log.i("ben", "Id: " + mID.toString());
                     return new FeedMapFragment();
                 case 3:
-
+                    Log.i("ben", "Id: " + mID.toString());
                     return new FeedAboutAQIFragment();
 
 
