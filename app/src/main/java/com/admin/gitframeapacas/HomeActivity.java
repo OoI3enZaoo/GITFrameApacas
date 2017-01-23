@@ -1,9 +1,7 @@
 package com.admin.gitframeapacas;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,26 +10,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+
+//import com.google.firebase.auth.FirebaseAuth;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,7 +32,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private String type;
     private String UID = "";
@@ -70,19 +61,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         searchNavigate = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_navigate);
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
 
-        Intent intent = getIntent();
+       /* Intent intent = getIntent();
         type = intent.getStringExtra("TYPE").toString();
         UID = intent.getStringExtra("ID").toString();
 
         if (type.equals("User")) {
-            new SkipTask().execute();
+            //new SkipTask().execute();
         }
         if (type.equals("Member")) {
             Toast.makeText(getApplicationContext(), "Welcome Member", Toast.LENGTH_SHORT).show();
 
-        }
+        }*/
     }
 
     /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
@@ -236,7 +227,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_logout) {
 
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-            signOut();
+            //signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -270,27 +261,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void signOut() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage(R.string.logout);
-        alert.setCancelable(false);
-        alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mAuth.signOut();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alert.show();
-    }
-
+    /* public void signOut() {
+          AlertDialog.Builder alert = new AlertDialog.Builder(this);
+          alert.setMessage(R.string.logout);
+          alert.setCancelable(false);
+          alert.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                  mAuth.signOut();
+                  Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                  startActivity(intent);
+              }
+          });
+          alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                  dialogInterface.dismiss();
+              }
+          });
+          alert.show();
+      }
+  */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -338,7 +329,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public class SkipTask extends AsyncTask<String, Void, String> {
+/*    public class SkipTask extends AsyncTask<String, Void, String> {
 
         String message = "";
         String status = "";
@@ -394,5 +385,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Log.i("ben", "status: " + status);
             Log.i("ben", "Message: " + message);
         }
-    }
+    }*/
 }

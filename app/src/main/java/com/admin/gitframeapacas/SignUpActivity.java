@@ -1,31 +1,9 @@
 package com.admin.gitframeapacas;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 /**
  * Created by Admin on 12/11/2559.
@@ -39,8 +17,8 @@ public class SignUpActivity extends BaseActivity {
     private EditText lblPassword;
     private EditText lblPassword2;
     private EditText lblName;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    // private FirebaseAuth mAuth;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
 
     public SignUpActivity() {
     }
@@ -58,7 +36,7 @@ public class SignUpActivity extends BaseActivity {
         lblPassword2 = (EditText) findViewById(R.id.lblPassword2);
         lblName = (EditText) findViewById(R.id.lblName);
 
-
+/*
         Button btnSummitAccount = (Button) findViewById(R.id.btnSignup);
         btnSummitAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,16 +103,6 @@ public class SignUpActivity extends BaseActivity {
                 }
 
 
-
-
-
-
-
-               /* Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("TYPE", "Member");
-                intent.putExtras(bundle);
-                startActivity(intent);*/
             }
         });
 
@@ -308,6 +276,7 @@ public class SignUpActivity extends BaseActivity {
             }
             check = false;
         }
-    }
+    }*/
 
+    }
 }

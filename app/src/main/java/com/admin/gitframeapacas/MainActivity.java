@@ -1,28 +1,19 @@
 package com.admin.gitframeapacas;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "AnonymousAuth";
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+
+    //  private FirebaseAuth mAuth;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +26,10 @@ public class MainActivity extends BaseActivity {
         txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signInAnonymously();
+                // signInAnonymously();
             }
         });
-        mAuth = FirebaseAuth.getInstance();
+        /*mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -50,15 +41,15 @@ public class MainActivity extends BaseActivity {
                 }
                 updateUI(user);
             }
-        };
+        };*/
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), HomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("ID","Login");
-                intent.putExtras(bundle);
+                //Bundle bundle = new Bundle();
+                //bundle.putString("ID","Login");
+                //intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -74,7 +65,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    @Override
+   /* @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
@@ -154,7 +145,7 @@ public class MainActivity extends BaseActivity {
         hideProgressDialog();
     }
 
-
+*/
 
 
 }

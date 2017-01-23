@@ -42,8 +42,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
 
-
-    compile 'com.google.firebase:firebase-auth:10.0.1'
+    //compile 'com.google.firebase:firebase-auth:10.0.1'
     testCompile 'junit:junit:4.12'
 }
 

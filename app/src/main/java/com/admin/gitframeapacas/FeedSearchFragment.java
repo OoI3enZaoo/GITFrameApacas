@@ -1,10 +1,8 @@
 package com.admin.gitframeapacas;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -21,25 +19,14 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import static com.admin.gitframeapacas.DataHelper.sDistrictSuggestions;
 
 public class FeedSearchFragment extends Fragment {
 
     public static final long FIND_SUGGESTION_SIMULATED_DELAY = 250;
     static String TAG = "BlankFragment";
-    private static ProgressDialog mProgressDialog;
+    //private static ProgressDialog mProgressDialog;
     FloatingSearchView mSearchDistrict;
     FloatingSearchView mSearchNavigate;
     private ColorDrawable mDimDrawable;
@@ -59,12 +46,12 @@ public class FeedSearchFragment extends Fragment {
         //searchDistrict.attachNavigationDrawerToMenuButton(draw);
 
 
-        mProgressDialog = new ProgressDialog(getActivity());
+       /* mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.show();
+        mProgressDialog.show();*/
 
-        new JSONFeedLogTask2().execute();
+        //new JSONFeedLogTask2().execute();
 
         setupFloatingSearch();
 
@@ -370,7 +357,7 @@ public class FeedSearchFragment extends Fragment {
         //state and it makes sense to call supper onBackPressed() and close the activity
         return mSearchDistrict.setSearchFocused(false);
     }
-
+/*
     private static class JSONFeedLogTask2 extends AsyncTask<String, Void, String> {
 
 
@@ -445,5 +432,5 @@ public class FeedSearchFragment extends Fragment {
         }
 
 
-    }
+    }*/
 }
