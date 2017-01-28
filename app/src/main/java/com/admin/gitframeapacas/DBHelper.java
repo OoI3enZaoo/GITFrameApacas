@@ -28,8 +28,14 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table checklogin " +
-                        "(id integer primary key, name text,status integer)"
+                        "(name text,status integer)"
         );
+
+        db.execSQL(
+                "INSERT INTO checklogin VALUES ('',0)"
+
+        );
+
     }
 
     @Override

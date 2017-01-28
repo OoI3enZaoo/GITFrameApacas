@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GITFrameApacas.iml" filepath="$PROJECT_DIR$/GITFrameApacas.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libtest/libtest.iml" filepath="$PROJECT_DIR$/libtest/libtest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xenqtt/xenqtt.iml" filepath="$PROJECT_DIR$/xenqtt/xenqtt.iml" />
     </modules>
   </component>
 </project>

@@ -21,11 +21,13 @@ import okhttp3.Response;
 
 public class MainActivity extends BaseActivity {
 
-    private static final String TAG = "AnonymousAuth";
+    private static final String TAG = "ben2";
     EditText mID;
     EditText mPWD;
 
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
@@ -35,6 +37,7 @@ public class MainActivity extends BaseActivity {
         TextView txtSkip = (TextView) findViewById(R.id.txtSkip);
         mID = (EditText) findViewById(R.id.lbl_id);
         mPWD = (EditText) findViewById(R.id.lbl_pwd);
+
         statusLogin();
         txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +67,11 @@ public class MainActivity extends BaseActivity {
 
     public void statusLogin() {
         DBHelper db = new DBHelper(getApplicationContext());
+
         int status = db.getStatus();
         String name = db.getName();
         Log.i("ben", "number of row: " + status + name);
+
         if (status == 1) {
             Log.i("ben", "in if number of row" + status);
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -102,7 +107,7 @@ public class MainActivity extends BaseActivity {
                 // Do something with the response.
             } catch (IOException e) {
                 e.printStackTrace();
-                }
+            }
             return strings[0];
         }
 
@@ -125,10 +130,7 @@ public class MainActivity extends BaseActivity {
             }
 
 
-
-
         }
     }
-
 
 }

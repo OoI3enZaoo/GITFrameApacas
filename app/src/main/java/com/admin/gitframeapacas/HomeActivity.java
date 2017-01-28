@@ -19,7 +19,17 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
@@ -30,14 +40,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public static int aaa;
     public static int a = 0;
+    public static boolean MQTTRunning = true;
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
     String mID;
     //private FirebaseAuth mAuth;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private String type;
-    private String UID = "";
+    private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
+    private MqttThread mqttThread = null;
+    private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
+    private String mqttUser = "admin";
+    private String mqttPwd = "admin";
+    private String sssn = "aparcas_raw";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -80,6 +95,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(getApplicationContext(), "Welcome Member", Toast.LENGTH_SHORT).show();
 
         }*/
+
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (MQTTRunning) {
+                    MQTTSender();
+                }
+
+            }
+        }, 0, 3000);
     }
 
     /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
@@ -294,6 +320,34 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
       }
   */
 
+    public void MQTTSender() {
+        JSONObject obj = new JSONObject();
+        try {
+            Random rand = new Random();
+            int option = rand.nextInt(4) + 1;
+            obj.put("id", new RandomGas().id());
+            obj.put("lat", new RandomGas().lat(option));
+            obj.put("lon", new RandomGas().lon(option));
+            obj.put("co", new RandomGas().co());
+            obj.put("no2", new RandomGas().no2());
+            obj.put("o3", new RandomGas().o3());
+            obj.put("so2", new RandomGas().so2());
+            obj.put("pm25", new RandomGas().pm25());
+            obj.put("rad", new RandomGas().rad());
+            obj.put("tstamp", new RandomGas().tstamp());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            messageQueue.put(obj);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mqttThread = new MqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd);
+        mqttThread.start();
+
+    }// end of Random
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -330,73 +384,110 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Show 3 total pages.
             return 4;
         }
- /*       public boolean isViewFromObject(final View view, final Object object) {
-            return view.equals(object);
-        }
-
-        @Override
-        public void destroyItem(final View container, final int position, final Object object) {
-            ((ViewPager) container).removeView((View) object);
-        }*/
-
 
     }
 
-/*    public class SkipTask extends AsyncTask<String, Void, String> {
+    public class RandomGas {
+        Random rand = new Random();
+        int ranPosition;
 
-        String message = "";
-        String status = "";
+        int id() {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            OkHttpClient client = new OkHttpClient();
-
-
-            RequestBody formBody1 = new FormBody.Builder()
-                    .add("id", UID)
-                    .build();
-            Request request1 = new Request.Builder()
-                    .url("http://sysnet.utcc.ac.th/aparcas/SelectUser.jsp")
-                    .post(formBody1)
-                    .build();
-
-            try {
-                Response response = client.newCall(request1).execute();
-                status = response.body().string();
-                status = status.trim().toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            if (status.equals("NonSuccess")) {
-
-                RequestBody formBody = new FormBody.Builder()
-                        .add("id", UID)
-                        .add("district", type)
-                        .build();
-                Request request = new Request.Builder()
-                        .url("http://sysnet.utcc.ac.th/aparcas/InsertUser.jsp")
-                        .post(formBody)
-                        .build();
-
-                try {
-                    Response response = client.newCall(request).execute();
-                    message = response.body().string();
-                    // Do something with the response.
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return null;
+            return rand.nextInt(999999999) + 1111;
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.i("ben", "status: " + status);
-            Log.i("ben", "Message: " + message);
+        float lat(int option) {
+
+            float latmin;
+            float latmax;
+            Log.i("ben", "randomPosition(lat): " + option);
+            switch (option) {
+                case 1:
+                    latmin = 13.705845f;
+                    latmax = 13.927882f;
+
+                    break;
+                case 2:
+                    latmin = 13.665243f;
+                    latmax = 13.713277f;
+
+                    break;
+                case 3:
+                    latmin = 13.781308f;
+                    latmax = 13.668292f;
+                    break;
+                default:
+                    latmin = 13.623085f;
+                    latmax = 13.507395f;
+                    break;
+            }
+            return rand.nextFloat() * (latmax - latmin) + latmin;
+
         }
-    }*/
+
+        float lon(int option) {
+            float lonmin;
+            float lonmax;
+            Log.i("ben", "randomPosition(lon): " + option);
+            switch (option) {
+                case 1:
+                    lonmin = 100.563011f;
+                    lonmax = 100.909767f;
+                    break;
+                case 2:
+                    lonmin = 100.587902f;
+                    lonmax = 100.737247f;
+                    break;
+                case 3:
+                    lonmin = 100.344143f;
+                    lonmax = 100.514345f;
+                    break;
+                default:
+                    lonmin = 100.423708f;
+                    lonmax = 100.442076f;
+                    break;
+            }
+            return rand.nextFloat() * (lonmax - lonmin) + lonmin;
+
+        }
+
+        int co() {
+            return rand.nextInt(80) + 5;
+        }
+
+        int no2() {
+            return rand.nextInt(120) + 15;
+
+        }
+
+        int o3() {
+            return rand.nextInt(20) + 1;
+
+        }
+
+        int so2() {
+            return rand.nextInt(18) + 5;
+
+        }
+
+        int pm25() {
+            return rand.nextInt(350) + 50;
+        }
+
+        float rad() {
+            float radmin = 0.020f;
+            float radmax = 0.200f;
+            return rand.nextFloat() * (radmax - radmin) + radmin;
+        }
+
+        String tstamp() {
+            Date dNow = new Date();
+            SimpleDateFormat ft =
+                    new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
+            return ft.format(dNow);
+        }
+
+    }
+
+
 }

@@ -19,6 +19,8 @@ import org.eazegraph.lib.models.BarModel;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
+import static com.admin.gitframeapacas.HomeActivity.MQTTRunning;
+
 
 /**
  * Created by Admin on 12/11/2559.
@@ -33,7 +35,9 @@ public class FeedHomeFragment extends Fragment {
     private FloatingActionButtonPlus mActionButtonPlus;
     private CustomGauge gauge;
     private TextView txtAQI;
-    private Button btnTestAQI;
+    private Button mRandomGas;
+
+
     public FeedHomeFragment() {
 
     }
@@ -47,7 +51,7 @@ public class FeedHomeFragment extends Fragment {
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
-        btnTestAQI = (Button) v.findViewById(R.id.btnRandomAQI);
+        mRandomGas = (Button) v.findViewById(R.id.btnRandomGas);
         loadData();
         return v;
 
@@ -55,13 +59,16 @@ public class FeedHomeFragment extends Fragment {
 
     private void loadData() {
 
-        final int[] random = {40, 60, 110, 210, 400};
-        btnTestAQI.setOnClickListener(new View.OnClickListener() {
-            int count = 0;
+        // final int[] random = {40, 60, 110, 210, 400};
+        mRandomGas.setOnClickListener(new View.OnClickListener() {
+            //    int count = 0;
 
             @Override
             public void onClick(View view) {
+                MQTTRunning = MQTTRunning == false;
 
+
+                /*
                 if (count > 4) {
                     count = 0;
                 }
@@ -85,10 +92,11 @@ public class FeedHomeFragment extends Fragment {
                 }
                 if (gauge.getValue() > 300) {
                     gauge.setPointStartColor(Color.parseColor("#f36c60"));
-                }
-
+                }*/
 
             }
+
+
         });
 
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
