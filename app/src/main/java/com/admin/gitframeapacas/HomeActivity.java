@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public static int aaa;
     public static int a = 0;
-    public static boolean MQTTRunning = true;
+    public static boolean MQTTRunning = false;
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;

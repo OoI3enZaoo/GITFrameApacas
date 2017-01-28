@@ -68,6 +68,8 @@ public class FeedHomeFragment extends Fragment {
                 MQTTRunning = MQTTRunning == false;
 
 
+
+
                 /*
                 if (count > 4) {
                     count = 0;
