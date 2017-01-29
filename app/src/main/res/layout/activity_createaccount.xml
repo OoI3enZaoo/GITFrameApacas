@@ -29,7 +29,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
 
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -41,7 +41,7 @@
         android:id="@+id/lblPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -64,28 +64,56 @@
         app:layout_constraintTop_toBottomOf="@+id/lblPassword" />
 
     <EditText
-        android:id="@+id/lblName"
+        android:id="@+id/lblFName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="First Name"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/lblPassword2"
         app:layout_constraintRight_toRightOf="@+id/lblPassword2"
         app:layout_constraintTop_toBottomOf="@+id/lblPassword2" />
 
+
+    <EditText
+        android:id="@+id/lblLName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="textPersonName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/lblFName"
+        app:layout_constraintRight_toRightOf="@+id/lblFName"
+        app:layout_constraintTop_toBottomOf="@+id/lblFName" />
+
+    <EditText
+        android:id="@+id/lblBD"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="Your Bithday"
+        android:inputType="textPersonName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/lblLName"
+        app:layout_constraintRight_toRightOf="@+id/lblLName"
+        app:layout_constraintTop_toBottomOf="@+id/lblLName" />
+
     <Button
         android:id="@+id/btnSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Create account"
         android:theme="@style/ThemeOverlay.MyDarkButton"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/lblName"
-        app:layout_constraintRight_toRightOf="@+id/lblName"
+        app:layout_constraintLeft_toLeftOf="@+id/lblLName"
+        app:layout_constraintRight_toRightOf="@+id/lblLName"
         app:layout_constraintTop_toBottomOf="@+id/txtError" />
 
     <TextView
@@ -99,9 +127,9 @@
         android:layout_marginTop="8dp"
         android:text=""
         android:textColor="@color/md_red_800"
-        app:layout_constraintHorizontal_bias="0.45"
-        app:layout_constraintLeft_toLeftOf="@+id/lblName"
-        app:layout_constraintRight_toRightOf="@+id/lblName"
-        app:layout_constraintTop_toBottomOf="@+id/lblName" />
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintLeft_toLeftOf="@+id/lblBD"
+        app:layout_constraintRight_toRightOf="@+id/lblBD"
+        app:layout_constraintTop_toBottomOf="@+id/lblBD" />
 
 </android.support.constraint.ConstraintLayout>

@@ -43,7 +43,9 @@ dependencies {
     compile 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.3'
     compile group: 'net.sf.xenqtt', name: 'xenqtt', version: '0.9.5'
     //compile 'com.google.firebase:firebase-auth:10.0.1'
+
     compile('org.eclipse.paho:org.eclipse.paho.android.service:1.0.2') {
+
         exclude module: 'support-v4'
     }
     testCompile 'junit:junit:4.12'

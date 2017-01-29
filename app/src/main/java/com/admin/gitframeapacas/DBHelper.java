@@ -32,7 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
         );
 
         db.execSQL(
-                "INSERT INTO checklogin VALUES ('',0)"
+                "INSERT INTO checklogin VALUES ('x',0)"
 
         );
 
@@ -67,12 +67,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateAccount(Integer id, int status) {
+   /* public boolean updateAccount(Integer id, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("status", status);
 
         db.update("checklogin", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
+    }
+*/
+
+    public boolean updateStatus(int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("status", status);
+        db.update("checklogin", contentValues, null, null);
+        return true;
+    }
+
+    public boolean updateName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        db.update("checklogin", contentValues, null, null);
         return true;
     }
 

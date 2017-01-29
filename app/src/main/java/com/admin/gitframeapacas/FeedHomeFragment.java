@@ -65,8 +65,14 @@ public class FeedHomeFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                MQTTRunning = MQTTRunning == false;
-
+                //MQTTRunning = MQTTRunning == false;
+                if (MQTTRunning) {
+                    getActivity().stopService(new Intent(getActivity(), SendGasService.class));
+                    MQTTRunning = false;
+                } else {
+                    getActivity().startService(new Intent(getActivity(), SendGasService.class));
+                    MQTTRunning = true;
+                }
 
 
 

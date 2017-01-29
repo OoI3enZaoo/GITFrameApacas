@@ -36,13 +36,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
             android:name=".HistoryActivity"
             android:parentActivityName=".HistoryActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity android:name=".SignUpActivity"></activity>
         <activity
             android:name=".HelpActivity"
@@ -53,7 +52,9 @@
             android:name=".SettingActivity"
             android:parentActivityName=".SettingActivity"
             android:theme="@style/AppTheme.Menu"></activity>
-
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".DistrictActivity"
             android:parentActivityName=".DistrictActivity"
@@ -75,6 +76,9 @@
 
 
         <service android:name="org.eclipse.paho.android.service.MqttService"></service>
+        <service
+            android:name=".SendGasService"
+            android:process=":my_service" />
     </application>
 
 </manifest>

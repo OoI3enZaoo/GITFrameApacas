@@ -75,9 +75,6 @@ public class MainActivity extends BaseActivity {
         if (status == 1) {
             Log.i("ben", "in if number of row" + status);
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("ID", name);
-            intent.putExtras(bundle);
             Log.i("ben", "Hello" + name);
             startActivity(intent);
         } else {
@@ -93,7 +90,7 @@ public class MainActivity extends BaseActivity {
         protected String doInBackground(String... strings) {
             OkHttpClient client = new OkHttpClient();
             RequestBody formBody = new FormBody.Builder()
-                    .add("user_id", strings[0])
+                    .add("user_email", strings[0])
                     .add("user_pwd", strings[1])
                     .build();
             Request request = new Request.Builder()
@@ -112,20 +109,23 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(String name) {
-            super.onPostExecute(name);
-            Log.i("ben", "Message: " + message.toString().trim());
-            if (message.toString().trim().equals("0")) {
+        protected void onPostExecute(String x) {
+            super.onPostExecute(x);
+
+            message = message.toString().trim();
+            Log.i("checkLogin", "message: " + message);
+            String status = message.substring(0, 1);
+            Log.i("checkLogin", "status: " + status);
+            String name = message.substring(2);
+            Log.i("checkLogin", "name: " + name);
+            if (status.toString().trim().equals("0")) {
                 Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                 DBHelper db = new DBHelper(getApplicationContext());
-                db.insertAccount(name, 1);
-                Log.i("ben", "S: " + name);
+                db.updateStatus(1);
+                db.updateName(name);
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("ID", name);
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
 

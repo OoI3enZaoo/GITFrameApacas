@@ -1,9 +1,28 @@
 package com.admin.gitframeapacas;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Random;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by Admin on 12/11/2559.
@@ -11,12 +30,17 @@ import android.widget.TextView;
 
 public class SignUpActivity extends BaseActivity {
 
+    public static int startYear;
+    public static int startMonth;
+    public static int startDay;
+    public EditText lblFName;
+    public EditText lblLName;
+    public EditText lblBD;
     TextView txtError;
-    boolean check = false;
     private EditText lblEmail;
     private EditText lblPassword;
     private EditText lblPassword2;
-    private EditText lblName;
+
     // private FirebaseAuth mAuth;
     //private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -34,63 +58,36 @@ public class SignUpActivity extends BaseActivity {
         lblEmail = (EditText) findViewById(R.id.lblEmail);
         lblPassword = (EditText) findViewById(R.id.lblPassword);
         lblPassword2 = (EditText) findViewById(R.id.lblPassword2);
-        lblName = (EditText) findViewById(R.id.lblName);
+        lblFName = (EditText) findViewById(R.id.lblFName);
+        lblLName = (EditText) findViewById(R.id.lblLName);
+        lblBD = (EditText) findViewById(R.id.lblBD);
 
-/*
+
+        lblBD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Signup", "click");
+                Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+                System.out.println("the selected " + mDay);
+                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,
+                        new mDateSetListener(), mYear, mMonth, mDay);
+                dialog.show();
+
+            }
+        });
+
         Button btnSummitAccount = (Button) findViewById(R.id.btnSignup);
         btnSummitAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (lblEmail.getText().toString().trim().equals("")) {
+                if (lblEmail.getText().toString().trim().equals("") && lblPassword.getText().toString().trim().equals("") && lblPassword2.getText().toString().trim().equals("") && lblFName.getText().toString().trim().equals("") && lblLName.getText().toString().trim().equals("")) {
 
                     new CountDownTimer(4000, 10) {
                         public void onTick(long millisUntilFinished) {
-                            txtError.setText("Enter Your Email");
-                        }
-
-                        public void onFinish() {
-                            txtError.setText("");
-                        }
-                    }.start();
-
-
-                } else {
-                    new CheckEmailTask().execute(lblEmail.getText().toString().trim());
-                    check = true;
-                }
-                if (check == false && !lblEmail.getText().toString().trim().equals("") && lblPassword.getText().toString().trim().equals("") && lblPassword2.getText().toString().trim().equals("")) {
-
-                    new CountDownTimer(4000, 10) {
-                        public void onTick(long millisUntilFinished) {
-                            txtError.setText("Enter Your password");
-                        }
-
-                        public void onFinish() {
-                            txtError.setText("");
-                        }
-                    }.start();
-
-                    if (!lblPassword.getText().toString().trim().equals("") && !lblPassword2.getText().toString().trim().equals("")) {
-
-                        if (lblPassword.getText().toString().trim() != lblPassword2.getText().toString().trim()) {
-                            new CountDownTimer(4000, 10) {
-                                public void onTick(long millisUntilFinished) {
-                                    txtError.setText("Your password doesn't match");
-                                }
-
-                                public void onFinish() {
-                                    txtError.setText("");
-                                }
-                            }.start();
-
-                        }
-                    }
-                }
-
-                if (lblName.getText().toString().trim().equals("") && !lblPassword.getText().toString().trim().equals("") && !lblPassword2.getText().toString().trim().equals("") && !lblEmail.getText().toString().trim().equals("")) {
-                    new CountDownTimer(4000, 10) {
-                        public void onTick(long millisUntilFinished) {
-                            txtError.setText("Enter Your Name");
+                            txtError.setText("Enter Your Data");
                         }
 
                         public void onFinish() {
@@ -98,172 +95,97 @@ public class SignUpActivity extends BaseActivity {
                         }
                     }.start();
                 }
-                if (!lblName.getText().toString().trim().equals("") && !lblPassword.getText().toString().trim().equals("") && !lblPassword2.getText().toString().trim().equals("") && !lblEmail.getText().toString().trim().equals("")) {
-                    new CheckNameTask().execute(lblName.getText().toString().trim());
+                if (!lblPassword.getText().toString().equals("") && !lblPassword2.getText().toString().equals("") && !lblPassword.getText().toString().trim().equals(lblPassword2.getText().toString())) {
+                    Log.i("Login", "Not Same Password");
+                    new CountDownTimer(4000, 10) {
+                        public void onTick(long millisUntilFinished) {
+                            txtError.setText("Check your Password");
+                        }
+                        public void onFinish() {
+                            txtError.setText("");
+                        }
+                    }.start();
                 }
-
-
-            }
-        });
-
-    }
-
-    boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
-                .matches();
-    }
-
-    private void signInAnonymously() {
-        showProgressDialog();
-        mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "False Login", Toast.LENGTH_SHORT).show();
-                    //  mTextViewProfile.setTextColor(Color.RED);
-                    //   mTextViewProfile.setText(task.getException().getMessage());
-                } else {
-                    Toast.makeText(getApplicationContext(), "Success Login", Toast.LENGTH_SHORT).show();
-                    // mTextViewProfile.setTextColor(Color.DKGRAY);
-
+                if (lblPassword.getText().toString().trim().equals(lblPassword2.getText().toString()) && !lblFName.getText().toString().trim().equals("") && !lblLName.getText().toString().trim().equals("")) {
+                    Log.i("Login", "Success");
+                    new InsertUserTask().execute();
                 }
-                hideProgressDialog();
             }
         });
     }
 
-    private void updateUI(FirebaseUser user) {
-        boolean isSignedIn = (user != null);
+    class InsertUserTask extends AsyncTask<String, Void, String> {
 
-        if (isSignedIn) {
-
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("ID", user.getUid());
-            bundle.putString("TYPE", "Member");
-            intent.putExtras(bundle);
-            startActivity(intent);
-
-            // mTextViewProfile.setText("Email: " + user.getEmail());
-            // mTextViewProfile.append("\n");
-            //  mTextViewProfile.append("Firebase ID: " + user.getUid());
-        } else {
-            //  mTextViewProfile.setText(null);
-        }
-
-        // findViewById(R.id.button_anonymous_sign_in).setEnabled(!isSignedIn);
-        //  findViewById(R.id.button_anonymous_sign_out).setEnabled(isSignedIn);
-        //   findViewById(R.id.button_link_account).setEnabled(isSignedIn);
-
-        hideProgressDialog();
-    }
-
-    class CheckNameTask extends AsyncTask<String, Void, String> {
-        private String status;
-
+        private String emailStatus = "";
         @Override
         protected String doInBackground(String... strings) {
-            String mName = strings[0];
-            OkHttpClient client = new OkHttpClient();
+
+
+            OkHttpClient client1 = new OkHttpClient();
             RequestBody formBody1 = new FormBody.Builder()
-                    .add("Name", mName)
+                    .add("email", lblEmail.getText().toString().trim())
                     .build();
             Request request1 = new Request.Builder()
-                    .url("http://sysnet.utcc.ac.th/aparcas/SelectNameMember.jsp")
+                    .url("http://sysnet.utcc.ac.th/aparcas/api/checkEmail.jsp")
                     .post(formBody1)
                     .build();
 
             try {
-                Response response = client.newCall(request1).execute();
-                status = response.body().string();
-                status = status.trim().toString();
-                return status;
+                Response response1 = client1.newCall(request1).execute();
+                emailStatus = response1.body().string();
+                emailStatus = emailStatus.trim().toString();
+                Log.i("Login", "email statuc: " + emailStatus);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Log.i("ben", "Name status: " + s);
-            if (status.equals("Success")) {
-
-                new CountDownTimer(4000, 10) {
-                    public void onTick(long millisUntilFinished) {
-                        txtError.setText("Use another Name");
-                    }
-
-                    public void onFinish() {
-                        txtError.setText("");
-                    }
-                }.start();
-
+            if (emailStatus.equals("0")) {
+                long lowerLimit = 1L;
+                long upperLimit = 999999999999999999L;
+                Random r = new Random();
+                long number = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
+                Log.i("number", String.valueOf(r));
+                OkHttpClient client = new OkHttpClient();
+                RequestBody formBody = new FormBody.Builder()
+                        .add("user_id", String.valueOf(number))
+                        .add("user_pwd", lblPassword.getText().toString().trim())
+                        .add("fname", lblFName.getText().toString().trim())
+                        .add("lname", lblLName.getText().toString().trim())
+                        .add("bdate", lblBD.getText().toString().trim())
+                        .add("email", lblEmail.getText().toString().trim())
+                        .build();
+                Request request = new Request.Builder()
+                        .url("http://sysnet.utcc.ac.th/aparcas/api/insert_user.jsp")
+                        .post(formBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    //message = response.body().string();
+                    // Do something with the response.
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "1";
             } else {
 
-                mAuth = FirebaseAuth.getInstance();
-                mAuthListener = new FirebaseAuth.AuthStateListener() {
-                    @Override
-                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-
-                        } else {
-
-                        }
-                        updateUI(user);
-                    }
-                };
-
-
-                signInAnonymously();
-
+                return "Fail";
             }
 
-        }
-    }
-
-    class CheckEmailTask extends AsyncTask<String, Void, String> {
-        private String status;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            String mEmail = strings[0];
-            OkHttpClient client = new OkHttpClient();
-            RequestBody formBody1 = new FormBody.Builder()
-                    .add("email", mEmail)
-                    .build();
-            Request request1 = new Request.Builder()
-                    .url("http://sysnet.utcc.ac.th/aparcas/SelectEmailMember.jsp")
-                    .post(formBody1)
-                    .build();
-
-            try {
-                Response response = client.newCall(request1).execute();
-                status = response.body().string();
-                status = status.trim().toString();
-                return status;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.i("ben", "Email status: " + s);
+            if (s.equals("1")) {
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                /*DBHelper db = new DBHelper(getApplicationContext());
+                db.updateStatus(1);
+                db.updateName(lblFName.getText().toString().trim());*/
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
 
-            if (status.equals("Success")) {
 
+            } else {
                 new CountDownTimer(4000, 10) {
                     public void onTick(long millisUntilFinished) {
                         txtError.setText("Use another email");
@@ -273,10 +195,34 @@ public class SignUpActivity extends BaseActivity {
                         txtError.setText("");
                     }
                 }.start();
-            }
-            check = false;
-        }
-    }*/
+                Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
 
+            }
+
+
+        }
+    }
+
+    class mDateSetListener implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            // getCalender();
+            int mYear = year;
+            int mMonth = monthOfYear;
+            int mDay = dayOfMonth;
+            lblBD.setText(new StringBuilder()
+                    // Month is 0 based so add 1
+                    .append(mYear).append("-")
+                    .append(mMonth + 1).append("-")
+                    .append(mDay).append("")
+            );
+            Log.i("Date", "" + lblBD.getText().toString());
+
+
+        }
     }
 }
+
