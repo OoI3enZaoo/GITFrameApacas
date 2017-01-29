@@ -1,8 +1,12 @@
 package com.admin.gitframeapacas;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,13 +23,25 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import static com.admin.gitframeapacas.DataHelper.sDistrictSuggestions;
 
 public class FeedSearchFragment extends Fragment {
 
     public static final long FIND_SUGGESTION_SIMULATED_DELAY = 250;
     static String TAG = "BlankFragment";
+    private static ProgressDialog dialog;
     //private static ProgressDialog mProgressDialog;
     FloatingSearchView mSearchDistrict;
     FloatingSearchView mSearchNavigate;
@@ -39,19 +55,13 @@ public class FeedSearchFragment extends Fragment {
 
         mSearchDistrict = (FloatingSearchView) v.findViewById(R.id.search_district);
         mSearchNavigate = (FloatingSearchView) v.findViewById(R.id.search_navigate);
-
-
-        //searchDistrict.attachNavigationDrawerToMenuButton(mDrawerLayout);
-        //DrawerLayout draw = (DrawerLayout)getActivity().findViewById(R.id.drawer_layout);
-        //searchDistrict.attachNavigationDrawerToMenuButton(draw);
-
-
-       /* mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("Loading...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.show();*/
-
-        //new JSONFeedLogTask2().execute();
+        dialog = new ProgressDialog(getActivity());
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("Loading. Please wait...2");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        new JSONFeedLogTask2(getActivity()).execute();
 
         setupFloatingSearch();
 
@@ -357,10 +367,14 @@ public class FeedSearchFragment extends Fragment {
         //state and it makes sense to call supper onBackPressed() and close the activity
         return mSearchDistrict.setSearchFocused(false);
     }
-/*
+
     private static class JSONFeedLogTask2 extends AsyncTask<String, Void, String> {
 
+        private Context mContext;
 
+        public JSONFeedLogTask2(Context context) {
+            mContext = context;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -374,50 +388,87 @@ public class FeedSearchFragment extends Fragment {
 
             OkHttpClient client = new OkHttpClient();
             Log.d(TAG, "doinbackground");
-            Request request = new Request.Builder()
-                    .url("http://sysnet.utcc.ac.th:8161/aparcas/GetDistrict2.jsp")
-                    .build();
+            DBUser dbUser = new DBUser(mContext);
+            DBGrid dbGrid = new DBGrid(mContext);
+            int gridstatus = dbUser.getGrid();
+            Log.i("Searchs", "" + gridstatus);
+            if (gridstatus == 0) {
 
-            try {
+                Request request = new Request.Builder()
+                        .url("http://sysnet.utcc.ac.th/aparcas/api/grid_lut.jsp")
+                        .build();
+                try {
 
-                int count = 1;
-                int rount2 = 0;
-                Response response;
-                response = client.newCall(request).execute();
-                String result2 = response.body().string();
-                Gson gson = new Gson();
-                Type collectionType = new TypeToken<Collection<DistrictResponse>>() {
-                }.getType();
-                Collection<DistrictResponse> enums = gson.fromJson(result2, collectionType);
-                DistrictResponse[] result = enums.toArray(new DistrictResponse[enums.size()]);
+                    int count = 1;
+                    int rount2 = 0;
+                    Response response;
+                    response = client.newCall(request).execute();
+                    String result2 = response.body().string();
+                    Gson gson = new Gson();
+                    Type collectionType = new TypeToken<Collection<DistrictResponse>>() {
+                    }.getType();
+                    Collection<DistrictResponse> enums = gson.fromJson(result2, collectionType);
+                    DistrictResponse[] result = enums.toArray(new DistrictResponse[enums.size()]);
 
-                //Log.i("MYRESULT: ", String.valueOf(result));
-                String[] checkSame = new String[result.length + 2];
+                    //Log.i("MYRESULT: ", String.valueOf(result));
+                    String[] checkSame = new String[result.length + 2];
 
-                for (int i = 0; i < result.length; i++) {
-                    String DName = result[i].getName();
-                    for (int j = 0; j < checkSame.length; j++) {
-                        if (checkSame[j] != null) {
-                            if (checkSame[j].equals(DName)) {
-                                count = 0;
-                                break;
-                                //   Log.i("resultben", "count == 0: " + DName);
+                    for (int i = 0; i < result.length; i++) {
+                        String sName = result[i].getSname();
+                        for (int j = 0; j < checkSame.length; j++) {
+                            if (checkSame[j] != null) {
+                                if (checkSame[j].equals(sName)) {
+                                    count = 0;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if (count == 1) {
+                        if (count == 1) {
+                            sDistrictSuggestions.add(rount2, new DistrictSuggestion(sName + ""));
+                            //  Log.i("resultben", "count == 1: " + DName);
+                            checkSame[i] = sName;
+                            rount2++;
+                            String scode = result[i].getScode();
+                            String sname = result[i].getSname();
+                            String dcode = result[i].getDcode();
+                            String dname = result[i].getDname();
+                            String pcode = result[i].getPcode();
+                            String pname = result[i].getPname();
+                            Log.i("griddata2", dbGrid.insertData(Integer.parseInt(scode), sname, Integer.parseInt(dcode), dname, Integer.parseInt(pcode), pname) + "");
+                            Log.i("griddata", "SCODE: " + scode);
+                            Log.i("griddata", "sname: " + sname);
+                            Log.i("griddata", "dcode: " + dcode);
+                            Log.i("griddata", "dname: " + dname);
+                            Log.i("griddata", "pcode: " + pcode);
+                            Log.i("griddata", "pname: " + pname);
+                            Log.i("griddata", "number of rows: " + dbGrid.numberOfRows());
+                        }
+                        count = 1;
 
-                        sDistrictSuggestions.add(rount2, new DistrictSuggestion(DName + ""));
-                        //  Log.i("resultben", "count == 1: " + DName);
-                        checkSame[i] = DName;
-                        rount2++;
                     }
-                    count = 1;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                dbUser.updateGrid(1);
+            } else {
+                Cursor res = dbGrid.getAllData();
+                if (res.getCount() == 0) {
+                    Log.i("griddata", "Nothing found");
+                } else {
+
+                    while (res.moveToNext()) {
+                        int rount = 0;
+                        String sName = res.getString(1);
+                        sDistrictSuggestions.add(rount, new DistrictSuggestion(sName + ""));
+                        rount++;
+                    }
+
                 }
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
+
+
             }
 
 
@@ -427,10 +478,10 @@ public class FeedSearchFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            mProgressDialog.dismiss();
+            dialog.dismiss();
 
         }
 
 
-    }*/
+    }
 }

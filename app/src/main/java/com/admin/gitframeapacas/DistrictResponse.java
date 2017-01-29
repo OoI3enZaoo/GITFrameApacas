@@ -3,85 +3,107 @@ package com.admin.gitframeapacas;
 
 public class DistrictResponse {
 
-    private String id;
-    private String name;
-    private String co;
-    private String no2;
-    private String o3;
-    private String so2;
-    private String pm25;
-    private String radio;
-    private String timestamp;
+    /**
+     * scode : 3602
+     * sname : แขวงสีกัน
+     * dcode : 1036
+     * dname : เขตดอนเมือง
+     * xmin : 669212
+     * xmax : 670212
+     * ymin : 1542488
+     * ymax : 1543488
+     * pname : กรุงเทพมหานคร
+     * pcode : 10
+     */
 
-    public String getId() {
-        return id;
+    private String scode;
+    private String sname;
+    private String dcode;
+    private String dname;
+    private String xmin;
+    private String xmax;
+    private String ymin;
+    private String ymax;
+    private String pname;
+    private String pcode;
+
+    public String getScode() {
+        return scode;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setScode(String scode) {
+        this.scode = scode;
     }
 
-    public String getName() {
-        return name;
+    public String getSname() {
+        return sname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSname(String sname) {
+        this.sname = sname;
     }
 
-    public String getCo() {
-        return co;
+    public String getDcode() {
+        return dcode;
     }
 
-    public void setCo(String co) {
-        this.co = co;
+    public void setDcode(String dcode) {
+        this.dcode = dcode;
     }
 
-    public String getNo2() {
-        return no2;
+    public String getDname() {
+        return dname;
     }
 
-    public void setNo2(String no2) {
-        this.no2 = no2;
+    public void setDname(String dname) {
+        this.dname = dname;
     }
 
-    public String getO3() {
-        return o3;
+    public String getXmin() {
+        return xmin;
     }
 
-    public void setO3(String o3) {
-        this.o3 = o3;
+    public void setXmin(String xmin) {
+        this.xmin = xmin;
     }
 
-    public String getSo2() {
-        return so2;
+    public String getXmax() {
+        return xmax;
     }
 
-    public void setSo2(String so2) {
-        this.so2 = so2;
+    public void setXmax(String xmax) {
+        this.xmax = xmax;
     }
 
-    public String getPm25() {
-        return pm25;
+    public String getYmin() {
+        return ymin;
     }
 
-    public void setPm25(String pm25) {
-        this.pm25 = pm25;
+    public void setYmin(String ymin) {
+        this.ymin = ymin;
     }
 
-    public String getRadio() {
-        return radio;
+    public String getYmax() {
+        return ymax;
     }
 
-    public void setRadio(String radio) {
-        this.radio = radio;
+    public void setYmax(String ymax) {
+        this.ymax = ymax;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getPname() {
+        return pname;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setPname(String pname) {
+        this.pname = pname;
+    }
+
+    public String getPcode() {
+        return pcode;
+    }
+
+    public void setPcode(String pcode) {
+        this.pcode = pcode;
     }
 }

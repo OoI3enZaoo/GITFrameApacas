@@ -9,17 +9,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.HashMap;
 
-public class DBHelper extends SQLiteOpenHelper {
+public class DBUser extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "Aparcas.db";
     public static final String CONTACTS_TABLE_NAME = "checklogin";
     public static final String CONTACTS_COLUMN_ID = "id";
     public static final String CONTACTS_COLUMN_STATUS = "status";
     public static final String CONTACTS_COLUMN_NAME = "name";
+    public static final String CONTACTS_COLUMN_GRID = "grid";
 
     private HashMap hp;
 
-    public DBHelper(Context context) {
+    public DBUser(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
@@ -28,11 +29,12 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table checklogin " +
-                        "(name text,status integer)"
+                        "(name text,status integer,grid integer)"
         );
 
+
         db.execSQL(
-                "INSERT INTO checklogin VALUES ('x',0)"
+                "INSERT INTO checklogin VALUES ('x',0,0)"
 
         );
 
@@ -50,7 +52,6 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("status", status);
-
         db.insert("checklogin", null, contentValues);
         return true;
     }
@@ -93,6 +94,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateGrid(int grid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("grid", grid);
+        db.update("checklogin", contentValues, null, null);
+        return true;
+    }
     public Integer deleteContact(int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("checklogin",
@@ -117,6 +125,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return Integer.parseInt(place);
     }
 
+    public int getGrid() {
+        int status = 0;
+        String place = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select grid from checklogin", null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_GRID));
+            res.moveToNext();
+        }
+        return Integer.parseInt(place);
+    }
     public String getName() {
         String place = null;
         SQLiteDatabase db = this.getReadableDatabase();

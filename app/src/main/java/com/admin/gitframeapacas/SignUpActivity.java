@@ -1,6 +1,7 @@
 package com.admin.gitframeapacas;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class SignUpActivity extends BaseActivity {
     public static int startYear;
     public static int startMonth;
     public static int startDay;
+    private static ProgressDialog dialog;
     public EditText lblFName;
     public EditText lblLName;
     public EditText lblBD;
@@ -40,7 +42,6 @@ public class SignUpActivity extends BaseActivity {
     private EditText lblEmail;
     private EditText lblPassword;
     private EditText lblPassword2;
-
     // private FirebaseAuth mAuth;
     //private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -108,7 +109,13 @@ public class SignUpActivity extends BaseActivity {
                 }
                 if (lblPassword.getText().toString().trim().equals(lblPassword2.getText().toString()) && !lblFName.getText().toString().trim().equals("") && !lblLName.getText().toString().trim().equals("")) {
                     Log.i("Login", "Success");
+                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    dialog.setMessage("Loading. Please wait...");
+                    dialog.setIndeterminate(true);
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.show();
                     new InsertUserTask().execute();
+
                 }
             }
         });
@@ -178,7 +185,7 @@ public class SignUpActivity extends BaseActivity {
             super.onPostExecute(s);
             if (s.equals("1")) {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                /*DBHelper db = new DBHelper(getApplicationContext());
+                /*DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
                 db.updateName(lblFName.getText().toString().trim());*/
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -198,6 +205,7 @@ public class SignUpActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Fail", Toast.LENGTH_SHORT).show();
 
             }
+            dialog.dismiss();
 
 
         }

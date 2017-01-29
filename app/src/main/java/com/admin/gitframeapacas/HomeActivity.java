@@ -63,8 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
 
-        startService(new Intent(getApplicationContext(), SendGasService.class));
-
+        //startService(new Intent(getApplicationContext(), SendGasService.class));
 
 
     }
@@ -225,7 +224,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_logout) {
 
             Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-            DBHelper db = new DBHelper(getApplicationContext());
+            DBUser db = new DBUser(getApplicationContext());
             db.updateStatus(0);
             db.updateName("");
             Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);

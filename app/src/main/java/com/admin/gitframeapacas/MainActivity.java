@@ -1,5 +1,6 @@
 package com.admin.gitframeapacas;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,7 +25,8 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = "ben2";
     EditText mID;
     EditText mPWD;
-
+    TextView txtSkip;
+    ProgressDialog dialog;
 
     @Override
 
@@ -34,15 +36,17 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         Button btnSignup = (Button) findViewById(R.id.btnSignup);
-        TextView txtSkip = (TextView) findViewById(R.id.txtSkip);
         mID = (EditText) findViewById(R.id.lbl_id);
         mPWD = (EditText) findViewById(R.id.lbl_pwd);
-
+        txtSkip = (TextView) findViewById(R.id.txtSkip);
+        dialog = new ProgressDialog(MainActivity.this);
         statusLogin();
         txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -51,6 +55,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
+                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                dialog.setMessage("Loading. Please wait...");
+                dialog.setIndeterminate(true);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
 
                 new CheckLogin().execute(mID.getText().toString().trim(), mPWD.getText().toString().trim());
 
@@ -66,7 +75,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void statusLogin() {
-        DBHelper db = new DBHelper(getApplicationContext());
+        DBUser db = new DBUser(getApplicationContext());
 
         int status = db.getStatus();
         String name = db.getName();
@@ -120,14 +129,18 @@ public class MainActivity extends BaseActivity {
             Log.i("checkLogin", "name: " + name);
             if (status.toString().trim().equals("0")) {
                 Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+
             } else {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                DBHelper db = new DBHelper(getApplicationContext());
+                DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
                 db.updateName(name);
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
             }
+            dialog.dismiss();
+
+
 
 
         }
