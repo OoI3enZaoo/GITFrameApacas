@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.R;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 

@@ -1,9 +1,11 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.admin.gitframeapacas.R;
 
 import org.eazegraph.lib.charts.ValueLineChart;
 import org.eazegraph.lib.models.ValueLinePoint;

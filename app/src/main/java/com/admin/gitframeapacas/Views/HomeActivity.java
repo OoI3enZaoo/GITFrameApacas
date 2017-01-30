@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,13 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment;
+import com.admin.gitframeapacas.Fragment.FeedFavoriteFragment;
+import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
+import com.admin.gitframeapacas.Fragment.FeedMapFragment;
+import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBUser;
 import com.arlib.floatingsearchview.FloatingSearchView;
 
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
-
-
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,15 +36,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
-    String mID;
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
         initUI();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -64,20 +67,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         //startService(new Intent(getApplicationContext(), SendGasService.class));
-
-
     }
 
-    /*public static void onAttachSearchViewToDrawer(FloatingSearchView searchView) {
-        searchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
-            onAttachSearchViewToDrawer(searchDistrict);
-
-    }*/
 
     @Override
     public void onBackPressed() {
         // do nothing.
     }
+
     private void initUI() {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -227,7 +224,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             DBUser db = new DBUser(getApplicationContext());
             db.updateStatus(0);
             db.updateName("");
-            Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent2);
         }
 
@@ -262,10 +259,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -296,7 +293,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-
 
 
 }

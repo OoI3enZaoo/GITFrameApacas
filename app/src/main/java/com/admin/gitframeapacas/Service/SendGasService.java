@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -78,7 +78,17 @@ public class SendGasService extends Service {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mqttThread = new MqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd);
+        mqttThread = new MqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd) {
+            @Override
+            public void createListener() {
+
+            }
+
+            @Override
+            public void createClient() {
+
+            }
+        };
         mqttThread.start();
 
     }// end of Random

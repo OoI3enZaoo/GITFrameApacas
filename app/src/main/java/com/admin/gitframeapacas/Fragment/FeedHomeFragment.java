@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.Service.SendGasService;
+import com.admin.gitframeapacas.Views.GraphGasActivity;
+import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 
@@ -19,7 +23,7 @@ import org.eazegraph.lib.models.BarModel;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
-import static com.admin.gitframeapacas.HomeActivity.MQTTRunning;
+import static com.admin.gitframeapacas.Views.HomeActivity.MQTTRunning;
 
 
 /**
@@ -36,13 +40,9 @@ public class FeedHomeFragment extends Fragment {
     private CustomGauge gauge;
     private TextView txtAQI;
     private Button mRandomGas;
-
-
     public FeedHomeFragment() {
 
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -54,9 +54,7 @@ public class FeedHomeFragment extends Fragment {
         mRandomGas = (Button) v.findViewById(R.id.btnRandomGas);
         loadData();
         return v;
-
     }
-
     private void loadData() {
 
         // final int[] random = {40, 60, 110, 210, 400};
@@ -66,6 +64,7 @@ public class FeedHomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //MQTTRunning = MQTTRunning == false;
+
                 if (MQTTRunning) {
                     getActivity().stopService(new Intent(getActivity(), SendGasService.class));
                     MQTTRunning = false;
@@ -73,6 +72,7 @@ public class FeedHomeFragment extends Fragment {
                     getActivity().startService(new Intent(getActivity(), SendGasService.class));
                     MQTTRunning = true;
                 }
+
 
 
 
@@ -108,6 +108,8 @@ public class FeedHomeFragment extends Fragment {
         });
 
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
+        mActionButtonPlus.clearAnimation();
+
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
 
             @Override

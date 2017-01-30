@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        tools:context="com.admin.gitframeapacas.FeedHomeFragment">
+        tools:context="com.admin.gitframeapacas.Fragment.FeedHomeFragment">
 
 
         <TextView
@@ -58,7 +58,7 @@
 
         <include
             android:id="@+id/include2"
-            layout="@layout/gas"
+            layout="@layout/custom_gauge"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

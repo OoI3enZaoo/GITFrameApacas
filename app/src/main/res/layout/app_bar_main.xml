@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".HomeActivity">
+    tools:context=".Views.HomeActivity">
 
     <fragment
         android:id="@+id/searchfragment"
-        android:name="com.admin.gitframeapacas.FeedSearchFragment"
+        android:name="com.admin.gitframeapacas.Fragment.FeedSearchFragment"
         android:layout_width="361dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

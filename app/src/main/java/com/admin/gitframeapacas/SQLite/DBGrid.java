@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.SQLite;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,16 +7,13 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * Created by Admin on 29/1/2560.
  */
 
 public class DBGrid extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "Aparcas2.db";
+    public static final String DATABASE_NAME = "Grid.db";
     public static final String CONTACTS_TABLE_NAME = "grid_lut";
     public static final String CONTACTS_COLUMN_SCODE = "scode";
     public static final String CONTACTS_COLUMN_SNAME = "sname";
@@ -25,7 +22,6 @@ public class DBGrid extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_PCODE = "pcode";
     public static final String CONTACTS_COLUMN_PNAME = "pname";
 
-    private HashMap hp;
 
     public DBGrid(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -51,7 +47,7 @@ public class DBGrid extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
         onCreate(db);
     }
 
@@ -72,24 +68,8 @@ public class DBGrid extends SQLiteOpenHelper {
     public int numberOfRows() {
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-
         return numRows;
     }
-
-    public ArrayList<String> getSname() {
-        ArrayList<String> snamelist = null;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select sname from grid_lut", null);
-        if (res.moveToFirst()) {
-            while (res.isAfterLast() == false) {
-                String name = res.getString(res.getColumnIndex(CONTACTS_COLUMN_SNAME));
-                snamelist.add(name);
-                res.moveToNext();
-            }
-        }
-        return snamelist;
-    }
-
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACTS_TABLE_NAME, null);

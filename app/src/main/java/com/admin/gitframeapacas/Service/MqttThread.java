@@ -1,5 +1,7 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Service;
 
+
+import android.util.Log;
 
 import net.sf.xenqtt.client.AsyncClientListener;
 import net.sf.xenqtt.client.AsyncMqttClient;
@@ -17,15 +19,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MqttThread implements Runnable {
+public abstract class MqttThread implements Runnable {
 
+    public AsyncClientListener mqttListener = null;
+    public MqttClient mqttClient = null;
+    public int mqttHandlerThreadPoolSize = 5;
     private BlockingQueue<JSONObject> messageQueue;
     private Thread innerThread;
     private boolean stopInnerThread = false;
     private String mqttBrokerURL;
-    private AsyncClientListener mqttListener = null;
-    private MqttClient mqttClient = null;
-    private int mqttHandlerThreadPoolSize = 5;
     private String mqttClientId;
     private boolean mqttCleanSession = false;
     private String mqttUser;
@@ -45,13 +47,18 @@ public class MqttThread implements Runnable {
         this.mqttPwd = mqttPwd;
     }
 
+    public MqttThread() {
+
+    }
+
     public void start() {
         try {
             createPublisher();
             innerThread = new Thread(this);
             innerThread.start();
         } catch (Exception e) {
-            System.out.println("start exception (MqttThread): " + e);
+
+            Log.i("MQT2", "start exception (MqttThread): " + e);
         }
     }
 
@@ -60,7 +67,7 @@ public class MqttThread implements Runnable {
             stopInnerThread = true;
             destroyPublisher();
         } catch (Exception e) {
-            System.out.println("stop exception (MqttThread): " + e);
+            Log.i("MQT2", "stop exception (MqttThread): " + e);
         }
     }
 
@@ -86,13 +93,7 @@ public class MqttThread implements Runnable {
     }
 
 
-    public boolean isStopInnerThread() {
-        return stopInnerThread;
-    }
 
-    public void setStopInnerThread(boolean stopInnerThread) {
-        this.stopInnerThread = stopInnerThread;
-    }
 
     public void createPublisher() {
         final CountDownLatch connectLatch = new CountDownLatch(1);
@@ -153,6 +154,17 @@ public class MqttThread implements Runnable {
         }
     }
 
+    public boolean isStopInnerThread() {
+        return stopInnerThread;
+    }
+
+    public void setStopInnerThread(boolean stopInnerThread) {
+        this.stopInnerThread = stopInnerThread;
+    }
+
+    public abstract void createListener();
+
+    public abstract void createClient();
     public void destroyPublisher() {
         if (!mqttClient.isClosed()) {
             mqttClient.disconnect();

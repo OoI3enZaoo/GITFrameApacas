@@ -29,7 +29,7 @@
             android:value="@string/app_id" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Views.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,46 +38,46 @@
         </activity>
 
         <activity
-            android:name=".HistoryActivity"
-            android:parentActivityName=".HistoryActivity"
+            android:name=".Views.HistoryActivity"
+            android:parentActivityName=".Views.HistoryActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".Views.SignUpActivity"></activity>
         <activity
-            android:name=".HelpActivity"
-            android:parentActivityName=".HelpActivity"
+            android:name=".Views.HelpActivity"
+            android:parentActivityName=".Views.HelpActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
         <activity
-            android:name=".SettingActivity"
-            android:parentActivityName=".SettingActivity"
+            android:name=".Views.SettingActivity"
+            android:parentActivityName=".Views.SettingActivity"
             android:theme="@style/AppTheme.Menu"></activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".Views.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".DistrictActivity"
-            android:parentActivityName=".DistrictActivity"
+            android:name=".Views.DistrictActivity"
+            android:parentActivityName=".Views.DistrictActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".ProfileActivity"
+            android:name=".Views.ProfileActivity"
+            android:parentActivityName=".Views.ProfileActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
         <activity
-            android:name=".RecommendActivity"
-            android:parentActivityName=".RecommendActivity"
+            android:name=".Views.RecommendActivity"
+            android:parentActivityName=".Views.RecommendActivity"
             android:theme="@style/AppTheme.Menu"></activity>
         <activity
-            android:name=".GraphGasActivity"
-            android:parentActivityName=".GraphGasActivity"
+            android:name=".Views.GraphGasActivity"
+            android:parentActivityName=".Views.GraphGasActivity"
             android:theme="@style/AppTheme.Menu"></activity>
 
 
         <service android:name="org.eclipse.paho.android.service.MqttService"></service>
         <service
-            android:name=".SendGasService"
+            android:name=".Service.SendGasService"
             android:process=":my_service" />
     </application>
 

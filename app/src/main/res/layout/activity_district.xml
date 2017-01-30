@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context="com.admin.gitframeapacas.DistrictActivity">
+    tools:context="com.admin.gitframeapacas.Views.DistrictActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
 
     <include
-        layout="@layout/gas"
+        layout="@layout/custom_gauge"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

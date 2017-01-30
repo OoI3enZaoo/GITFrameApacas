@@ -1,15 +1,19 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBUser;
 
 import java.io.IOException;
 
@@ -20,7 +24,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class MainActivity extends BaseActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "ben2";
     EditText mID;
@@ -33,13 +37,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         Button btnSignup = (Button) findViewById(R.id.btnSignup);
         mID = (EditText) findViewById(R.id.lbl_id);
         mPWD = (EditText) findViewById(R.id.lbl_pwd);
         txtSkip = (TextView) findViewById(R.id.txtSkip);
-        dialog = new ProgressDialog(MainActivity.this);
+        dialog = new ProgressDialog(LoginActivity.this);
         statusLogin();
         txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
-        tools:context="com.admin.gitframeapacas.FeedAboutAQIFragment">
+        tools:context="com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment">
 
 
         <TextView

@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.admin.gitframeapacas.R;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -29,7 +32,7 @@ import okhttp3.Response;
  * Created by Admin on 12/11/2559.
  */
 
-public class SignUpActivity extends BaseActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     public static int startYear;
     public static int startMonth;

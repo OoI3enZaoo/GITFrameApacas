@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Views;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
-
+import com.admin.gitframeapacas.R;
 
 
 public class HistoryActivity extends AppCompatActivity {

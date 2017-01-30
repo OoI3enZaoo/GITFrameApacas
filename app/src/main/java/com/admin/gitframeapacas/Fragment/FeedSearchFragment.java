@@ -1,4 +1,4 @@
-package com.admin.gitframeapacas;
+package com.admin.gitframeapacas.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.DataHelper;
+import com.admin.gitframeapacas.DistrictResponse;
+import com.admin.gitframeapacas.DistrictSuggestion;
+import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBGrid;
+import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Views.DistrictActivity;
+import com.admin.gitframeapacas.Views.ProfileActivity;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
