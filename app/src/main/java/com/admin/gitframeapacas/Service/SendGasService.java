@@ -29,7 +29,6 @@ public class SendGasService extends Service {
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
     private String sssn = "aparcas_raw";
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -45,12 +44,9 @@ public class SendGasService extends Service {
                 if (MQTTRunning) {
                     MQTTSender();
                 }
-
             }
         }, 0, 3000);
-
     }
-
     public void onDestroy() {
         Toast.makeText(getApplication(), "Stop Service!", Toast.LENGTH_LONG).show();
     }

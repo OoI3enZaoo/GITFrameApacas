@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText mID;
     EditText mPWD;
     TextView txtSkip;
-    ProgressDialog dialog;
+    private ProgressDialog dialog;
 
     @Override
 
@@ -49,8 +49,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                DBUser db = new DBUser(getApplicationContext());
+                db.updateStatus(1);
+                db.updateUserType("user");
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
+
 
             }
         });
@@ -139,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                 DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
                 db.updateName(name);
+                db.updateUserType("member");
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
             }

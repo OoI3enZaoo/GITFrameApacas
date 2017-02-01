@@ -12,7 +12,8 @@ public class DBUser extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "User.db";
     public static final String CONTACTS_TABLE_NAME = "user";
     public static final String CONTACTS_COLUMN_NAME = "name";
-    public static final String CONTACTS_COLUMN_STATUS = "status";
+    public static final String CONTACTS_COLUMN_STATUS = "statusLogin";
+    public static final String CONTACTS_COLUMN_TYPE = "usertype";
     public static final String CONTACTS_COLUMN_GRID = "grid";
 
     public DBUser(Context context) {
@@ -27,12 +28,15 @@ public class DBUser extends SQLiteOpenHelper {
                         "(" +
                         CONTACTS_COLUMN_NAME + " text," +
                         CONTACTS_COLUMN_STATUS + " integer," +
-                        CONTACTS_COLUMN_GRID + " integer" +
+                        CONTACTS_COLUMN_GRID + " integer," +
+                        CONTACTS_COLUMN_TYPE + " text" +
+
+
                         ")"
         );
 
         db.execSQL(
-                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0)"
+                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'')"
 
         );
     }
@@ -78,6 +82,13 @@ public class DBUser extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateUserType(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACTS_COLUMN_TYPE, name);
+        db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
+        return true;
+    }
 
 
     public int getStatus() {
@@ -116,6 +127,21 @@ public class DBUser extends SQLiteOpenHelper {
 
         while (res.isAfterLast() == false) {
             place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME));
+            res.moveToNext();
+        }
+
+        return place;
+    }
+
+    public String getUserType() {
+        String place = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select " + CONTACTS_COLUMN_TYPE + " from " + CONTACTS_TABLE_NAME, null);
+
+        res.moveToFirst();
+
+        while (res.isAfterLast() == false) {
+            place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_TYPE));
             res.moveToNext();
         }
 

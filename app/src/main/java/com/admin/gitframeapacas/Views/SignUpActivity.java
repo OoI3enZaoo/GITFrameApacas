@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBUser;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -38,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
     public static int startMonth;
     public static int startDay;
     private static ProgressDialog dialog;
+    private static String TAG = "BENSignUpActivity";
     public EditText lblFName;
     public EditText lblLName;
     public EditText lblBD;
@@ -50,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     public SignUpActivity() {
     }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,20 +66,20 @@ public class SignUpActivity extends AppCompatActivity {
         lblFName = (EditText) findViewById(R.id.lblFName);
         lblLName = (EditText) findViewById(R.id.lblLName);
         lblBD = (EditText) findViewById(R.id.lblBD);
-
+        dialog = new ProgressDialog(SignUpActivity.this);
 
         lblBD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Signup", "click");
+                Log.i(TAG, "lblBD Click");
                 Calendar c = Calendar.getInstance();
                 int mYear = c.get(Calendar.YEAR);
                 int mMonth = c.get(Calendar.MONTH);
                 int mDay = c.get(Calendar.DAY_OF_MONTH);
                 System.out.println("the selected " + mDay);
-                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this,
+                DatePickerDialog date = new DatePickerDialog(SignUpActivity.this,
                         new mDateSetListener(), mYear, mMonth, mDay);
-                dialog.show();
+                date.show();
 
             }
         });
@@ -87,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSummitAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, "Submit Click");
                 if (lblEmail.getText().toString().trim().equals("") && lblPassword.getText().toString().trim().equals("") && lblPassword2.getText().toString().trim().equals("") && lblFName.getText().toString().trim().equals("") && lblLName.getText().toString().trim().equals("")) {
 
                     new CountDownTimer(4000, 10) {
@@ -100,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }.start();
                 }
                 if (!lblPassword.getText().toString().equals("") && !lblPassword2.getText().toString().equals("") && !lblPassword.getText().toString().trim().equals(lblPassword2.getText().toString())) {
-                    Log.i("Login", "Not Same Password");
+                    Log.i(TAG, "Password not equal");
                     new CountDownTimer(4000, 10) {
                         public void onTick(long millisUntilFinished) {
                             txtError.setText("Check your Password");
@@ -111,7 +113,8 @@ public class SignUpActivity extends AppCompatActivity {
                     }.start();
                 }
                 if (lblPassword.getText().toString().trim().equals(lblPassword2.getText().toString()) && !lblFName.getText().toString().trim().equals("") && !lblLName.getText().toString().trim().equals("")) {
-                    Log.i("Login", "Success");
+
+                    Log.i(TAG, "Call AsyncTask InsertUserTask()");
                     dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                     dialog.setMessage("Loading. Please wait...");
                     dialog.setIndeterminate(true);
@@ -130,7 +133,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-
+            Log.i(TAG, "doInBackground");
             OkHttpClient client1 = new OkHttpClient();
             RequestBody formBody1 = new FormBody.Builder()
                     .add("email", lblEmail.getText().toString().trim())
@@ -144,19 +147,19 @@ public class SignUpActivity extends AppCompatActivity {
                 Response response1 = client1.newCall(request1).execute();
                 emailStatus = response1.body().string();
                 emailStatus = emailStatus.trim().toString();
-                Log.i("Login", "email statuc: " + emailStatus);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
             if (emailStatus.equals("0")) {
                 long lowerLimit = 1L;
-                long upperLimit = 999999999999999999L;
+                long upperLimit = 9999999999999999L;
                 Random r = new Random();
                 long number = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
                 Log.i("number", String.valueOf(r));
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()
+
                         .add("user_id", String.valueOf(number))
                         .add("user_pwd", lblPassword.getText().toString().trim())
                         .add("fname", lblFName.getText().toString().trim())
@@ -178,6 +181,7 @@ public class SignUpActivity extends AppCompatActivity {
                 return "1";
             } else {
 
+                Log.i(TAG, "Email Same");
                 return "Fail";
             }
 
@@ -186,11 +190,14 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.i(TAG, "onPostExcute");
             if (s.equals("1")) {
+                Log.i(TAG, "Login Success");
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                /*DBUser db = new DBUser(getApplicationContext());
+                DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
-                db.updateName(lblFName.getText().toString().trim());*/
+                db.updateName(lblFName.getText().toString().trim());
+                db.updateUserType("member");
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
 
@@ -200,7 +207,6 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onTick(long millisUntilFinished) {
                         txtError.setText("Use another email");
                     }
-
                     public void onFinish() {
                         txtError.setText("");
                     }

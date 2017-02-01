@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
 import com.admin.gitframeapacas.Fragment.FeedMapFragment;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.SendGasService;
 import com.arlib.floatingsearchview.FloatingSearchView;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     private static DrawerLayout mDrawerLayout;
+    private static String TAG = "BENHomeActivity";
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
@@ -46,8 +49,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         initUI();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +67,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
 
-        //startService(new Intent(getApplicationContext(), SendGasService.class));
+        startService(new Intent(getApplicationContext(), SendGasService.class));
     }
 
 
@@ -77,6 +78,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void initUI() {
 
+        Log.i(TAG, "initUI");
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         final ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(mSectionsPagerAdapter);
@@ -272,13 +274,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
+                    Log.i(TAG, "FeedHomeFragment");
                     return new FeedHomeFragment();
-
                 case 1:
+                    Log.i(TAG, "FeedFavoriteFragment");
                     return new FeedFavoriteFragment();
                 case 2:
+                    Log.i(TAG, "FeedMapFragment");
                     return new FeedMapFragment();
                 case 3:
+                    Log.i(TAG, "FeedAboutAQIFragment");
                     return new FeedAboutAQIFragment();
 
 

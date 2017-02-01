@@ -1,9 +1,14 @@
 package com.admin.gitframeapacas.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.SendGasService;
 import com.admin.gitframeapacas.Views.GraphGasActivity;
 import com.admin.gitframeapacas.Views.RecommendActivity;
@@ -32,35 +38,79 @@ import static com.admin.gitframeapacas.Views.HomeActivity.MQTTRunning;
 
 public class FeedHomeFragment extends Fragment {
 
-    private static final String TAG = "AnonymousAuth";
 
-
+    private static String TAG = "BENFeedHomeFragment";
     private BarChart mBarChart;
     private FloatingActionButtonPlus mActionButtonPlus;
     private CustomGauge gauge;
     private TextView txtAQI;
     private Button mRandomGas;
+
     public FeedHomeFragment() {
 
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        final View v = inflater.inflate(R.layout.fragment_home, container, false);
         mBarChart = (BarChart) v.findViewById(R.id.barchart);
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
         mRandomGas = (Button) v.findViewById(R.id.btnRandomGas);
+        final ConstraintLayout view = (ConstraintLayout) v.findViewById(R.id.fragment_home);
+        final ViewGroup parent = (ViewGroup) view.getParent();
         loadData();
+        DBUser db = new DBUser(getActivity());
+        String user_type = db.getUserType();
+        if (user_type.equals("member")) {
+            Log.i(TAG, "You are member");
+
+
+        } else {//user
+            Log.i(TAG, "You are user");
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    getActivity());
+
+            alertDialogBuilder.setTitle("APARCAS System");
+            alertDialogBuilder
+                    .setMessage("คุณมีอุปกรณ์เซ็นเซอร์ตรวจจับสภาพอากาศหรือไม่")
+                    .setCancelable(false)
+                    .setPositiveButton("มี", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            Log.i(TAG, "มีเซ็นเซอร์");
+                            gauge.setVisibility(View.GONE);
+                            txtAQI.setVisibility(View.GONE);
+                            dialog.cancel();
+
+                        }
+                    })
+                    .setNegativeButton("ไม่มี", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            Log.i(TAG, "ไม่มีเซ็เนซอร์");
+                            dialog.cancel();
+                            Snackbar snackbar = Snackbar.make(view, "หากคุณมีเซ็นเซอร์ คุณสามารถเข้าไปเปิดการใช้งานที่ตั้งค่าได้ในภายหลัง", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+                    });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+        }
         return v;
     }
     private void loadData() {
 
+        Log.i(TAG, "loadData");
         // final int[] random = {40, 60, 110, 210, 400};
         mRandomGas.setOnClickListener(new View.OnClickListener() {
             //    int count = 0;
-
             @Override
             public void onClick(View view) {
                 //MQTTRunning = MQTTRunning == false;
