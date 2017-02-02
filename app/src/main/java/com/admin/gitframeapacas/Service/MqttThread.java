@@ -53,6 +53,8 @@ public abstract class MqttThread implements Runnable {
 
     public void start() {
         try {
+            createListener();
+            createClient();
             createPublisher();
             innerThread = new Thread(this);
             innerThread.start();
@@ -76,6 +78,7 @@ public abstract class MqttThread implements Runnable {
         // TODO Auto-generated method stub
         while (!stopInnerThread) {
             try {
+                Thread.sleep(100);
                 JSONObject event = messageQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (event != null) sendMessage(event);
             } catch (Exception e) {
@@ -154,6 +157,7 @@ public abstract class MqttThread implements Runnable {
         }
     }
 
+
     public boolean isStopInnerThread() {
         return stopInnerThread;
     }
@@ -161,14 +165,11 @@ public abstract class MqttThread implements Runnable {
     public void setStopInnerThread(boolean stopInnerThread) {
         this.stopInnerThread = stopInnerThread;
     }
-
     public abstract void createListener();
-
     public abstract void createClient();
     public void destroyPublisher() {
         if (!mqttClient.isClosed()) {
             mqttClient.disconnect();
         }
     }
-
 }

@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
-import com.admin.gitframeapacas.Service.SendGasService;
+import com.admin.gitframeapacas.Service.SetGasService;
 import com.admin.gitframeapacas.Views.GraphGasActivity;
 import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
@@ -116,10 +116,10 @@ public class FeedHomeFragment extends Fragment {
                 //MQTTRunning = MQTTRunning == false;
 
                 if (MQTTRunning) {
-                    getActivity().stopService(new Intent(getActivity(), SendGasService.class));
+                    getActivity().stopService(new Intent(getActivity(), SetGasService.class));
                     MQTTRunning = false;
                 } else {
-                    getActivity().startService(new Intent(getActivity(), SendGasService.class));
+                    getActivity().startService(new Intent(getActivity(), SetGasService.class));
                     MQTTRunning = true;
                 }
 

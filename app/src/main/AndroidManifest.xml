@@ -77,7 +77,10 @@
 
         <service android:name="org.eclipse.paho.android.service.MqttService"></service>
         <service
-            android:name=".Service.SendGasService"
+            android:name=".Service.SetGasService"
+            android:process=":my_service" />
+        <service
+            android:name=".Service.GetGasService"
             android:process=":my_service" />
     </application>
 

@@ -23,7 +23,8 @@ import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
 import com.admin.gitframeapacas.Fragment.FeedMapFragment;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
-import com.admin.gitframeapacas.Service.SendGasService;
+import com.admin.gitframeapacas.Service.GetGasService;
+import com.admin.gitframeapacas.Service.SetGasService;
 import com.arlib.floatingsearchview.FloatingSearchView;
 
 import java.util.ArrayList;
@@ -67,7 +68,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
 
-        startService(new Intent(getApplicationContext(), SendGasService.class));
+        startService(new Intent(getApplicationContext(), SetGasService.class));
+        startService(new Intent(getApplicationContext(), GetGasService.class));
     }
 
 
@@ -138,30 +140,30 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     case 0:
 
 
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
                             searchDistrict.setVisibility(View.VISIBLE);
                         }
-                        break;
+                        break;*/
 
                     case 1:
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
                             searchDistrict.setVisibility(View.VISIBLE);
                         }
-                        break;
+                        break;*/
                     case 2:
-                        if (searchDistrict.getVisibility() == View.VISIBLE) {
+                        /*if (searchDistrict.getVisibility() == View.VISIBLE) {
                             searchDistrict.setVisibility(View.GONE);
                             searchNavigate.setVisibility(View.VISIBLE);
                         }
-                        break;
+                        break;*/
                     case 3:
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
@@ -169,7 +171,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         }
 
                         break;
-
+*/
                 }
             }
 

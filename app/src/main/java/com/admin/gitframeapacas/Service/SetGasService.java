@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by Admin on 29/1/2560.
  */
 
-public class SendGasService extends Service {
+public class SetGasService extends Service {
     public static boolean MQTTRunning = true;
     private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
     private MqttThread mqttThread = null;
@@ -56,16 +56,16 @@ public class SendGasService extends Service {
         try {
             Random rand = new Random();
             int option = rand.nextInt(4) + 1;
-            obj.put("id", new SendGasService.RandomGas().id());
-            obj.put("lat", new SendGasService.RandomGas().lat(option));
-            obj.put("lon", new SendGasService.RandomGas().lon(option));
-            obj.put("co", new SendGasService.RandomGas().co());
-            obj.put("no2", new SendGasService.RandomGas().no2());
-            obj.put("o3", new SendGasService.RandomGas().o3());
-            obj.put("so2", new SendGasService.RandomGas().so2());
-            obj.put("pm25", new SendGasService.RandomGas().pm25());
-            obj.put("rad", new SendGasService.RandomGas().rad());
-            obj.put("tstamp", new SendGasService.RandomGas().tstamp());
+            obj.put("id", new SetGasService.RandomGas().id());
+            obj.put("lat", new SetGasService.RandomGas().lat(option));
+            obj.put("lon", new SetGasService.RandomGas().lon(option));
+            obj.put("co", new SetGasService.RandomGas().co());
+            obj.put("no2", new SetGasService.RandomGas().no2());
+            obj.put("o3", new SetGasService.RandomGas().o3());
+            obj.put("so2", new SetGasService.RandomGas().so2());
+            obj.put("pm25", new SetGasService.RandomGas().pm25());
+            obj.put("rad", new SetGasService.RandomGas().rad());
+            obj.put("tstamp", new SetGasService.RandomGas().tstamp());
         } catch (JSONException e) {
             e.printStackTrace();
         }
