@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Data.DistrictResponse;
 import com.admin.gitframeapacas.DataHelper;
-import com.admin.gitframeapacas.DistrictResponse;
 import com.admin.gitframeapacas.DistrictSuggestion;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBGrid;

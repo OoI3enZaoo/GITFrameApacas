@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class SetGasService extends Service {
     public static boolean MQTTRunning = true;
     private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
-    private MqttThread mqttThread = null;
+    private SetMqttThread setMqttThread = null;
     private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
@@ -74,7 +74,7 @@ public class SetGasService extends Service {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mqttThread = new MqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd) {
+        setMqttThread = new SetMqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd) {
             @Override
             public void createListener() {
 
@@ -85,7 +85,7 @@ public class SetGasService extends Service {
 
             }
         };
-        mqttThread.start();
+        setMqttThread.start();
 
     }// end of Random
 

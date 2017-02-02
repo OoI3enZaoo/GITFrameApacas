@@ -1,12 +1,14 @@
 package com.admin.gitframeapacas.Service;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.TextView;
+
+import com.admin.gitframeapacas.Fragment.FeedMapFragment;
 
 import net.sf.xenqtt.client.AsyncClientListener;
 import net.sf.xenqtt.client.AsyncMqttClient;
@@ -31,24 +33,19 @@ public class GetGasService extends Service {
     private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
-    private Hashtable<String, MqttThread> mqttThreadHT = new Hashtable<String, MqttThread>();
-    private Handler handler = null;
+    private Hashtable<String, GetMqttThread> mqttThreadHT = new Hashtable<String, GetMqttThread>();
     private String sssn = "admin";
     private String topic = "aparcas_raw";
-    private TextView tstamp;
 
     @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
 
-        MqttThread mqttThread = createMQTTThread(sssn, topic);
+        GetMqttThread mqttThread = createMQTTThread(sssn, topic);
         mqttThread.start();
         mqttThreadHT.put(sssn, mqttThread);
 
@@ -56,10 +53,9 @@ public class GetGasService extends Service {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public IBinder onBind(Intent intent) {
+        return null;
     }
-
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
@@ -67,9 +63,21 @@ public class GetGasService extends Service {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Log.i(TAG, "In onTaskRemoved");
+    }
 
-    private MqttThread createMQTTThread(final String sssn, final String topic) {
-        return new MqttThread() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    private GetMqttThread createMQTTThread(final String sssn, final String topic) {
+        return new GetMqttThread() {
             @Override
             public void createListener() {
                 Log.i(TAG, "createListener");
@@ -84,12 +92,13 @@ public class GetGasService extends Service {
                         final PublishMessage msg = message;
                         String mMsg = msg.getPayloadString().toString();
                         Log.i(TAG, "publishReceived: " + mMsg);
-                        //tstamp.setText("");
-                        //text = data.getLat();
 
 
-                        //tstamp.setText(tstamp.getText() +  "\n"  +data.getLat());
-                        //Toast.makeText(getApplicationContext(), "tstamp: ", Toast.LENGTH_SHORT).show();
+                        Intent broadcastIntent = new Intent();
+                        broadcastIntent.setAction(FeedMapFragment.mBroadcastStringAction);
+                        broadcastIntent.putExtra("Data", mMsg);
+                        sendBroadcast(broadcastIntent);
+
                         message.ack();
                     }
 
@@ -156,8 +165,9 @@ public class GetGasService extends Service {
                 }
             }//end createClient
 
-        };//end new MqttThread
+        };//end new SetMqttThread
 
     }//end createMQTTThread()
+
 
 }

@@ -7,11 +7,15 @@ import android.support.v7.widget.Toolbar;
 
 import com.admin.gitframeapacas.R;
 
+
 /**
  * Created by Admin on 8/1/2560.
  */
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private String TAG = "BENProfileActivity";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,4 +28,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
+
+
 }

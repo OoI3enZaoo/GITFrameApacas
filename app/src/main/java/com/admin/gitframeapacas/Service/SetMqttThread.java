@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class MqttThread implements Runnable {
+public abstract class SetMqttThread implements Runnable {
 
     public AsyncClientListener mqttListener = null;
     public MqttClient mqttClient = null;
@@ -36,7 +36,7 @@ public abstract class MqttThread implements Runnable {
     private String sssn;
     private int counter = 0;
 
-    public MqttThread(String sssn, BlockingQueue<JSONObject> messageQueue, String mqttBrokerURL, String mqttUser, String mqttPwd) {
+    public SetMqttThread(String sssn, BlockingQueue<JSONObject> messageQueue, String mqttBrokerURL, String mqttUser, String mqttPwd) {
         super();
         this.messageQueue = messageQueue;
         this.mqttBrokerURL = mqttBrokerURL;
@@ -47,20 +47,18 @@ public abstract class MqttThread implements Runnable {
         this.mqttPwd = mqttPwd;
     }
 
-    public MqttThread() {
+    public SetMqttThread() {
 
     }
 
     public void start() {
         try {
-            createListener();
-            createClient();
             createPublisher();
             innerThread = new Thread(this);
             innerThread.start();
         } catch (Exception e) {
 
-            Log.i("MQT2", "start exception (MqttThread): " + e);
+            Log.i("MQT2", "start exception (SetMqttThread): " + e);
         }
     }
 
@@ -69,7 +67,7 @@ public abstract class MqttThread implements Runnable {
             stopInnerThread = true;
             destroyPublisher();
         } catch (Exception e) {
-            Log.i("MQT2", "stop exception (MqttThread): " + e);
+            Log.i("MQT2", "stop exception (SetMqttThread): " + e);
         }
     }
 
@@ -82,7 +80,7 @@ public abstract class MqttThread implements Runnable {
                 JSONObject event = messageQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (event != null) sendMessage(event);
             } catch (Exception e) {
-                System.out.println("run exception (MqttThread): " + e);
+                System.out.println("run exception (SetMqttThread): " + e);
             }//end try
         }//end while
     }
