@@ -9,7 +9,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
@@ -29,6 +28,8 @@ public class SetGasService extends Service {
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
     private String sssn = "aparcas_raw";
+
+    private String TAG = "BENSetGasService";
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -56,16 +57,16 @@ public class SetGasService extends Service {
         try {
             Random rand = new Random();
             int option = rand.nextInt(4) + 1;
-            obj.put("id", new SetGasService.RandomGas().id());
-            obj.put("lat", new SetGasService.RandomGas().lat(option));
-            obj.put("lon", new SetGasService.RandomGas().lon(option));
-            obj.put("co", new SetGasService.RandomGas().co());
-            obj.put("no2", new SetGasService.RandomGas().no2());
-            obj.put("o3", new SetGasService.RandomGas().o3());
-            obj.put("so2", new SetGasService.RandomGas().so2());
-            obj.put("pm25", new SetGasService.RandomGas().pm25());
-            obj.put("rad", new SetGasService.RandomGas().rad());
-            obj.put("tstamp", new SetGasService.RandomGas().tstamp());
+            obj.put("uid", new RandomGas().id());
+            obj.put("lat", new RandomGas().lat(option));
+            obj.put("lon", new RandomGas().lon(option));
+            obj.put("co", new RandomGas().co());
+            obj.put("no2", new RandomGas().no2());
+            obj.put("o3", new RandomGas().o3());
+            obj.put("so2", new RandomGas().so2());
+            obj.put("pm25", new RandomGas().pm25());
+            obj.put("rad", new RandomGas().rad());
+            obj.put("ts", new RandomGas().tstamp());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -182,11 +183,15 @@ public class SetGasService extends Service {
             return rand.nextFloat() * (radmax - radmin) + radmin;
         }
 
-        String tstamp() {
+        int tstamp() {
             Date dNow = new Date();
-            SimpleDateFormat ft =
+            /*SimpleDateFormat ft =
                     new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
-            return ft.format(dNow);
+            ft.format(dNow);*/
+            long unixTime = System.currentTimeMillis() / 1000;
+
+
+            return (int) unixTime;
         }
 
     }

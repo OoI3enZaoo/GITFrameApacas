@@ -22,6 +22,8 @@ import com.admin.gitframeapacas.R;
  */
 
 public class RecommendActivity extends AppCompatActivity {
+
+    public static int mItem = 1;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,7 @@ public class RecommendActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
 
-            return 8;
+            return mItem;
         }
     }
 

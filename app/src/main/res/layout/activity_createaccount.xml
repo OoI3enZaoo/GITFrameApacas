@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.admin.gitframeapacas.Views.SignUpActivity">
 
 
     <ImageView
         android:id="@+id/logo"
         style="@style/CustomLogoImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="385dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="0dp"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop"
-        app:layout_constraintHorizontal_bias="0.54"
+        android:scaleType="fitCenter"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

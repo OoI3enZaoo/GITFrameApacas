@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.admin.gitframeapacas.Fragment.FeedMapFragment;
+import com.admin.gitframeapacas.Fragment.FeedMapRealtimeFragment;
 
 import net.sf.xenqtt.client.AsyncClientListener;
 import net.sf.xenqtt.client.AsyncMqttClient;
@@ -95,7 +95,7 @@ public class GetGasService extends Service {
 
 
                         Intent broadcastIntent = new Intent();
-                        broadcastIntent.setAction(FeedMapFragment.mBroadcastStringAction);
+                        broadcastIntent.setAction(FeedMapRealtimeFragment.mBroadcastStringAction);
                         broadcastIntent.putExtra("Data", mMsg);
                         sendBroadcast(broadcastIntent);
 

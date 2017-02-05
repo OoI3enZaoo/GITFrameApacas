@@ -24,7 +24,7 @@
                 app:fabSize="mini" />
         </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
-        <com.lzp.floatingactionbuttonplus.FabTagLayout
+        <!--<com.lzp.floatingactionbuttonplus.FabTagLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:tagText="Chart">
@@ -35,7 +35,7 @@
                 android:src="@drawable/ic_chart"
                 app:backgroundTint="#4284E4"
                 app:fabSize="mini" />
-        </com.lzp.floatingactionbuttonplus.FabTagLayout>
+        </com.lzp.floatingactionbuttonplus.FabTagLayout>-->
 
     </com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus>
 </RelativeLayout>

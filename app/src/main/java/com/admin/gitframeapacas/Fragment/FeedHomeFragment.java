@@ -9,14 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
-import com.admin.gitframeapacas.Service.SetGasService;
-import com.admin.gitframeapacas.Views.GraphGasActivity;
 import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
@@ -25,8 +22,6 @@ import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
 
 import pl.pawelkleczkowski.customgauge.CustomGauge;
-
-import static com.admin.gitframeapacas.Views.HomeActivity.MQTTRunning;
 
 
 /**
@@ -41,7 +36,7 @@ public class FeedHomeFragment extends Fragment {
     private FloatingActionButtonPlus mActionButtonPlus;
     private CustomGauge gauge;
     private TextView txtAQI;
-    private Button mRandomGas;
+
 
     public FeedHomeFragment() {
 
@@ -54,8 +49,29 @@ public class FeedHomeFragment extends Fragment {
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
-        mRandomGas = (Button) v.findViewById(R.id.btnRandomGas);
+
         final ConstraintLayout view = (ConstraintLayout) v.findViewById(R.id.fragment_home);
+
+        gauge.setValue(120);
+        txtAQI.setText("120");
+
+        if (gauge.getValue() > 0) {
+            gauge.setPointStartColor(Color.parseColor("#91a7ff"));
+
+        }
+        if (gauge.getValue() > 50) {
+            gauge.setPointStartColor(Color.parseColor("#42bd41"));
+        }
+        if (gauge.getValue() > 100) {
+            gauge.setPointStartColor(Color.parseColor("#fff176"));
+
+        }
+        if (gauge.getValue() > 200) {
+            gauge.setPointStartColor(Color.parseColor("#ffb74d"));
+        }
+        if (gauge.getValue() > 300) {
+            gauge.setPointStartColor(Color.parseColor("#f36c60"));
+        }
 
         loadData();
         DBUser db = new DBUser(getActivity());
@@ -75,19 +91,8 @@ public class FeedHomeFragment extends Fragment {
 
         Log.i(TAG, "loadData");
         // final int[] random = {40, 60, 110, 210, 400};
-        mRandomGas.setOnClickListener(new View.OnClickListener() {
-            //    int count = 0;
-            @Override
-            public void onClick(View view) {
-                //MQTTRunning = MQTTRunning == false;
 
-                if (MQTTRunning) {
-                    getActivity().stopService(new Intent(getActivity(), SetGasService.class));
-                    MQTTRunning = false;
-                } else {
-                    getActivity().startService(new Intent(getActivity(), SetGasService.class));
-                    MQTTRunning = true;
-                }
+
 
 
 
@@ -118,10 +123,6 @@ public class FeedHomeFragment extends Fragment {
                     gauge.setPointStartColor(Color.parseColor("#f36c60"));
                 }*/
 
-            }
-
-
-        });
 
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
         mActionButtonPlus.clearAnimation();
@@ -137,11 +138,11 @@ public class FeedHomeFragment extends Fragment {
                         Intent intent2 = new Intent(getActivity(), RecommendActivity.class);
                         startActivity(intent2);
                         break;
-                    case 1:
+                   /* case 1:
                         Toast.makeText(getActivity(), "Chart", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), GraphGasActivity.class);
                         startActivity(intent);
-                        break;
+                        break;*/
 
                 }
 

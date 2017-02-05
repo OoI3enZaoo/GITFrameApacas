@@ -56,12 +56,12 @@ public class DistrictActivity extends AppCompatActivity {
                         Intent intent2 = new Intent(DistrictActivity.this, RecommendActivity.class);
                         startActivity(intent2);
                         break;
-                    case 1:
+                  /*  case 1:
                         Toast.makeText(getApplicationContext(), "Chart", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(DistrictActivity.this, GraphGasActivity.class);
                         startActivity(intent);
-                        break;
-                    case 2:
+                        break;*/
+                    case 1:
                         Toast.makeText(getApplicationContext(), "Add to favorite", Toast.LENGTH_SHORT).show();
                         break;
 

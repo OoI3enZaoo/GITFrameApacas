@@ -38,7 +38,7 @@ import org.json.JSONException;
  * Created by Admin on 12/11/2559.
  */
 
-public class FeedMapFragment extends Fragment {
+public class FeedMapRealtimeFragment extends Fragment {
 
 
     public static final String mBroadcastStringAction = "com.truiton.broadcast.string";
@@ -133,7 +133,7 @@ public class FeedMapFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        View v = inflater.inflate(R.layout.fragment_realtime, container, false);
 
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);

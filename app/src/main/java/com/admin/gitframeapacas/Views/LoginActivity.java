@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         txtSkip = (TextView) findViewById(R.id.txtSkip);
         dialog = new ProgressDialog(LoginActivity.this);
         statusLogin();
+
         txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

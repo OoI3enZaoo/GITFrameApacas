@@ -26,7 +26,8 @@ import android.widget.Toast;
 import com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment;
 import com.admin.gitframeapacas.Fragment.FeedFavoriteFragment;
 import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
-import com.admin.gitframeapacas.Fragment.FeedMapFragment;
+import com.admin.gitframeapacas.Fragment.FeedMapNavigateFragment;
+import com.admin.gitframeapacas.Fragment.FeedMapRealtimeFragment;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.GetGasService;
@@ -168,6 +169,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_realtime),
+                        Color.parseColor(colors[2]))
+                        // .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
+                        .title("Real time")
+                        .badgeTitle("Real time !!")
+                        .build()
+        );
+
+        models.add(
+                new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_about),
                         Color.parseColor(colors[3]))
                         // .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
@@ -191,6 +202,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (position) {
                     case 0:
 
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
@@ -198,21 +215,52 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         break;
 
                     case 1:
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
                         }
                         break;
 
+                    case 2:
 
-                    case 2://map
+                        if (searchDistrict.getVisibility() == View.VISIBLE) {
+                            searchDistrict.setVisibility(View.GONE);
+                            searchNavigate.setVisibility(View.VISIBLE);
+                        }
+
+                        if (isMyServiceRunning(GetGasService.class) == true) {
+                            stopService(new Intent(getApplicationContext(), GetGasService.class));
+                            Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
+                        }
+                        break;
+
+                    case 3://map
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
+
                         if (isMyServiceRunning(GetGasService.class) == false) {
                             startService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
                         }
 
                         break;
-                    case 3:
+                    case 4:
+                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                            searchNavigate.setVisibility(View.GONE);
+                        }
+                        if (searchDistrict.getVisibility() == View.GONE) {
+                            searchDistrict.setVisibility(View.VISIBLE);
+                        }
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
@@ -258,17 +306,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_history) {
-            Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, "HistoryActivity", Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_notification) {
+        if (id == R.id.nav_notification) {
             Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
 
-        } else if (id == R.id.nav_reward) {
+        } /*else if (id == R.id.nav_reward) {
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_setting) {
+        }*/ else if (id == R.id.nav_setting) {
 
             Toast.makeText(this, "SettingActivity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
@@ -345,9 +388,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     Log.i(TAG, "FeedFavoriteFragment");
                     return new FeedFavoriteFragment();
                 case 2:
-                    Log.i(TAG, "FeedMapFragment");
-                    return new FeedMapFragment();
+                    Log.i(TAG, "FeedFavoriteFragment");
+                    return new FeedMapNavigateFragment();
                 case 3:
+                    Log.i(TAG, "FeedMapRealtimeFragment");
+                    return new FeedMapRealtimeFragment();
+                case 4:
                     Log.i(TAG, "FeedAboutAQIFragment");
                     return new FeedAboutAQIFragment();
 
@@ -359,7 +405,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 4;
+            return 5;
         }
 
     }
