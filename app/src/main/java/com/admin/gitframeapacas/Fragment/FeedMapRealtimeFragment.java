@@ -1,44 +1,35 @@
 package com.admin.gitframeapacas.Fragment;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.webkit.WebView;
 
-import com.admin.gitframeapacas.Data.RealTimeDataResponse;
 import com.admin.gitframeapacas.R;
-import com.admin.gitframeapacas.Service.GetGasService;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONException;
 
 /**
  * Created by Admin on 12/11/2559.
  */
 
 public class FeedMapRealtimeFragment extends Fragment {
+
+    private WebView mWebView;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_realtime, container, false);
+        mWebView = (WebView) v.findViewById(R.id.webview_realtime);
+
+
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.loadUrl("http://sysnet.utcc.ac.th/aparcas/realtime.html");
+
+        return v;
+    }
+/*
 
 
     public static final String mBroadcastStringAction = "com.truiton.broadcast.string";
@@ -51,8 +42,7 @@ public class FeedMapRealtimeFragment extends Fragment {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /*mTextView.setText(mTextView.getText()
-                    + "Broadcast From Service: \n");*/
+
             if (intent.getAction().equals(mBroadcastStringAction)) {
                 final String mData = intent.getStringExtra("Data");
                 Log.i(TAG, mData + "\n\n");
@@ -151,20 +141,9 @@ public class FeedMapRealtimeFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                /*// For showing a move to my location button
-                googleMap.setMyLocationEnabled(true);*/
 
-                // For dropping a marker at a point on the Map
                 LatLng sydney = new LatLng(13.756331, 100.501765);
-              /*  googleMap.addMarker(new MarkerOptions().position(new LatLng(13.756331,100.501765))
-                        .title("Marker Title")
-                        .snippet("Marker Description")
-                );*/
 
-
-                //Log.i(TAG,"lat: " + data.getLat() + "\nlon: " + data.getLon());
-
-                // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -204,5 +183,6 @@ public class FeedMapRealtimeFragment extends Fragment {
 
     }
 
+*/
 
 }

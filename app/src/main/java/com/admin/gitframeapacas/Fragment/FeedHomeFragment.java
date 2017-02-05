@@ -125,7 +125,7 @@ public class FeedHomeFragment extends Fragment {
 
 
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
-        mActionButtonPlus.clearAnimation();
+        //mActionButtonPlus.clearAnimation();
 
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
 
@@ -155,7 +155,7 @@ public class FeedHomeFragment extends Fragment {
         mBarChart.addBar(new BarModel("SO2", 5f, Color.parseColor("#ffb74d")));
         mBarChart.addBar(new BarModel("PM2.5", 3f, Color.parseColor("#f36c60")));
         mBarChart.addBar(new BarModel("Radio", 6f, Color.parseColor("#ba68c8")));
-        mBarChart.startAnimation();
+        //mBarChart.startAnimation();
 
 
     }
