@@ -83,6 +83,13 @@
             android:name=".Service.GetGasService"
             android:process=":my_service" />
 
+        <activity android:name=".Bluetooth.DeviceScanActivity" />
+        <activity android:name=".Bluetooth.DeviceControlActivity" />
+
+        <service
+            android:name=".Bluetooth.BluetoothLeService"
+            android:enabled="true" />
+
 
     </application>
 

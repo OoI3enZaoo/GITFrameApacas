@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView android:id="@+id/imageView" android:layout_width="wrap_content"
+        android:layout_height="170dp" android:scaleType="matrix"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/profile_background_detail" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/profile_image"
+        android:layout_width="96dp" android:layout_height="96dp" android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp" android:src="@drawable/person"
+        app:civ_border_color="#FF000000" app:civ_border_width="2dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView android:id="@+id/textView3" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginStart="32dp"
+        android:text="Bill Gates" android:textColor="#FFFFFF" android:textSize="20dp"
+        app:layout_constraintLeft_toRightOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/profile_image" />
+
+    <TextView android:id="@+id/textView4" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Level 10"
+        android:textColor="#FFFFFF" android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textView3"
+        app:layout_constraintRight_toRightOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+</android.support.constraint.ConstraintLayout>

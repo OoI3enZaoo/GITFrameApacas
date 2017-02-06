@@ -1,0 +1,46 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical" android:weightSum="1"
+    tools:context="com.admin.gitframeapacas.Views.DistrictActivity">
+
+    <android.support.v7.widget.Toolbar android:id="@+id/toolbar" android:layout_width="0dp"
+        android:layout_height="56dp" android:background="#90A4AE"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/AppTheme.PopupOverlay" app:subtitleTextColor="#FFFFFF"
+        app:titleTextColor="#FFFFFF"
+        tools:layout_editor_absoluteY="0dp"></android.support.v7.widget.Toolbar>
+
+    <TextView android:id="@+id/txtLocation" android:layout_width="352dp"
+        android:layout_height="wrap_content" android:layout_marginTop="11dp"
+        android:gravity="center" android:text="Current location" android:textSize="20sp"
+        android:textStyle="bold" app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:layout_editor_absoluteX="4dp" />
+
+
+    <TextView android:id="@+id/txtlastUpdate" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp"
+        android:gravity="center" android:text="Last Update: " android:textSize="17dp"
+        android:textStyle="normal" app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="@+id/txtLocation"
+        app:layout_constraintRight_toRightOf="@+id/txtLocation"
+        app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
+
+    <include layout="@layout/custom_gauge" android:layout_width="0dp" android:layout_height="0dp"
+        android:layout_marginTop="16dp" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtlastUpdate"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <include layout="@layout/floating_other_district" android:layout_width="0dp"
+        android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>
+

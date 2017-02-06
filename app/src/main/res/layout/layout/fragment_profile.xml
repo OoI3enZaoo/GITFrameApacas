@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical"
+    tools:context="com.admin.gitframeapacas.Fragment.FeedProfileFragment">
+
+
+    <ImageView android:id="@+id/imageView" android:layout_width="wrap_content"
+        android:layout_height="126dp" android:scaleType="matrix"
+        app:layout_constraintHorizontal_bias="0.0" app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/profile_background_detail" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/profile_image"
+        android:layout_width="96dp" android:layout_height="96dp" android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp" android:src="@drawable/person"
+        app:civ_border_color="#FF000000" app:civ_border_width="2dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView android:id="@+id/textView3" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp" android:text="Bill Gates" android:textColor="#FFFFFF"
+        android:textSize="20dp" app:layout_constraintLeft_toRightOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+    <TextView android:id="@+id/textView4" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Level 10"
+        android:textColor="#FFFFFF" android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="@+id/textView3"
+        app:layout_constraintRight_toRightOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+
+    <ListView android:id="@+id/menu_setting" android:layout_width="0dp"
+        android:layout_height="187dp" android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp" android:layout_marginTop="8dp"
+        android:choiceMode="singleChoice" android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" tool:layout_constraintHorizontal_bias="0.57"
+        tool:layout_constraintLeft_toLeftOf="parent" tool:layout_constraintRight_toRightOf="parent"
+        tool:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:context="com.rupomkhondaker.sonalibanklimited.NavigationDrawerFragment" />
+
+
+</android.support.constraint.ConstraintLayout>

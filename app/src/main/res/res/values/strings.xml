@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">GITFrameApacas</string>
     <string name="app_id">1724525574468249</string>
-    <string name="reset_password"><u>Reset password</u></string>
-    <string name="skip"><u>skip</u></string>
+    <string name="reset_password">
+        <u>Reset password</u>
+    </string>
+    <string name="skip">
+        <u>skip</u>
+    </string>
     <string name="action_settings">การตั้งค่า</string>
     <string name="action_help">ช่วยเหลือและความเห็น</string>
     <string name="action_logout">ออกจากระบบ</string>

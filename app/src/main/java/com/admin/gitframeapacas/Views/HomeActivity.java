@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Bluetooth.DeviceScanActivity;
 import com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment;
 import com.admin.gitframeapacas.Fragment.FeedFavoriteFragment;
 import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
@@ -93,8 +94,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             //gauge.setVisibility(View.GONE);
                             //txtAQI.setVisibility(View.GONE);
                             dialog.cancel();
-                            DBUser db = new DBUser(getApplicationContext());
-                            db.updateCheckSensor(1);
+                            //  DBUser db = new DBUser(getApplicationContext());
+                            //db.updateCheckSensor(1);
+                            Intent intent = new Intent(getApplicationContext(), DeviceScanActivity.class);
+                            startActivity(intent);
 
                         }
                     })
@@ -110,8 +113,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         }
                                     });
                             snackbar.show();
-                            DBUser db = new DBUser(getApplicationContext());
-                            db.updateCheckSensor(1);
+                            //  DBUser db = new DBUser(getApplicationContext());
+                            //  db.updateCheckSensor(1);
 
 
                         }
