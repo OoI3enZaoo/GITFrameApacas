@@ -1,11 +1,19 @@
 package com.admin.gitframeapacas.Fragment;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -17,9 +25,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Bluetooth.BluetoothLeService;
 import com.admin.gitframeapacas.Bluetooth.DeviceScanActivity;
+import com.admin.gitframeapacas.Bluetooth.SampleGattAttributes;
 import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.GPSTracker;
 import com.admin.gitframeapacas.Views.RecommendActivity;
@@ -33,7 +44,13 @@ import org.eazegraph.lib.models.BarModel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -52,6 +69,9 @@ import static java.lang.Float.parseFloat;
 public class FeedHomeFragment extends Fragment {
 
 
+    //xxxxxxx bluetooth le xxxxxxx
+    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
+    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     public static BarChart mBarChart;
     private static String TAG = "BENFeedHomeFragment";
     private static CustomGauge gauge;
@@ -71,13 +91,105 @@ public class FeedHomeFragment extends Fragment {
     private static String pname;
     private static TextView lastUpdate;
     private static TextView txtLocation;
+    private final String LIST_NAME = "NAME";
+    private final String LIST_UUID = "UUID";
     ConstraintLayout view2;
+    String dust = null;
+    String CO = null;
+    String NO2 = null;
+    int statusCurrent = 1;
+    int counter = 0;
+    List<String> arrayDust = new ArrayList<String>();
+    List<String> arrayCO = new ArrayList<String>();
+    List<String> arrayNO2 = new ArrayList<String>();
     private FloatingActionButtonPlus mActionButtonPlus;
     private Snackbar snackbar;
+    private String mDeviceName;
+    private String mDeviceAddress;
+    private BluetoothLeService mBluetoothLeService;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                getActivity().finish();
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            mBluetoothLeService.connect(mDeviceAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
+    private boolean mConnected = false;
+    private BluetoothGattCharacteristic mNotifyCharacteristic;
+    private String hrValue;
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
+            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                mConnected = true;
+                updateConnectionState(R.string.connected);
+                getActivity().invalidateOptionsMenu();
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                mConnected = false;
+                updateConnectionState(R.string.disconnected);
+                getActivity().invalidateOptionsMenu();
+                clearUI();
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                // Show all the supported services and characteristics on the user interface.
+                displayGattServices(mBluetoothLeService.getSupportedGattServices());
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+
+                //displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                //displayDataCO(intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
+                //displayDataNO2(intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+
+                dust = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                CO = intent.getStringExtra(BluetoothLeService.EXTRA_DATA1);
+                NO2 = intent.getStringExtra(BluetoothLeService.EXTRA_DATA2);
+
+                Log.d(TAG, "test value dust =" + dust + "," + "CO =" + CO + "," + "NO2 =" + NO2);
+
+                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA) != null) {
+                    arrayDust.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                    Log.d(TAG, "Dust List = " + String.valueOf(arrayDust));
+                }
+                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA1) != null) {
+                    arrayCO.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
+                    Log.d(TAG, "CO List = " + String.valueOf(arrayCO));
+                }
+                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA2) != null) {
+                    arrayNO2.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+                    Log.d(TAG, "NO2 List = " + String.valueOf(arrayNO2));
+                }
+
+                Log.d(TAG, "Dust = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                Log.d(TAG, "CO = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
+                Log.d(TAG, "NO2 = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+            }
+        }
+    };
 
     public FeedHomeFragment() {
 
     }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -93,8 +205,6 @@ public class FeedHomeFragment extends Fragment {
         view2 = (ConstraintLayout) v.findViewById(R.id.fragment_home);
 
 
-
-        loadData();
         DBUser db = new DBUser(getActivity());
         String user_type = db.getUserType();
         if (user_type.equals("member")) {
@@ -106,8 +216,29 @@ public class FeedHomeFragment extends Fragment {
 
 
         }
+        DBCurrentLocation dbcl = new DBCurrentLocation(getContext());
+
+        if (dbcl.numberOfRows() == 1) {
+            Log.i(TAG, "already have data");
+            Cursor res = dbcl.getAllData();
+            if (res.getCount() == 0) {
+
+            } else {
+
+                while (res.moveToNext()) {
+                    //String sName = res.getString(0);
+
+
+                }
+            }
+        } else {
+
+            loadData();
+            Log.i(TAG, "LoadData()");
+        }
         return v;
     }
+
     private void loadData() {
 
 
@@ -126,11 +257,16 @@ public class FeedHomeFragment extends Fragment {
                             //gauge.setVisibility(View.GONE);
                             //txtAQI.setVisibility(View.GONE);
                             dialog.cancel();
-
-                            db.updateCheckSensor(1);
+                            //db.updateCheckSensor(1);
                             db.updateHaveSensor(1);
                             Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
                             startActivity(intent);
+
+
+                            Intent intent2 = getActivity().getIntent();
+                            mDeviceName = intent2.getStringExtra(EXTRAS_DEVICE_NAME);
+                            mDeviceAddress = intent2.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+
 
                         }
                     })
@@ -148,7 +284,7 @@ public class FeedHomeFragment extends Fragment {
                             db.updateHaveSensor(0);
                             snackbar.show();
                             DBUser db = new DBUser(getActivity());
-                            db.updateCheckSensor(1);
+                            //db.updateCheckSensor(1);
                             new DataNearby(getActivity()).execute();
 
 
@@ -163,9 +299,8 @@ public class FeedHomeFragment extends Fragment {
         }
 
 
-        //mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
-        mActionButtonPlus.setPadding(50, 100, 5, 0);
-
+        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
+        //mActionButtonPlus.setPadding(50,100,5,0);
 
 
         //mActionButtonPlus.clearAnimation();
@@ -192,6 +327,180 @@ public class FeedHomeFragment extends Fragment {
         });
 
 
+    }
+
+    private void clearUI() {
+        hrValue = "";
+    }
+
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxx bluetoothLE method xxxxxxxxxxxxxxxxxxxxxxxxx
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            Log.d(TAG, "Connect request result=" + result);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mGattUpdateReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unbindService(mServiceConnection);
+        mBluetoothLeService = null;
+    }
+
+    private void updateConnectionState(final int resourceId) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+    }
+
+    private void displayData(String data) {//write textview for Dust
+        if (data != null) {
+
+        }
+    }
+
+    private void displayDataCO(String data) {// write textview for CO
+        if (data != null) {
+
+        }
+    }
+
+    private void displayDataNO2(String data) {// write textview for NO2
+        if (data != null) {
+
+        }
+    }
+
+    private void displayGattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null) return;
+        String uuid = null;
+        String unknownServiceString = getResources().getString(R.string.unknown_service);
+        String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
+        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
+                = new ArrayList<ArrayList<HashMap<String, String>>>();
+        mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+
+        // Loops through available GATT Services.
+        for (BluetoothGattService gattService : gattServices) {
+            HashMap<String, String> currentServiceData = new HashMap<String, String>();
+            uuid = gattService.getUuid().toString();
+            currentServiceData.put(
+                    LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
+            currentServiceData.put(LIST_UUID, uuid);
+            gattServiceData.add(currentServiceData);
+
+            ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
+                    new ArrayList<HashMap<String, String>>();
+            List<BluetoothGattCharacteristic> gattCharacteristics =
+                    gattService.getCharacteristics();
+            ArrayList<BluetoothGattCharacteristic> charas =
+                    new ArrayList<BluetoothGattCharacteristic>();
+
+            // Loops through available Characteristics.
+            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+                charas.add(gattCharacteristic);
+                HashMap<String, String> currentCharaData = new HashMap<String, String>();
+                uuid = gattCharacteristic.getUuid().toString();
+                currentCharaData.put(
+                        LIST_NAME, SampleGattAttributes.lookup(uuid, unknownCharaString));
+                currentCharaData.put(LIST_UUID, uuid);
+                gattCharacteristicGroupData.add(currentCharaData);
+            }
+            mGattCharacteristics.add(charas);
+            gattCharacteristicData.add(gattCharacteristicGroupData);
+
+
+        }
+        Timer myTimer;
+        myTimer = new Timer();
+
+        myTimer.schedule(new TimerTask() {
+            public void run() {
+
+                if (mConnected == true) {//if bluttooth is enable
+                    final BluetoothGattCharacteristic characteristic =
+                            mGattCharacteristics.get(2).get(counter);
+                    if (statusCurrent == 1) {
+                        counter = 0;
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+
+                        if (dust != null) {
+                            Log.d(TAG, "loop1 !=null");
+                            if (mNotifyCharacteristic != null) {
+                                mBluetoothLeService.setCharacteristicNotification(
+                                        mNotifyCharacteristic, false);
+                                mNotifyCharacteristic = null;
+                            }
+                            mBluetoothLeService.readCharacteristic(characteristic);
+                            statusCurrent++;
+                        } else {
+                            Log.d(TAG, "loop1 ==null");
+                        }
+                    }
+                    if (statusCurrent == 2) {
+                        counter = 1;
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+                        if (CO != null) {
+                            Log.d(TAG, "loop2 !=null");
+                            if (mNotifyCharacteristic != null) {
+                                mBluetoothLeService.setCharacteristicNotification(
+                                        mNotifyCharacteristic, false);
+                                mNotifyCharacteristic = null;
+                            }
+                            mBluetoothLeService.readCharacteristic(characteristic);
+                            statusCurrent++;
+                        } else {
+                            Log.d(TAG, "loop2 ==null");
+                        }
+                    }
+                    if (statusCurrent == 3) {
+                        counter = 2;
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
+
+                    }
+                } else if (mConnected == false) {// if bluetooth disable
+                    try {
+                        // thread to sleep for 1000 milliseconds
+                        Thread.sleep(3000);
+                        Log.d(TAG, "BLE is dead");
+
+                        Random r = new Random();
+                        dust = arrayDust.get(r.nextInt(arrayDust.size()));
+                        CO = arrayCO.get(r.nextInt(arrayCO.size()));
+                        NO2 = arrayNO2.get(r.nextInt(arrayNO2.size()));
+                        Log.d(TAG, "Dust random = = " + dust);
+                        Log.d(TAG, "CO random = = " + CO);
+                        Log.d(TAG, "NO2 random = = " + NO2);
+                    } catch (Exception e) {
+
+                    }
+
+
+                }
+
+
+            }
+        }, 0, 1000);
     }
 
     public static class DataNearby extends AsyncTask<Object, Object, String> {
@@ -293,6 +602,8 @@ public class FeedHomeFragment extends Fragment {
                 // Toast.makeText(getApplicationContext(), "ระบบทำการค้นหาสถานที่ใกล้เคียง", Toast.LENGTH_SHORT).show();
 
 
+                DBCurrentLocation dbCL = new DBCurrentLocation(mContext);
+                dbCL.insertData(aqi, co, no2, o3, so2, pm25, rad, tstamp, sname, dname, pname);
                 Float fco = parseFloat(co);
                 Float fno2 = parseFloat(no2);
                 Float fo3 = parseFloat(o3);
@@ -342,6 +653,5 @@ public class FeedHomeFragment extends Fragment {
 
         }
     }
-
 
 }

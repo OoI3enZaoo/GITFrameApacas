@@ -38,11 +38,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
 import com.admin.gitframeapacas.R;
-import com.admin.gitframeapacas.Views.HomeActivity;
 
 import java.util.ArrayList;
-
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -51,7 +50,6 @@ public class DeviceScanActivity extends ListActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
-    public static boolean bluetooth_status = false;
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -63,11 +61,11 @@ public class DeviceScanActivity extends ListActivity {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mLeDeviceListAdapter.addDevice(device);
-                            mLeDeviceListAdapter.notifyDataSetChanged();
-                        }
+                @Override
+                public void run() {
+                    mLeDeviceListAdapter.addDevice(device);
+                    mLeDeviceListAdapter.notifyDataSetChanged();
+                }
                     });
                 }
             };
@@ -75,9 +73,7 @@ public class DeviceScanActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //   getActionBar().setTitle(R.string.title_devices);
         mHandler = new Handler();
-
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -98,7 +94,6 @@ public class DeviceScanActivity extends ListActivity {
             finish();
             return;
         }
-
         int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -175,17 +170,21 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
-        //final Intent intent = new Intent(this, DeviceControlActivity.class);
-        Intent intent = new Intent(this, HomeActivity.class);
+        /*final Intent intent = new Intent(this, DeviceControlActivity.class);
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());//send device name to next activity
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());//send device name to next activity
-
+        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());//send device address to next activity
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
         }
-        bluetooth_status = true;
-
+        startActivity(intent);*/
+        final Intent intent = new Intent(this, FeedHomeFragment.class);
+        intent.putExtra(FeedHomeFragment.EXTRAS_DEVICE_NAME, device.getName());//send device name to next activity
+        intent.putExtra(FeedHomeFragment.EXTRAS_DEVICE_ADDRESS, device.getAddress());//send device address to next activity
+        if (mScanning) {
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            mScanning = false;
+        }
         startActivity(intent);
     }
 

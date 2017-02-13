@@ -31,12 +31,12 @@ public class SampleGattAttributes {
     static {
         // Sample Services.
         attributes.put("0000180d-0000-1000-8000-00805f9b34fb", "Dust Service");
-        attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Gas CO Service");
-        attributes.put("0000180b-0000-1000-8000-00805f9b34fb", "Gas NO2 Service");
+        attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "CO Service");
+        attributes.put("0000180b-0000-1000-8000-00805f9b34fb", "NO2 Service");
         // Sample Characteristics.
         attributes.put(HEART_RATE_MEASUREMENT, "Dust Measurement");
-        attributes.put(MANAFACTURER_NAME, "Gas CO (PPM) Measurement");
-        attributes.put(NO2_NAME, "Gas NO2 (PPM) Measurement");
+        attributes.put(MANAFACTURER_NAME, "CO Measurement");
+        attributes.put(NO2_NAME, "NO2 Measurement");
     }
 
     public static String lookup(String uuid, String defaultName) {

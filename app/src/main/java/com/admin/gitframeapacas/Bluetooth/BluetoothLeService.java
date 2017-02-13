@@ -71,13 +71,17 @@ public class BluetoothLeService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
-    private int mConnectionState = STATE_DISCONNECTED;
+
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
+    private int mConnectionState = STATE_DISCONNECTED;
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
+
+
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
@@ -207,7 +211,7 @@ public class BluetoothLeService extends Service {
 
             }
 
-            Log.d(TAG, "Received MQ9 test: " + test);
+            Log.d(TAG, "Received CO test: " + test);
             intent.putExtra(EXTRA_DATA1, number);
         } else if (UUID_NO2.equals(characteristic.getUuid())) {
             final byte[] bytes = characteristic.getValue();
@@ -234,7 +238,7 @@ public class BluetoothLeService extends Service {
 
             }
 
-            Log.d(TAG, "Received NO2 test: " + test);
+            Log.d(TAG, "Received MQ9 test: " + test);
             intent.putExtra(EXTRA_DATA2, number);
         } else {
             // For all other profiles, writes the data formatted in HEX.
@@ -292,10 +296,11 @@ public class BluetoothLeService extends Service {
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
+     *
      * @return Return true if the connection is initiated successfully. The connection result
-     * is reported asynchronously through the
-     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     * callback.
+     *         is reported asynchronously through the
+     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     *         callback.
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
@@ -336,6 +341,7 @@ public class BluetoothLeService extends Service {
      * callback.
      */
     public void disconnect() {
+
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
@@ -374,7 +380,7 @@ public class BluetoothLeService extends Service {
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
-     * @param enabled        If true, enable notification.  False otherwise.
+     * @param enabled If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
@@ -391,6 +397,19 @@ public class BluetoothLeService extends Service {
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
         }
+        if (UUID_MANAFACTURER_NAME.equals(characteristic.getUuid())) {
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            mBluetoothGatt.writeDescriptor(descriptor);
+        }
+        if (UUID_NO2.equals(characteristic.getUuid())) {
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            mBluetoothGatt.writeDescriptor(descriptor);
+        }
+
     }
 
     /**
