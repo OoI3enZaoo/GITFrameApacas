@@ -110,7 +110,9 @@ public class FeedHomeFragment extends Fragment {
 
                 }
                 if (gauge.getValue() > 50) {
-                    gauge.setPointStartColor(Color.parseColor("#42bd41"));
+                    gauge.setPointStartColor(
+
+                    Color.parseColor("#42bd41"));
                 }
                 if (gauge.getValue() > 100) {
                     gauge.setPointStartColor(Color.parseColor("#fff176"));

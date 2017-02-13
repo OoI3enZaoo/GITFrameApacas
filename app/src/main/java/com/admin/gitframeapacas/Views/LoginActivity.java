@@ -16,6 +16,7 @@ import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
 
 import java.io.IOException;
+import java.util.Random;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -50,9 +51,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
+                long lowerLimit = 1L;
+                long upperLimit = 9999999999999999L;
+                Random r = new Random();
+                Long userId = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
+
                 DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
                 db.updateUserType("user");
+                db.updateUserID(userId);
+
+
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
 

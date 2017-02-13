@@ -51,6 +51,10 @@ public class DBGrid extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void drop() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
+    }
     public boolean insertData(int scode, String sname, int dcode, String dname, int pcode, String pname) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -74,6 +78,19 @@ public class DBGrid extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACTS_TABLE_NAME, null);
         return res;
+    }
+
+    public String getSCode(String sname) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        String scode = "";
+        cursor = db.rawQuery("SELECT scode FROM " + CONTACTS_TABLE_NAME + " WHERE sname=?", new String[]{sname + ""});
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            scode = cursor.getString(cursor.getColumnIndex("scode"));
+        }
+        return scode;
+
     }
 
 }

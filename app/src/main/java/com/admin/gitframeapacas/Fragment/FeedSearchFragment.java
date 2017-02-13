@@ -157,6 +157,9 @@ public class FeedSearchFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), DistrictActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("district", mLastQuery);
+                    DBGrid dbGrid = new DBGrid(getContext());
+                    String scode = dbGrid.getSCode(mLastQuery);
+                    bundle.putString("scode", scode);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -406,8 +409,6 @@ public class FeedSearchFragment extends Fragment {
                         .url("http://sysnet.utcc.ac.th/aparcas/api/grid_lut.jsp")
                         .build();
                 try {
-
-                    int count = 1;
                     int rount2 = 0;
                     Response response;
                     response = client.newCall(request).execute();
@@ -418,24 +419,9 @@ public class FeedSearchFragment extends Fragment {
                     Collection<DistrictResponse> enums = gson.fromJson(result2, collectionType);
                     DistrictResponse[] result = enums.toArray(new DistrictResponse[enums.size()]);
 
-                    //Log.i("MYRESULT: ", String.valueOf(result));
-                    String[] checkSame = new String[result.length + 2];
-
                     for (int i = 0; i < result.length; i++) {
                         String sName = result[i].getSname();
-                        for (int j = 0; j < checkSame.length; j++) {
-                            if (checkSame[j] != null) {
-                                if (checkSame[j].equals(sName)) {
-                                    count = 0;
-                                    break;
-                                }
-                            }
-                        }
-                        if (count == 1) {
                             sDistrictSuggestions.add(rount2, new DistrictSuggestion(sName + ""));
-                            //  Log.i("resultben", "count == 1: " + DName);
-                            checkSame[i] = sName;
-                            rount2++;
                             String scode = result[i].getScode();
                             String sname = result[i].getSname();
                             String dcode = result[i].getDcode();
@@ -451,9 +437,6 @@ public class FeedSearchFragment extends Fragment {
                             Log.i("griddata", "pname: " + pname);
                             Log.i("griddata", "number of rows: " + dbGrid.numberOfRows());
                         }
-                        count = 1;
-
-                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -36,14 +36,16 @@ public class SetGasService extends Service {
     }
 
     public void onCreate() {
-        Toast.makeText(getApplication(), "Start Service!", Toast.LENGTH_LONG).show();
 
+
+        Toast.makeText(getApplication(), "Start Service!: ", Toast.LENGTH_LONG).show();
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (MQTTRunning) {
                     MQTTSender();
+
                 }
             }
         }, 0, 3000);
@@ -178,8 +180,8 @@ public class SetGasService extends Service {
         }
 
         float rad() {
-            float radmin = 0.020f;
-            float radmax = 0.200f;
+            float radmin = 0.010f;
+            float radmax = 1.100f;
             return rand.nextFloat() * (radmax - radmin) + radmin;
         }
 
@@ -195,5 +197,6 @@ public class SetGasService extends Service {
         }
 
     }
+
 
 }

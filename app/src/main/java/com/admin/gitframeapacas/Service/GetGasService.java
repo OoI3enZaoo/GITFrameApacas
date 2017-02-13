@@ -95,8 +95,8 @@ public class GetGasService extends Service {
                         /*Intent broadcastIntent = new Intent();
                         broadcastIntent.setAction(FeedMapRealtimeFragment.mBroadcastStringAction);
                         broadcastIntent.putExtra("Data", mMsg);
-                        sendBroadcast(broadcastIntent);*/
-
+                        sendBroadcast(broadcastIntent);
+                        */
                         message.ack();
                     }
 

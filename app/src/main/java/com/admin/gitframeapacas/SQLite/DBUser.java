@@ -17,6 +17,8 @@ public class DBUser extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_GRID = "grid";
     public static final String CONTACTS_COLUMN_CHECK_SENSOR = "checksensor";
 
+    public static final String CONTACTS_COLUMN_USERID = "user_id";
+
     public DBUser(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
@@ -31,12 +33,13 @@ public class DBUser extends SQLiteOpenHelper {
                         CONTACTS_COLUMN_STATUS + " integer," +
                         CONTACTS_COLUMN_GRID + " integer," +
                         CONTACTS_COLUMN_TYPE + " text," +
-                        CONTACTS_COLUMN_CHECK_SENSOR + " integer" +
+                        CONTACTS_COLUMN_CHECK_SENSOR + " integer," +
+                        CONTACTS_COLUMN_USERID + " integer" +
                         ")"
         );
 
         db.execSQL(
-                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0)"
+                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0,0)"
 
         );
     }
@@ -48,6 +51,10 @@ public class DBUser extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void drop() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
+    }
     public boolean insertAccount(String name, int status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -87,6 +94,7 @@ public class DBUser extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACTS_COLUMN_TYPE, name);
         db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
+
         return true;
     }
 
@@ -94,6 +102,14 @@ public class DBUser extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACTS_COLUMN_CHECK_SENSOR, status);
+        db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
+        return true;
+    }
+
+    public boolean updateUserID(Long name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACTS_COLUMN_USERID, name);
         db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
         return true;
     }
@@ -113,8 +129,18 @@ public class DBUser extends SQLiteOpenHelper {
         return Integer.parseInt(place);
     }
 
+    public long getUserID() {
+        String place = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select " + CONTACTS_COLUMN_USERID + " from " + CONTACTS_TABLE_NAME, null);
+        res.moveToFirst();
+        while (res.isAfterLast() == false) {
+            place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_USERID));
+            res.moveToNext();
+        }
+        return Long.parseLong(place);
+    }
     public int getGrid() {
-        int status = 0;
         String place = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select " + CONTACTS_COLUMN_GRID + " from " + CONTACTS_TABLE_NAME, null);

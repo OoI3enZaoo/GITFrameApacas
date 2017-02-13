@@ -40,16 +40,16 @@ public class SignUpActivity extends AppCompatActivity {
     public static int startDay;
     private static ProgressDialog dialog;
     private static String TAG = "BENSignUpActivity";
+    private static long userId;
     public EditText lblFName;
     public EditText lblLName;
     public EditText lblBD;
     TextView txtError;
     private EditText lblEmail;
     private EditText lblPassword;
-    private EditText lblPassword2;
     // private FirebaseAuth mAuth;
     //private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private EditText lblPassword2;
     public SignUpActivity() {
     }
 
@@ -155,12 +155,12 @@ public class SignUpActivity extends AppCompatActivity {
                 long lowerLimit = 1L;
                 long upperLimit = 9999999999999999L;
                 Random r = new Random();
-                long number = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
+                userId = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
                 Log.i("number", String.valueOf(r));
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()
 
-                        .add("user_id", String.valueOf(number))
+                        .add("user_id", String.valueOf(userId))
                         .add("user_pwd", lblPassword.getText().toString().trim())
                         .add("fname", lblFName.getText().toString().trim())
                         .add("lname", lblLName.getText().toString().trim())
@@ -195,6 +195,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.i(TAG, "Login Success");
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
                 DBUser db = new DBUser(getApplicationContext());
+                db.updateUserID(userId);
                 db.updateStatus(1);
                 db.updateName(lblFName.getText().toString().trim());
                 db.updateUserType("member");
