@@ -56,10 +56,10 @@ public class DBCurrentLocation extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
         onCreate(db);
     }
-
     public void drop() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
+        db.delete(CONTACTS_TABLE_NAME, null, null);
+        db.close();
     }
 
     public boolean insertData(String aqi, String co, String no2, String o3, String so2, String pm25, String rad, String tstamp, String sname, String dname, String pname) {

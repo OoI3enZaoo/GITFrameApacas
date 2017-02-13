@@ -34,6 +34,7 @@ import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
 import com.admin.gitframeapacas.Fragment.FeedMapNavigateFragment;
 import com.admin.gitframeapacas.Fragment.FeedMapRealtimeFragment;
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBFavorite;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.GetGasService;
@@ -386,6 +387,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             db.updateUserID((long) 0);
             DBFavorite dbFavorite = new DBFavorite(getApplicationContext());
             dbFavorite.drop();
+            DBCurrentLocation dbCur = new DBCurrentLocation(getApplicationContext());
+            dbCur.drop();
+
             if (isMyServiceRunning(SetGasService.class) == true) {
                 stopService(new Intent(getApplicationContext(), SetGasService.class));
             }

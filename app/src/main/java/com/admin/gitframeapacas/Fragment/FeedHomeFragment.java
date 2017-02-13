@@ -196,6 +196,7 @@ public class FeedHomeFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_home, container, false);
         mBarChart = (BarChart) v.findViewById(R.id.barchart);
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
+        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
         gps = new GPSTracker(getContext());
@@ -226,7 +227,58 @@ public class FeedHomeFragment extends Fragment {
             } else {
 
                 while (res.moveToNext()) {
-                    //String sName = res.getString(0);
+                    String sAQI = res.getString(0);
+                    String sCO = res.getString(1);
+                    String sNO2 = res.getString(2);
+                    String sO3 = res.getString(3);
+                    String sSO2 = res.getString(4);
+                    String sPM25 = res.getString(5);
+                    String sRAD = res.getString(6);
+                    String sTstamp = res.getString(7);
+                    String sSname = res.getString(8);
+                    String sDname = res.getString(9);
+                    String sPname = res.getString(10);
+
+
+                    Float fco = parseFloat(sCO);
+                    Float fno2 = parseFloat(sNO2);
+                    Float fo3 = parseFloat(sO3);
+                    Float fso2 = parseFloat(sSO2);
+                    Float fpm25 = parseFloat(sPM25);
+                    Float frad = parseFloat(sRAD);
+
+                    mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
+                    mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
+                    mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
+                    mBarChart.addBar(new BarModel("SO2", fso2, Color.parseColor("#ffb74d")));
+                    mBarChart.addBar(new BarModel("PM2.5", fpm25, Color.parseColor("#f36c60")));
+                    mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
+                    mBarChart.startAnimation();
+                    Log.i(TAG, "already: " + " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
+
+                    txtLocation.setText(sDname + " " + sSname + " " + sPname);
+                    lastUpdate.setText(sTstamp.toString() + "");
+                    gauge.setValue(Integer.parseInt(sAQI));
+                    txtAQI.setText("AQI: " + sAQI);
+
+                    if (gauge.getValue() > 0) {
+                        gauge.setPointStartColor(Color.parseColor("#91a7ff"));
+
+                    }
+                    if (gauge.getValue() > 50) {
+                        gauge.setPointStartColor(Color.parseColor("#42bd41"));
+                    }
+                    if (gauge.getValue() > 100) {
+                        gauge.setPointStartColor(Color.parseColor("#fff176"));
+
+                    }
+                    if (gauge.getValue() > 200) {
+                        gauge.setPointStartColor(Color.parseColor("#ffb74d"));
+                    }
+                    if (gauge.getValue() > 300) {
+                        gauge.setPointStartColor(Color.parseColor("#f36c60"));
+                    }
+
 
 
                 }
@@ -299,7 +351,7 @@ public class FeedHomeFragment extends Fragment {
         }
 
 
-        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
+
         //mActionButtonPlus.setPadding(50,100,5,0);
 
 
@@ -603,6 +655,7 @@ public class FeedHomeFragment extends Fragment {
 
 
                 DBCurrentLocation dbCL = new DBCurrentLocation(mContext);
+                dbCL.drop();
                 dbCL.insertData(aqi, co, no2, o3, so2, pm25, rad, tstamp, sname, dname, pname);
                 Float fco = parseFloat(co);
                 Float fno2 = parseFloat(no2);
