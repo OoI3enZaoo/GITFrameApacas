@@ -1,10 +1,13 @@
 package com.admin.gitframeapacas.Fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.admin.gitframeapacas.R;
 
@@ -13,62 +16,52 @@ import com.admin.gitframeapacas.R;
  */
 
 public class FeedFavoriteFragment extends Fragment {
+    private RecyclerView recyclerView;
     public FeedFavoriteFragment() {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_favorite, container, false);
-
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclearView);
+        recyclerView.setAdapter(new RecyclerViewAdapter());
 
         return v;
 
     }
 
-/*
-    public class RecyclrViewAdapter extends RecyclerView.Adapter<RecommendActivity.ViewHolder> {
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
-        public RecommendActivity.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            //View v = LayoutInflater.from(getActivity().getLayoutInflater(R.layout.item_favorite,parent,false));
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View v = inflater.inflate(R.layout.item_favorite, parent, false);
 
-
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_favorite, parent, false);
-            return new FeedFavoriteFragment().ViewHolder(v);
+            return new ViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(RecommendActivity.ViewHolder holder, int position) {
-            //   holder.location.setText("ตลาดไทย");
-            //holder.status.setText("อากาศเยี่ยมยอด");
-        }
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.sname.setText("ben");
 
+        }
         @Override
         public int getItemCount() {
+            return 2;
+        }
+    }
 
-            return 1;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView sname;
+        public ViewHolder(View itemView) {
+            super(itemView);
+            sname = (TextView) itemView.findViewById(R.id.txtsname);
         }
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txtRecom;
-        ImageView imgRecom;
-
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            Log.d("ben", "5");
-            txtRecom = (TextView) itemView.findViewById(R.id.txt_recom);
-            imgRecom = (ImageView) itemView.findViewById(R.id.img_recom);
-
-        }
-
-
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            Log.d("click", "Click: " + position);
-            Toast.makeText(getApplicationContext(), "click: " + position, Toast.LENGTH_SHORT).show();
-        }*/
 
 }

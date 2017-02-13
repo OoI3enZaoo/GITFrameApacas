@@ -3,16 +3,13 @@ package com.admin.gitframeapacas.Views;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -24,7 +21,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.admin.gitframeapacas.Bluetooth.DeviceScanActivity;
 import com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment;
 import com.admin.gitframeapacas.Fragment.FeedFavoriteFragment;
 import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
@@ -42,14 +37,12 @@ import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBFavorite;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.GetGasService;
-import com.admin.gitframeapacas.Service.GoogleService;
 import com.admin.gitframeapacas.Service.SetGasService;
 import com.arlib.floatingsearchview.FloatingSearchView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
@@ -71,6 +64,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     ConstraintLayout view2;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Snackbar snackbar;
+
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -137,76 +132,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         searchNavigate = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_navigate);
         searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
+
+
         view2 = (ConstraintLayout) findViewById(R.id.constaint_home);
-        geocoder = new Geocoder(this, Locale.getDefault());
-        mPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        medit = mPref.edit();
+        //gps = new GPSTracker(getApplicationContext());
+
 
         startService(new Intent(getApplicationContext(), SetGasService.class));
 
-        if (boolean_permission) {
-            if (mPref.getString("service", "").matches("")) {
-                medit.putString("service", "service").commit();
-                Intent intent = new Intent(getApplicationContext(), GoogleService.class);
-                startService(intent);
 
-            } else {
-                Toast.makeText(getApplicationContext(), "Service is already running", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Please enable the gps", Toast.LENGTH_SHORT).show();
-        }
-
-
-
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
-
-        DBUser db = new DBUser(getApplicationContext());
-        if (db.getCheckSensor() == 0) {
-            alertDialogBuilder.setTitle("APARCAS System");
-            alertDialogBuilder
-                    .setMessage("คุณมีอุปกรณ์เซ็นเซอร์ตรวจจับสภาพอากาศหรือไม่")
-                    .setCancelable(false)
-                    .setPositiveButton("มี", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            Log.i(TAG, "มีเซ็นเซอร์");
-                            //gauge.setVisibility(View.GONE);
-                            //txtAQI.setVisibility(View.GONE);
-                            dialog.cancel();
-                            //  DBUser db = new DBUser(getApplicationContext());
-                            //db.updateCheckSensor(1);
-                            Intent intent = new Intent(getApplicationContext(), DeviceScanActivity.class);
-                            startActivity(intent);
-
-                        }
-                    })
-                    .setNegativeButton("ไม่มี", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Log.i(TAG, "ไม่มีเซ็เนซอร์");
-                            dialog.cancel();
-                            snackbar = Snackbar.make(view2, "หากคุณมีเซ็นเซอร์ คุณสามารถเข้าไปเปิดการใช้งานที่ตั้งค่าได้ในภายหลัง", Snackbar.LENGTH_LONG)
-                                    .setAction("ปิด", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            snackbar.dismiss();
-                                        }
-                                    });
-                            snackbar.show();
-                            //  DBUser db = new DBUser(getApplicationContext());
-                            //  db.updateCheckSensor(1);
-
-
-                        }
-                    });
-
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
-
-            // show it
-            alertDialog.show();
-        }
         fn_permission();
     }
 
@@ -243,19 +177,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter(GoogleService.str_receiver));
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 
 
@@ -434,6 +355,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return false;
     }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

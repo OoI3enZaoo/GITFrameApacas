@@ -7,6 +7,21 @@ package com.admin.gitframeapacas.Data;
 public class LastDataResponse {
 
 
+    /**
+     * aqi : 286
+     * co : 7
+     * no2 : 116
+     * o3 : 2
+     * so2 : 21
+     * pm25 : 367
+     * rad : 0.254973
+     * tstamp : 2017-02-13 22:31:23.0
+     * user_id : 558604629
+     * sname : แขวงบางแค
+     * dname : เขตบางแค
+     * pname : กรุงเทพมหานคร
+     */
+
     private String aqi;
     private String co;
     private String no2;
@@ -16,6 +31,9 @@ public class LastDataResponse {
     private String rad;
     private String tstamp;
     private String user_id;
+    private String sname;
+    private String dname;
+    private String pname;
 
     public String getAqi() {
         return aqi;
@@ -87,5 +105,29 @@ public class LastDataResponse {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
+    }
+
+    public String getDname() {
+        return dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
+
+    public String getPname() {
+        return pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 }

@@ -188,6 +188,7 @@ public class DistrictActivity extends AppCompatActivity {
             Float fso2 = parseFloat(so2);
             Float fpm25 = parseFloat(pm25);
             Float frad = parseFloat(rad);
+
             mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
             mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
             mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
@@ -195,6 +196,7 @@ public class DistrictActivity extends AppCompatActivity {
             mBarChart.addBar(new BarModel("PM2.5", fpm25, Color.parseColor("#f36c60")));
             mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
             mBarChart.startAnimation();
+            Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
 
             lastUpdate.setText("เวลาล่าสุด: " + tstamp);
             txtAQI.setText("AQI: " + aqi);

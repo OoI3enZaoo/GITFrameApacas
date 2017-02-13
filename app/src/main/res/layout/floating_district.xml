@@ -24,18 +24,18 @@
                 app:fabSize="mini" />
         </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
-        <!--<com.lzp.floatingactionbuttonplus.FabTagLayout
+        <com.lzp.floatingactionbuttonplus.FabTagLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tagText="Chart">
+            app:tagText="Refresh Location">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_chart"
+                android:src="@drawable/ic_refresh"
                 app:backgroundTint="#4284E4"
                 app:fabSize="mini" />
-        </com.lzp.floatingactionbuttonplus.FabTagLayout>-->
+        </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
     </com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus>
 </RelativeLayout>

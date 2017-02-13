@@ -22,14 +22,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SetGasService extends Service {
     public static boolean MQTTRunning = true;
+    private static GPSTracker gps;
     private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
     private SetMqttThread setMqttThread = null;
     private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
     private String sssn = "aparcas_raw";
-
     private String TAG = "BENSetGasService";
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -37,13 +38,17 @@ public class SetGasService extends Service {
 
     public void onCreate() {
 
+        gps = new GPSTracker(getApplicationContext());
 
-        Toast.makeText(getApplication(), "Start Service!: ", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplication(), "Start Service!: " + gps.getLatitude() + " lon: " + gps.getLongitude(), Toast.LENGTH_LONG).show();
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (MQTTRunning) {
+
+                    Log.i(TAG, "lat: " + gps.getLatitude());
+                    Log.i(TAG, "long: " + gps.getLongitude());
                     MQTTSender();
 
                 }
