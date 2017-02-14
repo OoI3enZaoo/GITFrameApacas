@@ -16,6 +16,7 @@
 
 package com.admin.gitframeapacas.Bluetooth;
 
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -29,8 +30,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -38,8 +37,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.Views.HomeActivity;
 
 import java.util.ArrayList;
 
@@ -61,11 +60,11 @@ public class DeviceScanActivity extends ListActivity {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mLeDeviceListAdapter.addDevice(device);
-                    mLeDeviceListAdapter.notifyDataSetChanged();
-                }
+                        @Override
+                        public void run() {
+                            mLeDeviceListAdapter.addDevice(device);
+                            mLeDeviceListAdapter.notifyDataSetChanged();
+                        }
                     });
                 }
             };
@@ -98,36 +97,6 @@ public class DeviceScanActivity extends ListActivity {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        if (!mScanning) {
-            menu.findItem(R.id.menu_stop).setVisible(false);
-            menu.findItem(R.id.menu_scan).setVisible(true);
-            menu.findItem(R.id.menu_refresh).setActionView(null);
-        } else {
-            menu.findItem(R.id.menu_stop).setVisible(true);
-            menu.findItem(R.id.menu_scan).setVisible(false);
-            menu.findItem(R.id.menu_refresh).setActionView(
-                    R.layout.actionbar_indeterminate_progress);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_scan:
-                mLeDeviceListAdapter.clear();
-                scanLeDevice(true);
-                break;
-            case R.id.menu_stop:
-                scanLeDevice(false);
-                break;
-        }
-        return true;
     }
 
     @Override
@@ -178,14 +147,19 @@ public class DeviceScanActivity extends ListActivity {
             mScanning = false;
         }
         startActivity(intent);*/
-        final Intent intent = new Intent(this, FeedHomeFragment.class);
-        intent.putExtra(FeedHomeFragment.EXTRAS_DEVICE_NAME, device.getName());//send device name to next activity
-        intent.putExtra(FeedHomeFragment.EXTRAS_DEVICE_ADDRESS, device.getAddress());//send device address to next activity
+        final Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra(HomeActivity.EXTRAS_DEVICE_NAME, device.getName());//send device name to next activity
+        intent.putExtra(HomeActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());//send device address to next activity
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
         }
+        Bundle bundle = new Bundle();
+        bundle.putString("checkblt", "1");
+        intent.putExtras(bundle);
         startActivity(intent);
+
+
     }
 
     private void scanLeDevice(final boolean enable) {

@@ -59,7 +59,6 @@ public class DBCurrentLocation extends SQLiteOpenHelper {
     public void drop() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CONTACTS_TABLE_NAME, null, null);
-        db.close();
     }
 
     public boolean insertData(String aqi, String co, String no2, String o3, String so2, String pm25, String rad, String tstamp, String sname, String dname, String pname) {

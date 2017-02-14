@@ -57,7 +57,7 @@ public class DBFavorite extends SQLiteOpenHelper {
 
     public void drop() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
+        db.delete(CONTACTS_TABLE_NAME, null, null);
     }
 
     public boolean insertData(String sname, String scode, String aqi, String co, String no2, String o3, String so2, String pm25, String rad, String tstamp) {

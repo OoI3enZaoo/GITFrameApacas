@@ -55,7 +55,7 @@ public class DBUser extends SQLiteOpenHelper {
 
     public void drop() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + CONTACTS_TABLE_NAME);
+        db.delete(CONTACTS_TABLE_NAME, null, null);
     }
     public boolean insertAccount(String name, int status) {
         SQLiteDatabase db = this.getWritableDatabase();

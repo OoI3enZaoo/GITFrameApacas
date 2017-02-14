@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".Views.HomeActivity">
 
+
     <fragment
         android:id="@+id/searchfragment"
         android:name="com.admin.gitframeapacas.Fragment.FeedSearchFragment"

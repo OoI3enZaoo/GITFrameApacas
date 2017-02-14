@@ -59,6 +59,10 @@ public class DBRealTime extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void drop() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(CONTACTS_TABLE_NAME, null, null);
+    }
     public boolean insertData(String id, String lat, String lon, String co, String no2, String o3, String so2, String pm25, String rad, String tstamp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
