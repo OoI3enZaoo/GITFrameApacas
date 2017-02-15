@@ -83,7 +83,9 @@ public class FeedHomeFragment extends Fragment {
     ConstraintLayout view3;
     private FloatingActionButtonPlus mActionButtonPlus;
     private Snackbar snackbar;
-
+    private boolean checkNo2 = false;
+    private boolean checkCO = false;
+    private boolean checkPM25 = false;
 
     public FeedHomeFragment() {
 
@@ -118,11 +120,11 @@ public class FeedHomeFragment extends Fragment {
                         DBUser dbUser = new DBUser(getActivity());
                         Toast.makeText(getActivity(), "Switch", Toast.LENGTH_SHORT).show();
                         if (dbUser.getHaveSensor() == 0) {
-                            dbUser.updateCheckSensor(1);
-                            Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
-                            startActivity(intent);
+                            dbUser.updateHaveSensor(1);
+                            /*Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
+                            startActivity(intent);*/
                         } else if (dbUser.getHaveSensor() == 1) {
-                            dbUser.updateCheckSensor(0);
+                            dbUser.updateHaveSensor(0);
 
 
                             new DataNearby(getActivity()).execute();
@@ -265,26 +267,39 @@ public class FeedHomeFragment extends Fragment {
     public void setNO2(Float no2) {
         sensor_no2 = no2;
         Log.i(TAG, "no2: " + sensor_no2);
-        mBarChart.clearChart();
+
         mBarChart.addBar(new BarModel("NO2", sensor_no2, Color.parseColor("#42bd41")));
         mBarChart.startAnimation();
+        checkNo2 = true;
+        clearBar();
 
     }
 
     public void setCO(Float co) {
         sensor_co = co;
         Log.i(TAG, "co: " + sensor_co);
-        mBarChart.clearChart();
         mBarChart.addBar(new BarModel("CO", sensor_co, Color.parseColor("#91a7ff")));
         mBarChart.startAnimation();
+        checkCO = true;
+        clearBar();
     }
 
     public void setDust(Float dust) {
         sensor_pm25 = dust;
         Log.i(TAG, "pm25: " + sensor_pm25);
-        mBarChart.clearChart();
         mBarChart.addBar(new BarModel("PM2.5", sensor_pm25, Color.parseColor("#f36c60")));
         mBarChart.startAnimation();
+        checkPM25 = true;
+        clearBar();
+    }
+
+    private void clearBar() {
+        if (checkNo2 == true && checkCO == true && checkPM25 == true) {
+            mBarChart.clearChart();
+            checkNo2 = false;
+            checkCO = false;
+            checkPM25 = false;
+        }
     }
 
     public class DataNearby extends AsyncTask<Object, Object, String> {

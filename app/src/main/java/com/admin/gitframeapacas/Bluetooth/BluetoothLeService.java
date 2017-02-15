@@ -62,7 +62,7 @@ public class BluetoothLeService extends Service {
             UUID.fromString(MANAFACTURER_NAME);
     public final static UUID UUID_NO2 =
             UUID.fromString(NO2_NAME);
-    private final static String TAG = BluetoothLeService.class.getSimpleName();
+    private final static String TAG = "BENBluetoothLeService";
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
@@ -303,6 +303,7 @@ public class BluetoothLeService extends Service {
      *         callback.
      */
     public boolean connect(final String address) {
+        Log.i(TAG, "mBluetoothAdapter: " + mBluetoothAdapter + " address: " + address);
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;

@@ -1,8 +1,13 @@
 package com.admin.gitframeapacas.Views;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -64,6 +70,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private static final int REQUEST_PERMISSIONS = 100;
+    private static final long SCAN_PERIOD = 10000;
+    private static final int REQUEST_ENABLE_BT = 1;
     public static boolean MQTTRunning = false;
     public static String dust = null;
     public static String CO = null;
@@ -88,8 +96,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     List<String> arrayNO2 = new ArrayList<String>();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Snackbar snackbar;
-
-
+    private BluetoothAdapter mBluetoothAdapter;
+    private boolean mScanning;
+    private Handler mHandler;
     /* private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
          @Override
          public void onReceive(Context context, Intent intent) {
@@ -135,6 +144,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String mDeviceName;
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
+    private BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new BluetoothAdapter.LeScanCallback() {
+                @Override
+                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "Device: " + device.getName().toString() + " id: " + device.getAddress().toString());
+                            if (device.getName().equals("TestFloatNumber")) {
+                                connectBluetooth(device.getAddress().toString(), device.getName().toString());
+                            }
+                        }
+
+
+                    });
+                }
+            };
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
@@ -280,28 +306,85 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         fn_permission();
 
-        Intent intent = getIntent();
-        if (intent.getStringExtra("checkblt") != null) {
-            String checkbluetooth = intent.getStringExtra("checkblt");
-            Log.i(TAG, "checkbluetooth: " + checkbluetooth);
-            if (checkbluetooth.equals("1")) {
-                DBUser dbUser = new DBUser(getApplicationContext());
-                dbUser.updateHaveSensor(1);
-                Intent intent2 = getIntent();
-                mDeviceName = intent2.getStringExtra(EXTRAS_DEVICE_NAME);
-                mDeviceAddress = intent2.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-                Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-                bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-
-                Log.i(TAG, "devicename: " + mDeviceName + " device Address: " + mDeviceAddress);
-
-            }
-
+        mHandler = new Handler();
+        // Use this check to determine whether BLE is supported on the device.  Then you can
+        // selectively disable BLE-related features.
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
         }
+
+        // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
+        // BluetoothAdapter through BluetoothManager.
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+
+
+        //Intent intent = getIntent();
+        //if (intent.getStringExtra("checkblt") != null) {
+        //String checkbluetooth = intent.getStringExtra("checkblt");
+        //Log.i(TAG, "checkbluetooth: " + checkbluetooth);
+        //if (checkbluetooth.equals("1")) {
+        // DBUser dbUser = new DBUser(getApplicationContext());
+        // dbUser.updateHaveSensor(1);
+        //  Intent intent2 = getIntent();
+        // mDeviceName = intent2.getStringExtra(EXTRAS_DEVICE_NAME);
+        //  mDeviceAddress = intent2.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+
+
+        //}
+
+        //}
 
 
     }
 
+    private void connectBluetooth(String address, String name) {
+
+
+        Log.i(TAG, "Device: equals: " + address + " name: " + name);
+        DBUser dbUser = new DBUser(getApplicationContext());
+        if (dbUser.getHaveSensor() == 1) {
+
+            BluetoothManager bluetoothManager =
+                    (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+/*
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+*/
+
+                Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+                bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+            Log.i(TAG, "Blutooth adapterr: " + mBluetoothAdapter);
+
+            registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+            if (mBluetoothLeService != null) {
+                final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+                Log.d(TAG, "Connect request result=" + result);
+            }
+            }
+        if (mScanning) {
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            mScanning = false;
+        }
+
+
+    }
     private void fn_permission() {
         if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
 
@@ -593,17 +676,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-            Log.d(TAG, "Connect request result=" + result);
+
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                scanLeDevice(true);
+            }
         }
+
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
+
+        scanLeDevice(false);
     }
 
     @Override
@@ -760,6 +850,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void scanLeDevice(final boolean enable) {
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    invalidateOptionsMenu();
+                }
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
+        } else {
+            mScanning = false;
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        }
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // User chose not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -800,4 +921,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+
 }
