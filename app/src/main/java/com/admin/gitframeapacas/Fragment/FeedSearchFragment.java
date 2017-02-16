@@ -406,7 +406,7 @@ public class FeedSearchFragment extends Fragment {
             if (gridstatus == 0) {
 
                 Request request = new Request.Builder()
-                        .url("http://sysnet.utcc.ac.th/aparcas/api/grid_lut.jsp")
+                        .url("http://sysnet.utcc.ac.th/aparcas/api/districtForAndroid.jsp")
                         .build();
                 try {
                     int rount2 = 0;

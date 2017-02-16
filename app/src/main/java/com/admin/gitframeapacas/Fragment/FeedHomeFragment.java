@@ -25,6 +25,8 @@ import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Service.GPSTracker;
+import com.admin.gitframeapacas.Service.RandomGas;
+import com.admin.gitframeapacas.Views.HomeActivity;
 import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -61,6 +63,9 @@ public class FeedHomeFragment extends Fragment {
     public static Float sensor_no2 = 0.0f;
     public static Float sensor_co = 0.0f;
     public static Float sensor_pm25 = 0.0f;
+    public static boolean checkNo2;
+    public static boolean checkCO;
+    public static boolean checkPM25;
     private static String TAG = "BENFeedHomeFragment";
     private static CustomGauge gauge;
     private static TextView txtAQI;
@@ -83,9 +88,6 @@ public class FeedHomeFragment extends Fragment {
     ConstraintLayout view3;
     private FloatingActionButtonPlus mActionButtonPlus;
     private Snackbar snackbar;
-    private boolean checkNo2 = false;
-    private boolean checkCO = false;
-    private boolean checkPM25 = false;
 
     public FeedHomeFragment() {
 
@@ -99,7 +101,7 @@ public class FeedHomeFragment extends Fragment {
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
 
-
+        gps = new GPSTracker(getActivity());
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
 
             @Override
@@ -120,14 +122,17 @@ public class FeedHomeFragment extends Fragment {
                         DBUser dbUser = new DBUser(getActivity());
                         Toast.makeText(getActivity(), "Switch", Toast.LENGTH_SHORT).show();
                         if (dbUser.getHaveSensor() == 0) {
+                            mBarChart.clearChart();
                             dbUser.updateHaveSensor(1);
+                            ((HomeActivity) getActivity()).openBlutooth();
+
                             /*Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
                             startActivity(intent);*/
                         } else if (dbUser.getHaveSensor() == 1) {
+                            mBarChart.clearChart();
                             dbUser.updateHaveSensor(0);
-
-
                             new DataNearby(getActivity()).execute();
+
 
                         }
 
@@ -264,41 +269,112 @@ public class FeedHomeFragment extends Fragment {
         alertDialog.show();
     }
 
-    public void setNO2(Float no2) {
-        sensor_no2 = no2;
-        Log.i(TAG, "no2: " + sensor_no2);
-
-        mBarChart.addBar(new BarModel("NO2", sensor_no2, Color.parseColor("#42bd41")));
-        mBarChart.startAnimation();
-        checkNo2 = true;
-        clearBar();
-
+    public void setLocation() {
+        Log.i(TAG, "setData lat " + gps.getLatitude() + " lon: " + gps.getLongitude());
+        new dataTask(getActivity()).execute(gps.getLatitude(), gps.getLongitude());
     }
 
-    public void setCO(Float co) {
-        sensor_co = co;
-        Log.i(TAG, "co: " + sensor_co);
-        mBarChart.addBar(new BarModel("CO", sensor_co, Color.parseColor("#91a7ff")));
-        mBarChart.startAnimation();
-        checkCO = true;
-        clearBar();
+    public void setNO2(Float no2, boolean status) {
+        checkNo2 = status;
+        sensor_no2 = no2 * 1000;
+        Log.i(TAG, "no2: " + sensor_no2 + " true");
+        setBar();
     }
 
-    public void setDust(Float dust) {
-        sensor_pm25 = dust;
-        Log.i(TAG, "pm25: " + sensor_pm25);
-        mBarChart.addBar(new BarModel("PM2.5", sensor_pm25, Color.parseColor("#f36c60")));
-        mBarChart.startAnimation();
-        checkPM25 = true;
-        clearBar();
+    public void setCO(Float co, boolean status) {
+        checkCO = status;
+        sensor_co = co * 1000;
+        Log.i(TAG, "co: " + sensor_co + " true");
+        setBar();
     }
 
-    private void clearBar() {
+    public void setDust(Float dust, boolean status) {
+        checkPM25 = status;
+        sensor_pm25 = dust * 1000;
+        Log.i(TAG, "pm25: " + sensor_pm25 + " true");
+        setBar();
+    }
+
+    private void setBar() {
+        Log.i(TAG, "checkno2: " + checkNo2 + " checkco: " + checkCO + " checkpm25: " + checkPM25);
         if (checkNo2 == true && checkCO == true && checkPM25 == true) {
+            Log.i(TAG, "All true");
             mBarChart.clearChart();
+            RandomGas gas = new RandomGas();
+            float randO3 = gas.o3();
+            float randSO2 = gas.so2();
+
+            mBarChart.addBar(new BarModel("CO", sensor_co, Color.parseColor("#91a7ff")));
+            mBarChart.addBar(new BarModel("NO2", sensor_no2, Color.parseColor("#42bd41")));
+            mBarChart.addBar(new BarModel("O3", randO3, Color.parseColor("#fff176")));
+            mBarChart.addBar(new BarModel("SO2", randSO2, Color.parseColor("#ffb74d")));
+            mBarChart.addBar(new BarModel("PM2.5", sensor_pm25, Color.parseColor("#f36c60")));
+            mBarChart.startAnimation();
             checkNo2 = false;
             checkCO = false;
             checkPM25 = false;
+        }
+    }
+
+    public class dataTask extends AsyncTask<Double, Object, String> {
+        private Context mContext;
+
+        public dataTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Double... location) {
+            double lat = location[0];
+            double lon = location[1];
+            String data = "https://www.googleapis.com/fusiontables/v1/query?key=AIzaSyAWgbWYxPgHHo-PU4IuhjjZhjh1PXfhYkc&sql=SELECT SNAME FROM 1x40iw0b31K2vTT6ZiSUxBWUfBbznoppAtERA7S2G WHERE ST_INTERSECTS(geometry, CIRCLE(LATLNG(" + lat + "," + lon + "),1))";
+            if (lat > 0 && lon > 0) {
+                OkHttpClient client = new OkHttpClient();
+                RequestBody formBody = new FormBody.Builder()
+                        .build();
+                Request request = new Request.Builder()
+                        .url(data)
+                        .post(formBody)
+                        .build();
+                String sname = "";
+
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    String result = response.body().string();
+
+
+                    Log.i(TAG, "sname: " + result);
+
+                    /*sname = result.replaceAll("\\D+", "");
+                    if (sname.length() > 6) {
+                        sname = sname.substring(0, 6);
+                    }
+*/
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return sname;
+
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String name) {
+            super.onPostExecute(name);
+            if (!name.equals("")) {
+
+                txtLocation.setText(sname);
+
+            }
+
         }
     }
 

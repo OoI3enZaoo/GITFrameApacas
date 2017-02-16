@@ -93,4 +93,17 @@ public class DBGrid extends SQLiteOpenHelper {
 
     }
 
+    public String getSName(String scode) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        String sname = "";
+        cursor = db.rawQuery("SELECT sname FROM " + CONTACTS_TABLE_NAME + " WHERE scode=?", new String[]{scode});
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            sname = cursor.getString(cursor.getColumnIndex("sname"));
+        }
+        return sname;
+
+    }
+
 }

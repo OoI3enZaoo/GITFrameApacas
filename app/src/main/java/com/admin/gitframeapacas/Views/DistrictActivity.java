@@ -73,7 +73,7 @@ public class DistrictActivity extends AppCompatActivity {
         Intent intent = getIntent();
         DistrictName = intent.getStringExtra("district").toString();
         DistrictCode = intent.getStringExtra("scode").toString();
-        toolbar.setTitle(DistrictName + " code: " + DistrictCode);
+        toolbar.setTitle(DistrictName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         txtLocation = (TextView) findViewById(R.id.txtLocation);
@@ -83,9 +83,17 @@ public class DistrictActivity extends AppCompatActivity {
         view2 = (ConstraintLayout) findViewById(R.id.contraint_district);
         gauge = (CustomGauge) findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) findViewById(R.id.txtAQI);
-
-        new getLastDataTask(getApplicationContext()).execute(DistrictCode);
         loadData();
+        if (intent.getStringExtra("co") == null) {
+            new getLastDataTask(getApplicationContext()).execute(DistrictCode);
+        } else {
+            new getDataInSQLiteTask().execute(intent.getStringExtra("co").toString(), intent.getStringExtra("no2").toString(), intent.getStringExtra("o3").toString(), intent.getStringExtra("so2").toString(),
+                    intent.getStringExtra("pm25").toString(), intent.getStringExtra("rad").toString(), intent.getStringExtra("district").toString(), intent.getStringExtra("scode").toString(),
+                    intent.getStringExtra("tstamp").toString(), intent.getStringExtra("aqi").toString());
+
+
+            Log.i(TAG, "NOT NULL");
+        }
     }
 
     private void loadData() {
@@ -261,7 +269,9 @@ public class DistrictActivity extends AppCompatActivity {
             Log.i(TAG, "onPostExcute");
             if (s.equals("1")) {
                 DBFavorite dbFavorite = new DBFavorite(getApplicationContext());
-                dbFavorite.insertData(DistrictName, DistrictCode, aqi, co, no2, o3, so2, pm25, rad, tstamp);
+                Log.i(TAG, "dianame: " + DistrictName + " dcode: " + DistrictCode + " aqi:  " + aqi + " co: " + co + " no2: " + no2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " tstamp: " + tstamp);
+                Log.i(TAG, "insert: " + dbFavorite.insertData(DistrictName, DistrictCode, aqi, co, no2, o3, so2, pm25, rad, tstamp));
+                Log.i(TAG, "count: " + dbFavorite.numberOfRows());
                 snackbar = Snackbar.make(view2, "คุณได้เพิ่ม " + DistrictName + " เป็นรายการโปรดแล้ว", Snackbar.LENGTH_LONG)
                         .setAction("ปิด", new View.OnClickListener() {
                             @Override
@@ -282,5 +292,77 @@ public class DistrictActivity extends AppCompatActivity {
     }
 
 
+    private class getDataInSQLiteTask extends AsyncTask<String, Void, String> {
 
+        String mCO;
+        String mNO2;
+        String mO3;
+        String mSO2;
+        String mPM25;
+        String mRad;
+        String mSname;
+        String mScode;
+        String mTime;
+        String mAQI;
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            mCO = strings[0];
+            mNO2 = strings[1];
+            mO3 = strings[2];
+            mSO2 = strings[3];
+            mPM25 = strings[4];
+            mRad = strings[5];
+            mSname = strings[6];
+            mScode = strings[7];
+            mTime = strings[8];
+            mAQI = strings[9];
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Float fco = parseFloat(mCO);
+            Float fno2 = parseFloat(mNO2);
+            Float fo3 = parseFloat(mO3);
+            Float fso2 = parseFloat(mSO2);
+            Float fpm25 = parseFloat(mPM25);
+            Float frad = parseFloat(mRad);
+
+            mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
+            mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
+            mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
+            mBarChart.addBar(new BarModel("SO2", fso2, Color.parseColor("#ffb74d")));
+            mBarChart.addBar(new BarModel("PM2.5", fpm25, Color.parseColor("#f36c60")));
+            mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
+            mBarChart.startAnimation();
+            Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
+
+            lastUpdate.setText("เวลาล่าสุด: " + mTime);
+            txtAQI.setText("AQI: " + mAQI);
+            gauge.setValue(Integer.parseInt(mAQI));
+            if (gauge.getValue() > 0) {
+                gauge.setPointStartColor(Color.parseColor("#91a7ff"));
+
+            }
+            if (gauge.getValue() > 50) {
+                gauge.setPointStartColor(Color.parseColor("#42bd41"));
+            }
+            if (gauge.getValue() > 100) {
+                gauge.setPointStartColor(Color.parseColor("#fff176"));
+
+            }
+            if (gauge.getValue() > 200) {
+                gauge.setPointStartColor(Color.parseColor("#ffb74d"));
+            }
+            if (gauge.getValue() > 300) {
+                gauge.setPointStartColor(Color.parseColor("#f36c60"));
+            }
+
+        }
+    }
 }

@@ -3,14 +3,15 @@ package com.admin.gitframeapacas.SQLite;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DBFavorite extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "Favorite.db";
-    public static final String CONTACTS_TABLE_NAME = "favorite";
+    public static final String DATABASE_NAME = "myFavorite.db";
+    public static final String CONTACTS_TABLE_NAME = "my_favorite";
     public static final String CONTACTS_COLUMN_SNAME = "sname";
     public static final String CONTACTS_COLUMN_SCODE = "scode";
     public static final String CONTACTS_COLUMN_AQI = "aqi";
@@ -36,7 +37,7 @@ public class DBFavorite extends SQLiteOpenHelper {
                         "(" +
                         CONTACTS_COLUMN_SNAME + " text," +
                         CONTACTS_COLUMN_SCODE + " integer," +
-                        CONTACTS_COLUMN_AQI + " text" +
+                        CONTACTS_COLUMN_AQI + " text," +
                         CONTACTS_COLUMN_CO + " text," +
                         CONTACTS_COLUMN_NO2 + " text," +
                         CONTACTS_COLUMN_O3 + " text," +
@@ -78,6 +79,11 @@ public class DBFavorite extends SQLiteOpenHelper {
         return true;
     }
 
+    public int numberOfRows() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
+        return numRows;
+    }
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + CONTACTS_TABLE_NAME, null);

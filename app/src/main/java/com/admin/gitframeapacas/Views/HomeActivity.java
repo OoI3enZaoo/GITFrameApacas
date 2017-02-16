@@ -70,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
     private static final int REQUEST_PERMISSIONS = 100;
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 1000;
     private static final int REQUEST_ENABLE_BT = 1;
     public static boolean MQTTRunning = false;
     public static String dust = null;
@@ -144,23 +144,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String mDeviceName;
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i(TAG, "Device: " + device.getName().toString() + " id: " + device.getAddress().toString());
-                            if (device.getName().equals("TestFloatNumber")) {
-                                connectBluetooth(device.getAddress().toString(), device.getName().toString());
-                            }
-                        }
-
-
-                    });
-                }
-            };
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
@@ -178,6 +161,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mBluetoothLeService = null;
         }
     };
+    private BluetoothAdapter.LeScanCallback mLeScanCallback =
+            new BluetoothAdapter.LeScanCallback() {
+                @Override
+                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, "Device: " + device.getName().toString() + " id: " + device.getAddress().toString());
+                            if (device.getName().equals("TestFloatNumber")) {
+                                connectBluetooth(device.getAddress().toString(), device.getName().toString());
+                            }
+                        }
+
+
+                    });
+                }
+            };
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private String hrValue;
@@ -211,19 +211,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 FeedHomeFragment homefragment = new FeedHomeFragment();
 
+                homefragment.setLocation();
                 if (dust != null && !dust.equals("0.00") && !dust.equals("")) {
                     dust = dust.toString().trim();
-                    homefragment.setDust(Float.parseFloat(dust));
-
+                    homefragment.setDust(Float.parseFloat(dust), true);
 
                 }
                 if (CO != null && !CO.equals("0.00") && !CO.equals("")) {
                     CO = CO.toString().trim();
-                    homefragment.setCO(Float.parseFloat(CO));
+                    homefragment.setCO(Float.parseFloat(CO), true);
+
                 }
                 if (NO2 != null && !NO2.equals("0.00") && !NO2.equals("")) {
                     NO2 = NO2.toString().trim();
-                    homefragment.setNO2(Float.parseFloat(NO2));
+                    homefragment.setNO2(Float.parseFloat(NO2), true);
+
                 }
                 Log.d(TAG, "test value dust =" + dust + "," + "CO =" + CO + "," + "NO2 =" + NO2);
 
@@ -356,28 +358,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Log.i(TAG, "Device: equals: " + address + " name: " + name);
         DBUser dbUser = new DBUser(getApplicationContext());
-        if (dbUser.getHaveSensor() == 1) {
 
-            BluetoothManager bluetoothManager =
-                    (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = bluetoothManager.getAdapter();
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(address);
+            Log.d(TAG, "Connect request result=" + result);
+        }
 
-/*
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        Log.i(TAG, "Blutooth adapterr: " + mBluetoothAdapter);
 
-*/
-
-                Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-                bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
-            Log.i(TAG, "Blutooth adapterr: " + mBluetoothAdapter);
-
-            registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-            if (mBluetoothLeService != null) {
-                final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-                Log.d(TAG, "Connect request result=" + result);
-            }
-            }
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
@@ -385,6 +376,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
     private void fn_permission() {
         if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
 
@@ -676,23 +668,34 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
+            if (!mBluetoothAdapter.isEnabled()) {
+                DBUser dbUser = new DBUser(getApplicationContext());
+                if (dbUser.getHaveSensor() == 1) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                }
+            }
+        scanLeDevice(true);
+    }
 
-
+    public void openBlutooth() {
         if (!mBluetoothAdapter.isEnabled()) {
             if (!mBluetoothAdapter.isEnabled()) {
+                DBUser dbUser = new DBUser(getApplicationContext());
+                if (dbUser.getHaveSensor() == 1) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                scanLeDevice(true);
+
             }
         }
 
-
+    }
+        scanLeDevice(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         scanLeDevice(false);
     }
 
@@ -910,7 +913,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     return new FeedAboutAQIFragment();
 
 
-            }
+        }
             return null;
         }
 
@@ -918,7 +921,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         public int getCount() {
             // Show 3 total pages.
             return 5;
-        }
+    }
 
     }
 
