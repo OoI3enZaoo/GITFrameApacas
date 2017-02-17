@@ -19,7 +19,7 @@ public class RandomGas {
         return rand.nextInt(999999999) + 1111;
     }
 
-    float lat(int option) {
+    public float lat(int option) {
 
         float latmin;
         float latmax;
@@ -48,7 +48,7 @@ public class RandomGas {
 
     }
 
-    float lon(int option) {
+    public float lon(int option) {
         float lonmin;
         float lonmax;
         Log.i("ben", "randomPosition(lon): " + option);
@@ -74,36 +74,41 @@ public class RandomGas {
 
     }
 
-    int co() {
+    public int co() {
         return rand.nextInt(80) + 5;
     }
 
-    int no2() {
+    public int no2() {
         return rand.nextInt(120) + 15;
 
     }
 
-    public int o3() {
-        return (rand.nextInt(20) + 1) * 1000;
+    public float o3() {
+        float min = 1.00f;
+        float max = 15.00f;
+        return rand.nextFloat() * (max - min) + min;
 
     }
 
-    public int so2() {
-        return (rand.nextInt(18) + 5) * 1000;
+    public float so2() {
+
+        float min = 5.00f;
+        float max = 14.00f;
+        return rand.nextFloat() * (max - min) + min;
 
     }
 
-    int pm25() {
+    public int pm25() {
         return rand.nextInt(350) + 50;
     }
 
-    float rad() {
+    public float rad() {
         float radmin = 0.010f;
         float radmax = 1.100f;
         return rand.nextFloat() * (radmax - radmin) + radmin;
     }
 
-    int tstamp() {
+    public int tstamp() {
         Date dNow = new Date();
             /*SimpleDateFormat ft =
                     new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");

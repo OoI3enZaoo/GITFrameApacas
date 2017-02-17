@@ -1,17 +1,13 @@
 package com.admin.gitframeapacas.Fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +15,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.admin.gitframeapacas.Bluetooth.DeviceScanActivity;
 import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBUser;
-import com.admin.gitframeapacas.Service.GPSTracker;
 import com.admin.gitframeapacas.Service.RandomGas;
-import com.admin.gitframeapacas.Views.HomeActivity;
 import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,7 +31,10 @@ import org.eazegraph.lib.models.BarModel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -69,7 +65,8 @@ public class FeedHomeFragment extends Fragment {
     private static String TAG = "BENFeedHomeFragment";
     private static CustomGauge gauge;
     private static TextView txtAQI;
-    private static GPSTracker gps;
+
+
     private static String aqi;
     private static String co;
     private static String no2;
@@ -84,12 +81,13 @@ public class FeedHomeFragment extends Fragment {
     private static String pname;
     private static TextView lastUpdate;
     private static TextView txtLocation;
-    NestedScrollView view2;
+    private static TextView txtMode;
     ConstraintLayout view3;
     private FloatingActionButtonPlus mActionButtonPlus;
-    private Snackbar snackbar;
+
 
     public FeedHomeFragment() {
+
 
     }
 
@@ -101,7 +99,6 @@ public class FeedHomeFragment extends Fragment {
         mActionButtonPlus = (FloatingActionButtonPlus) v.findViewById(R.id.ActionButtonPlus);
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
 
-        gps = new GPSTracker(getActivity());
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
 
             @Override
@@ -124,37 +121,33 @@ public class FeedHomeFragment extends Fragment {
                         if (dbUser.getHaveSensor() == 0) {
                             mBarChart.clearChart();
                             dbUser.updateHaveSensor(1);
-                            ((HomeActivity) getActivity()).openBlutooth();
-
-                            /*Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
-                            startActivity(intent);*/
+                            txtMode.setText("โหมดเก็บค่าสภาพอากาศ");
                         } else if (dbUser.getHaveSensor() == 1) {
                             mBarChart.clearChart();
                             dbUser.updateHaveSensor(0);
+                            txtMode.setText("โหมดอ่านค่าสภาพอากาศ");
                             new DataNearby(getActivity()).execute();
-
-
                         }
-
-
                         break;
-
                 }
-
             }
         });
-
         gauge = (CustomGauge) v.findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) v.findViewById(R.id.txtAQI);
-        gps = new GPSTracker(getContext());
         lastUpdate = (TextView) v.findViewById(R.id.txtlastUpdate);
         txtLocation = (TextView) v.findViewById(R.id.txtLocation);
+        txtMode = (TextView) v.findViewById(R.id.txtMode);
 
-        view2 = (NestedScrollView) v.findViewById(R.id.fragment_home);
         view3 = (ConstraintLayout) v.findViewById(R.id.contrant);
+        loadData();
+        return v;
+    }
+
+    public void loadData() {
         DBUser dbUser = new DBUser(getActivity());
-        if (dbUser.getHaveSensor() == 0) {
+        if (dbUser.getCheckSensor() == 1) {
             Log.i(TAG, "already have data");
+            txtMode.setText("โหมดอ่านค่าสภาพอากาศ");
             DBCurrentLocation dbcl = new DBCurrentLocation(getActivity());
             Cursor res = dbcl.getAllData();
             while (res.moveToNext()) {
@@ -175,7 +168,6 @@ public class FeedHomeFragment extends Fragment {
                 Float fso2 = parseFloat(sSO2);
                 Float fpm25 = parseFloat(sPM25);
                 Float frad = parseFloat(sRAD);
-
                 mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
                 mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
                 mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
@@ -189,7 +181,6 @@ public class FeedHomeFragment extends Fragment {
                 lastUpdate.setText(sTstamp.toString() + "");
                 gauge.setValue(Integer.parseInt(sAQI));
                 txtAQI.setText("AQI: " + sAQI);
-
                 if (gauge.getValue() > 0) {
                     gauge.setPointStartColor(Color.parseColor("#91a7ff"));
 
@@ -208,71 +199,14 @@ public class FeedHomeFragment extends Fragment {
                     gauge.setPointStartColor(Color.parseColor("#f36c60"));
                 }
             }
-        } else if (dbUser.getHaveSensor() == 1) {
-            /*
-                            Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
-                            startActivity(intent);*/
-
-
-        } else {
-            loadData();
-            Log.i(TAG, "LoadData()");
+        } else if (dbUser.getCheckSensor() == 0) {
+            new DataNearby(getActivity()).execute();
         }
-
-
-        return v;
     }
-
-    private void loadData() {
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        final DBUser db = new DBUser(getActivity());
-        alertDialogBuilder.setTitle("APARCAS System");
-        alertDialogBuilder
-                .setMessage("คุณมีอุปกรณ์เซ็นเซอร์ตรวจจับสภาพอากาศหรือไม่")
-                .setCancelable(false)
-                .setPositiveButton("มี", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i(TAG, "มีเซ็นเซอร์");
-                        //gauge.setVisibility(View.GONE);
-                        //txtAQI.setVisibility(View.GONE);
-                        dialog.cancel();
-
-                        Intent intent = new Intent(getActivity(), DeviceScanActivity.class);
-                        startActivity(intent);
-
-                    }
-                })
-                .setNegativeButton("ไม่มี", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Log.i(TAG, "ไม่มีเซ็เนซอร์");
-                        dialog.cancel();
-                        snackbar = Snackbar.make(view2, "หากคุณมีเซ็นเซอร์ คุณสามารถเข้าไปเปิดการใช้งานที่ตั้งค่าได้ในภายหลัง", Snackbar.LENGTH_LONG)
-                                .setAction("ปิด", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        snackbar.dismiss();
-                                    }
-                                });
-                        snackbar.show();
-
-                        new DataNearby(getActivity()).execute();
-
-
-                    }
-                });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-    }
-
-    public void setLocation() {
+    /*public void setLocation() {
         Log.i(TAG, "setData lat " + gps.getLatitude() + " lon: " + gps.getLongitude());
         new dataTask(getActivity()).execute(gps.getLatitude(), gps.getLongitude());
-    }
+    }*/
 
     public void setNO2(Float no2, boolean status) {
         checkNo2 = status;
@@ -303,7 +237,6 @@ public class FeedHomeFragment extends Fragment {
             RandomGas gas = new RandomGas();
             float randO3 = gas.o3();
             float randSO2 = gas.so2();
-
             mBarChart.addBar(new BarModel("CO", sensor_co, Color.parseColor("#91a7ff")));
             mBarChart.addBar(new BarModel("NO2", sensor_no2, Color.parseColor("#42bd41")));
             mBarChart.addBar(new BarModel("O3", randO3, Color.parseColor("#fff176")));
@@ -313,8 +246,14 @@ public class FeedHomeFragment extends Fragment {
             checkNo2 = false;
             checkCO = false;
             checkPM25 = false;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
+            System.out.println(dateFormat.format(date));
+            lastUpdate.setText(String.format("เวลาล่าสุด: " + dateFormat.format(date)));
+            txtMode.setText("โหมดเก็บค่าสภาพอากาศ");
         }
     }
+
 
     public class dataTask extends AsyncTask<Double, Object, String> {
         private Context mContext;
@@ -343,13 +282,17 @@ public class FeedHomeFragment extends Fragment {
                         .build();
                 String sname = "";
 
-
+                String result = "";
                 try {
                     Response response = client.newCall(request).execute();
-                    String result = response.body().string();
+                    result = response.body().string();
 
-
+                    result = result.replaceAll("\\s+", "");
+                    result = result.replaceAll("\\W+", "");
+                    result = result.replaceAll("[a-zA-Z]", "");
                     Log.i(TAG, "sname: " + result);
+
+
 
                     /*sname = result.replaceAll("\\D+", "");
                     if (sname.length() > 6) {
@@ -360,25 +303,21 @@ public class FeedHomeFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return sname;
-
+                return result;
             }
             return "";
         }
-
         @Override
         protected void onPostExecute(String name) {
             super.onPostExecute(name);
             if (!name.equals("")) {
-
-                txtLocation.setText(sname);
-
+                txtLocation.setText(name);
             }
 
         }
     }
 
-    public class DataNearby extends AsyncTask<Object, Object, String> {
+    private class DataNearby extends AsyncTask<Object, Object, String> {
 
         private DBUser dbUser;
         private String message;
@@ -392,14 +331,11 @@ public class FeedHomeFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             dbUser = new DBUser(mContext);
-
         }
-
         @Override
         protected String doInBackground(Object... strings) {
-            double lat = gps.getLatitude();
-            double lon = gps.getLongitude();
-
+            double lat = 0.0d;
+            double lon = 0.0d;
 
             Log.i(TAG, "lat: " + lat + " lon: " + lon);
             if (lat > 0 && lon > 0) {
@@ -450,7 +386,6 @@ public class FeedHomeFragment extends Fragment {
                     sname = result[0].getSname();
                     dname = result[0].getDname();
                     pname = result[0].getPname();
-
                     Log.i(TAG, "aqi: " + aqi + " co: " + co + " no2: " + no2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " tstamp: " + tstamp + " uid: " + uid);
 
                 } catch (IOException e) {
@@ -510,7 +445,7 @@ public class FeedHomeFragment extends Fragment {
                     gauge.setPointStartColor(Color.parseColor("#f36c60"));
                 }
                 DBUser dbUser = new DBUser(mContext);
-                dbUser.updateHaveSensor(0);
+                dbUser.updateCheckSensor(1);
 
             } else if (s.equals("1")) { // have sensor
 
@@ -521,4 +456,6 @@ public class FeedHomeFragment extends Fragment {
             }
         }
     }
+
+
 }

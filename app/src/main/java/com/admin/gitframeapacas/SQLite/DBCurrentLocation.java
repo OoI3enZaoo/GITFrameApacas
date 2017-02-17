@@ -3,7 +3,6 @@ package com.admin.gitframeapacas.SQLite;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -82,9 +81,12 @@ public class DBCurrentLocation extends SQLiteOpenHelper {
     }
 
     public int numberOfRows() {
+        String countQuery = "SELECT  * FROM " + CONTACTS_TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        return numRows;
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int cnt = cursor.getCount();
+        cursor.close();
+        return cnt;
     }
 
     public Cursor getAllData() {

@@ -102,5 +102,37 @@ public class DBFavorite extends SQLiteOpenHelper {
          */
     }
 
+    public long UpdateData(String scode, String sname, String aqi, String co, String no2, String o3, String so2, String pm25, String rad, String tstamp) {
+        try {
+            SQLiteDatabase db;
+            db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(CONTACTS_COLUMN_SNAME, sname);
+            contentValues.put(CONTACTS_COLUMN_SCODE, scode);
+            contentValues.put(CONTACTS_COLUMN_AQI, aqi);
+            contentValues.put(CONTACTS_COLUMN_CO, co);
+            contentValues.put(CONTACTS_COLUMN_NO2, no2);
+            contentValues.put(CONTACTS_COLUMN_O3, o3);
+            contentValues.put(CONTACTS_COLUMN_SO2, so2);
+            contentValues.put(CONTACTS_COLUMN_PM25, pm25);
+            contentValues.put(CONTACTS_COLUMN_RAD, rad);
+            contentValues.put(CONTACTS_COLUMN_TSTAMP, tstamp);
+            long rows = db.update(CONTACTS_TABLE_NAME, contentValues, " scode = ?",
+                    new String[]{String.valueOf(scode)});
+
+            db.close();
+            return rows; // return rows updated.
+
+        } catch (Exception e) {
+            return -1;
+        }
+
+    }
+
+    public void deleteData(String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + CONTACTS_TABLE_NAME + " WHERE " + CONTACTS_COLUMN_SCODE + "='" + value + "'");
+        db.close();
+    }
 
 }

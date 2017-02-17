@@ -35,6 +35,7 @@ public abstract class SetMqttThread implements Runnable {
     private String topicName;
     private String sssn;
     private int counter = 0;
+    private String TAG = "BENSetMqttThread";
 
     public SetMqttThread(String sssn, BlockingQueue<JSONObject> messageQueue, String mqttBrokerURL, String mqttUser, String mqttPwd) {
         super();
@@ -58,7 +59,7 @@ public abstract class SetMqttThread implements Runnable {
             innerThread.start();
         } catch (Exception e) {
 
-            Log.i("MQT2", "start exception (SetMqttThread): " + e);
+            Log.i(TAG, "start exception (SetMqttThread): " + e);
         }
     }
 
@@ -67,7 +68,7 @@ public abstract class SetMqttThread implements Runnable {
             stopInnerThread = true;
             destroyPublisher();
         } catch (Exception e) {
-            Log.i("MQT2", "stop exception (SetMqttThread): " + e);
+            Log.i(TAG, "stop exception (SetMqttThread): " + e);
         }
     }
 
@@ -80,7 +81,8 @@ public abstract class SetMqttThread implements Runnable {
                 JSONObject event = messageQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (event != null) sendMessage(event);
             } catch (Exception e) {
-                System.out.println("run exception (SetMqttThread): " + e);
+
+                Log.i(TAG, "run exception (SetMqttThread): " + e);
             }//end try
         }//end while
     }
@@ -89,11 +91,7 @@ public abstract class SetMqttThread implements Runnable {
         //counter++;
 
         mqttClient.publish(new PublishMessage(topicName, QoS.AT_MOST_ONCE, String.valueOf(obj)));
-
-
     }
-
-
 
 
     public void createPublisher() {
@@ -102,19 +100,19 @@ public abstract class SetMqttThread implements Runnable {
         mqttListener = new AsyncClientListener() {
             @Override
             public void publishReceived(MqttClient client, PublishMessage message) {
-                System.out.println("Received a message when no subscriptions were active. Check your broker ;)");
+                Log.i(TAG, "Received a message when no subscriptions were active. Check your broker ");
             }
 
             @Override
             public void disconnected(MqttClient client, Throwable cause, boolean reconnecting) {
                 if (cause != null) {
-                    System.out.println("Disconnected from the broker due to an exception - " + cause);
+                    Log.i(TAG, "Disconnected from the broker due to an exception - " + cause);
                 } else {
-                    System.out.println("Disconnected from the broker.");
+                    Log.i(TAG, "Disconnected from the broker.");
                 }
 
                 if (reconnecting) {
-                    System.out.println("Attempting to reconnect to the broker.");
+                    Log.i(TAG, "Attempting to reconnect to the broker.");
                 }
             }
 
@@ -146,12 +144,12 @@ public abstract class SetMqttThread implements Runnable {
 
             ConnectReturnCode returnCode = connectReturnCode.get();
             if (returnCode == null || returnCode != ConnectReturnCode.ACCEPTED) {
-                System.out.println("The broker rejected our attempt to connect - Reason: " + returnCode);
+                Log.i(TAG, "The broker rejected our attempt to connect - Reason: " + returnCode);
                 //return;
             }
 
         } catch (Exception e) {
-            System.out.println("An exception prevented the publishing of the full catalog." + e);
+            Log.i(TAG, "An exception prevented the publishing of the full catalog." + e);
         }
     }
 

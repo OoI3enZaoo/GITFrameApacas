@@ -3,7 +3,6 @@ package com.admin.gitframeapacas.Service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -21,7 +20,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SetGasService extends Service {
     public static boolean MQTTRunning = true;
-    private static GPSTracker gps;
     private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
     private SetMqttThread setMqttThread = null;
     private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
@@ -37,17 +35,13 @@ public class SetGasService extends Service {
 
     public void onCreate() {
 
-        gps = new GPSTracker(getApplicationContext());
 
-        Toast.makeText(getApplication(), "Start Service!: " + gps.getLatitude() + " lon: " + gps.getLongitude(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplication(), "Start Service!: ", Toast.LENGTH_LONG).show();
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (MQTTRunning) {
-
-                    Log.i(TAG, "lat: " + gps.getLatitude());
-                    Log.i(TAG, "long: " + gps.getLongitude());
                     MQTTSender();
 
                 }
@@ -84,17 +78,15 @@ public class SetGasService extends Service {
         setMqttThread = new SetMqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd) {
             @Override
             public void createListener() {
-
             }
 
             @Override
             public void createClient() {
-
             }
         };
         setMqttThread.start();
 
-    }// end of Random
+    }
 
 
 }

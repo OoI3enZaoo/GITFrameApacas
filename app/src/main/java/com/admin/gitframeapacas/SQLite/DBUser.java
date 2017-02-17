@@ -17,7 +17,7 @@ public class DBUser extends SQLiteOpenHelper {
     public static final String CONTACTS_COLUMN_GRID = "grid";
     public static final String CONTACTS_COLUMN_CHECK_SENSOR = "checksensor";
     public static final String CONTACTS_COLUMN_HAVE_SENSOR = "havesensor";
-
+    public static final String CONTACTS_COLUMN_COUNT_FAVORITE = "favorite";
     public static final String CONTACTS_COLUMN_USERID = "user_id";
 
     public DBUser(Context context) {
@@ -36,12 +36,13 @@ public class DBUser extends SQLiteOpenHelper {
                         CONTACTS_COLUMN_TYPE + " text," +
                         CONTACTS_COLUMN_CHECK_SENSOR + " integer," +
                         CONTACTS_COLUMN_USERID + " integer," +
-                        CONTACTS_COLUMN_HAVE_SENSOR + " integer" +
+                        CONTACTS_COLUMN_HAVE_SENSOR + " integer," +
+                        CONTACTS_COLUMN_COUNT_FAVORITE + " integer" +
                         ")"
         );
 
         db.execSQL(
-                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0,0,3)"
+                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0,0,3,0)"
 
         );
     }
@@ -66,6 +67,13 @@ public class DBUser extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateCountFavorite(int status) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACTS_COLUMN_COUNT_FAVORITE, status);
+        db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
+        return true;
+    }
 
     public boolean updateStatus(int status) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -122,6 +130,21 @@ public class DBUser extends SQLiteOpenHelper {
         contentValues.put(CONTACTS_COLUMN_USERID, name);
         db.update(CONTACTS_TABLE_NAME, contentValues, null, null);
         return true;
+    }
+
+    public int getCountFavorite() {
+        String place = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select " + CONTACTS_COLUMN_COUNT_FAVORITE + " from " + CONTACTS_TABLE_NAME, null);
+
+        res.moveToFirst();
+
+        while (res.isAfterLast() == false) {
+            place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_COUNT_FAVORITE));
+            res.moveToNext();
+        }
+
+        return Integer.parseInt(place);
     }
 
     public int getStatus() {

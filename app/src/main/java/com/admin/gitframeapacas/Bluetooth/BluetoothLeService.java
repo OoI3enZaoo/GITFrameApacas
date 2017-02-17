@@ -31,9 +31,19 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.RandomGas;
+import com.admin.gitframeapacas.Service.SetMqttThread;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.admin.gitframeapacas.Bluetooth.SampleGattAttributes.MANAFACTURER_NAME;
 import static com.admin.gitframeapacas.Bluetooth.SampleGattAttributes.NO2_NAME;
@@ -52,10 +62,9 @@ public class BluetoothLeService extends Service {
             "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
-    public final static String EXTRA_DATA =
-            "com.example.bluetooth.le.EXTRA_DATA";
-    public final static String EXTRA_DATA1 = "test01";
-    public final static String EXTRA_DATA2 = "test02";
+    public final static String SENSOR_PM25 = "pm25";
+    public final static String SENSOR_CO = "co";
+    public final static String SENSOR_NO2 = "no2";
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
     public final static UUID UUID_MANAFACTURER_NAME =
@@ -66,11 +75,25 @@ public class BluetoothLeService extends Service {
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
+    public static boolean MQTTRunning = true;
+    private static float CO = 0.0f;
+    private static float NO2 = 0.0f;
+    private static float PM25 = 0.0f;
+    private static boolean CO_Status = false;
+    private static boolean NO2_Status = false;
+    private static boolean PM25_Status = false;
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
+    private BlockingQueue<JSONObject> messageQueue = new LinkedBlockingQueue<JSONObject>();
+    private SetMqttThread setMqttThread = null;
+    private String mqttBrokerURL = "tcp://sysnet.utcc.ac.th:1883";
+    private String mqttUser = "admin";
+    private String mqttPwd = "admin";
+    private String sssn = "aparcas_raw";
+
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -148,7 +171,7 @@ public class BluetoothLeService extends Service {
             }
             final int heartRate = characteristic.getIntValue(format, 1);
             Log.d(TAG, String.format("Received heart rate: %d", heartRate));
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
+            intent.putExtra(SENSOR_PM25, String.valueOf(heartRate));
         }*/
         if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
             /*int flag = characteristic.getProperties();
@@ -185,16 +208,19 @@ public class BluetoothLeService extends Service {
             }
 
             Log.d(TAG, "Received heart rate test: " + test);
-            intent.putExtra(EXTRA_DATA, number);
+
+            intent.putExtra(SENSOR_PM25, number);
+
+            setPM25(number);
         } else if (UUID_MANAFACTURER_NAME.equals(characteristic.getUuid())) {
             final byte[] bytes = characteristic.getValue();
-            String number = "";
+            String mCo = "";
             for (int i = 0; i < bytes.length; i++) {
                 if (bytes[i] == 46) {
-                    number = number + ".";
+                    mCo = mCo + ".";
                 } else {
                     int num = bytes[i] - 48;
-                    number = number + Integer.toString(num);
+                    mCo = mCo + Integer.toString(num);
                 }
 
             }
@@ -212,16 +238,20 @@ public class BluetoothLeService extends Service {
             }
 
             Log.d(TAG, "Received CO test: " + test);
-            intent.putExtra(EXTRA_DATA1, number);
+            setCO(test);
+            intent.putExtra(SENSOR_CO, mCo);
+
+
         } else if (UUID_NO2.equals(characteristic.getUuid())) {
             final byte[] bytes = characteristic.getValue();
-            String number = "";
+            String mNo2 = "";
             for (int i = 0; i < bytes.length; i++) {
+
                 if (bytes[i] == 46) {
-                    number = number + ".";
+                    mNo2 = mNo2 + ".";
                 } else {
                     int num = bytes[i] - 48;
-                    number = number + Integer.toString(num);
+                    mNo2 = mNo2 + Integer.toString(num);
                 }
 
             }
@@ -238,8 +268,10 @@ public class BluetoothLeService extends Service {
 
             }
 
-            Log.d(TAG, "Received MQ9 test: " + test);
-            intent.putExtra(EXTRA_DATA2, number);
+            Log.d(TAG, "Received NO2 test: " + test);
+            setNo2(test);
+            intent.putExtra(SENSOR_NO2, mNo2);
+
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -247,11 +279,20 @@ public class BluetoothLeService extends Service {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+
+
+                String mPm25 = new String(data) + "\n" + stringBuilder.toString();
+
+
+                intent.putExtra(SENSOR_PM25, mPm25);
+
+
             }
         }
+
         sendBroadcast(intent);
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -292,15 +333,20 @@ public class BluetoothLeService extends Service {
         return true;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
     /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
-     *
      * @return Return true if the connection is initiated successfully. The connection result
-     *         is reported asynchronously through the
-     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     *         callback.
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
      */
     public boolean connect(final String address) {
         Log.i(TAG, "mBluetoothAdapter: " + mBluetoothAdapter + " address: " + address);
@@ -381,7 +427,7 @@ public class BluetoothLeService extends Service {
      * Enables or disables notification on a give characteristic.
      *
      * @param characteristic Characteristic to act on.
-     * @param enabled If true, enable notification.  False otherwise.
+     * @param enabled        If true, enable notification.  False otherwise.
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
@@ -423,6 +469,100 @@ public class BluetoothLeService extends Service {
         if (mBluetoothGatt == null) return null;
 
         return mBluetoothGatt.getServices();
+    }
+
+    public void onDestroy() {
+        Toast.makeText(getApplication(), "Stop Service!", Toast.LENGTH_LONG).show();
+    }
+
+    private void setPM25(String mPm25) {
+        Log.i(TAG, "setPm25: " + mPm25);
+        PM25 = Float.parseFloat(mPm25.toString().trim());
+        PM25_Status = true;
+        combineData();
+    }
+
+    private void setCO(String mCo) {
+        Log.i(TAG, "setCO: " + mCo);
+        CO = Float.parseFloat(mCo.toString().trim());
+        CO_Status = true;
+        combineData();
+    }
+
+    private void setNo2(String mNo2) {
+        Log.i(TAG, "setNO2: " + mNo2);
+        NO2 = Float.parseFloat(mNo2.toString().trim());
+        NO2_Status = true;
+        combineData();
+    }
+
+    private void combineData() {
+
+        Log.i(TAG, "PM25_STATUS: " + PM25_Status + " CO_STATUS: " + CO_Status + " NO2_STATUS: " + NO2_Status);
+        if (PM25_Status == true && CO_Status == true && NO2_Status == true) {
+            DBUser dbUser = new DBUser(getApplicationContext());
+            long uid = dbUser.getUserID();
+            float lat = 0.0f;
+            float lon = 0.0f;
+            MQTTSender(uid, lat, lon, CO, NO2, PM25);
+
+            PM25_Status = false;
+            CO_Status = false;
+            NO2_Status = false;
+        }
+    }
+
+    public void MQTTSender(long Luid, float mlat, float mlon, float mCO, float SNO2, float Spm25) {
+
+        JSONObject obj = new JSONObject();
+        try {
+
+            float fo3 = new RandomGas().o3();
+            float fso2 = new RandomGas().so2();
+            float frad = new RandomGas().rad();
+            float mmlat = new RandomGas().lat(1);
+            float mmlon = new RandomGas().lon(1);
+
+            String uid = String.valueOf(Luid);
+            String o3 = String.valueOf(fo3);
+            String so2 = String.valueOf(fso2);
+            String rad = String.valueOf(frad);
+            String pm25 = String.valueOf(Spm25);
+            String NO2 = String.valueOf(SNO2);
+            String lat = String.valueOf(mmlat);
+            String lon = String.valueOf(mmlon);
+            String CO = String.valueOf(mCO);
+            int tstamp = new RandomGas().tstamp();
+            obj.put("uid", uid);
+            obj.put("lat", lat);
+            obj.put("lon", lon);
+            obj.put("co", CO);
+            obj.put("no2", NO2);
+            obj.put("o3", o3);
+            obj.put("so2", so2);
+            obj.put("pm25", pm25);
+            obj.put("rad", rad);
+            obj.put("ts", tstamp);
+            Log.i(TAG, "MQTTSender: uid: " + uid + " lat: " + lat + " lon: " + lon + " co: " + CO + " no2: " + NO2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " ts: " + tstamp);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            messageQueue.put(obj);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setMqttThread = new SetMqttThread(sssn, messageQueue, mqttBrokerURL, mqttUser, mqttPwd) {
+            @Override
+            public void createListener() {
+            }
+
+            @Override
+            public void createClient() {
+            }
+        };
+        setMqttThread.start();
+
     }
 
     public class LocalBinder extends Binder {

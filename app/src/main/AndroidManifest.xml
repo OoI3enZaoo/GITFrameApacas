@@ -97,7 +97,15 @@
         <service
             android:name=".Bluetooth.BluetoothLeService"
             android:enabled="true" />
-
+        <service
+            android:name=".Service.RefreshFavorite"
+            android:process=":my_service" />
+        <service
+            android:name=".Service.DataOnApp"
+            android:process=":my_service" />
+        <service
+            android:name=".Service.SetGasService"
+            android:process=":my_service" />
 
     </application>
 

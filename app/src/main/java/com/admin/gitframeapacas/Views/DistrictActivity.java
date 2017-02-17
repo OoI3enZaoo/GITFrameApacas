@@ -2,6 +2,7 @@ package com.admin.gitframeapacas.Views;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import org.eazegraph.lib.models.BarModel;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import okhttp3.FormBody;
@@ -38,6 +40,21 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
 
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.COArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.NO2Array;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.O3Array;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.PM25Array;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.SO2Array;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.aqiArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.aqiColorArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.getAQIColor;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.getAQItoMessage;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.mAdapter;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.messageArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.radArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.scodeArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.snameArray;
+import static com.admin.gitframeapacas.Fragment.FeedFavoriteFragment.timeArray;
 import static java.lang.Float.parseFloat;
 
 public class DistrictActivity extends AppCompatActivity {
@@ -90,15 +107,10 @@ public class DistrictActivity extends AppCompatActivity {
             new getDataInSQLiteTask().execute(intent.getStringExtra("co").toString(), intent.getStringExtra("no2").toString(), intent.getStringExtra("o3").toString(), intent.getStringExtra("so2").toString(),
                     intent.getStringExtra("pm25").toString(), intent.getStringExtra("rad").toString(), intent.getStringExtra("district").toString(), intent.getStringExtra("scode").toString(),
                     intent.getStringExtra("tstamp").toString(), intent.getStringExtra("aqi").toString());
-
-
             Log.i(TAG, "NOT NULL");
         }
     }
-
     private void loadData() {
-
-
         txtLocation.setText(DistrictName);
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
@@ -110,17 +122,48 @@ public class DistrictActivity extends AppCompatActivity {
                         Intent intent2 = new Intent(DistrictActivity.this, RecommendActivity.class);
                         startActivity(intent2);
                         break;
-                    case 1:
+                    /*case 1:
                         Toast.makeText(getApplicationContext(), "Navigate to", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(DistrictActivity.this, GraphGasActivity.class);
                         startActivity(intent);
-                        break;
-                    case 2:
+                        break;*/
+                    case 1:
+                        Intent intent22 = getIntent();
+                        if (intent22.getStringExtra("co") == null) {
 
+                            DBFavorite dbFavorite = new DBFavorite(getApplicationContext());
+                            Cursor res = dbFavorite.getAllData();
+                            ArrayList<String> scode = new ArrayList();
+                            scode.clear();
+                            if (res.getCount() == 0) {
+                                Log.i("griddata", "Nothing found");
+                            } else {
+                                while (res.moveToNext()) {
+                                    scode.add(res.getString(1));//get scode
+                                }
+                            }
+                            boolean checkSame = false;
+                            for (int i = 0; i < scode.size(); i++) {
 
-                        new AddFavorite().execute();
+                                if (scode.get(i).toString().equals(DistrictCode.toString())) {
+                                    Log.i(TAG, "scodehere: " + DistrictCode + " scodeSqlite: " + scode.get(i) + " = Same");
+                                    checkSame = true;
+                                    break;
+                                } else {
+                                    Log.i(TAG, "scodehere: " + DistrictCode + " scodeSqlite: " + scode.get(i) + " = Not Same");
 
+                                }
+                            }
+                            if (checkSame == false) {
+                                new AddFavorite().execute();
 
+                            } else {
+                                Toast.makeText(getApplicationContext(), "แขวงนี้อยู่ในรายการโปรดอยู่แล้ว", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "แขวงนี้อยู่ในรายการโปรดอยู่แล้ว", Toast.LENGTH_SHORT).show();
+                        }
                         break;
 
                 }
@@ -186,7 +229,6 @@ public class DistrictActivity extends AppCompatActivity {
             return null;
         }
 
-
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
@@ -206,6 +248,7 @@ public class DistrictActivity extends AppCompatActivity {
             mBarChart.startAnimation();
             Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
 
+            tstamp = tstamp.substring(0, 16);
             lastUpdate.setText("เวลาล่าสุด: " + tstamp);
             txtAQI.setText("AQI: " + aqi);
             gauge.setValue(Integer.parseInt(aqi));
@@ -281,6 +324,21 @@ public class DistrictActivity extends AppCompatActivity {
                         });
                 snackbar.show();
 
+                timeArray.add(tstamp);
+                snameArray.add(DistrictName);
+
+
+                messageArray.add(getAQItoMessage(aqi));
+                scodeArray.add(DistrictCode);
+                COArray.add(co);
+                NO2Array.add(no2);
+                O3Array.add(o3);
+                SO2Array.add(so2);
+                PM25Array.add(pm25);
+                radArray.add(rad);
+                aqiArray.add(aqi);
+                aqiColorArray.add(getAQIColor(aqi));
+                mAdapter.notifyDataSetChanged();
 
             } else {
 

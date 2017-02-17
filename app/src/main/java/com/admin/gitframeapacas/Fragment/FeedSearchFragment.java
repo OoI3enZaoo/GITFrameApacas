@@ -26,7 +26,6 @@ import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBGrid;
 import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Views.DistrictActivity;
-import com.admin.gitframeapacas.Views.ProfileActivity;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -210,7 +209,7 @@ public class FeedSearchFragment extends Fragment {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
 
-                if (item.getItemId() == R.id.iconProfile) {
+                /*if (item.getItemId() == R.id.iconProfile) {
                     //mIsDarkSearchTheme = true;
                     Intent intent = new Intent(getActivity(), ProfileActivity.class);
                     startActivity(intent);
@@ -220,7 +219,7 @@ public class FeedSearchFragment extends Fragment {
                     //just print action
                     Toast.makeText(getActivity().getApplicationContext(), item.getTitle(),
                             Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
             }
         });
@@ -355,7 +354,7 @@ public class FeedSearchFragment extends Fragment {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
 
-                if (item.getItemId() == R.id.iconProfile) {
+                /*if (item.getItemId() == R.id.iconProfile) {
                     //mIsDarkSearchTheme = true;
                     Intent intent = new Intent(getActivity(), ProfileActivity.class);
                     startActivity(intent);
@@ -365,7 +364,7 @@ public class FeedSearchFragment extends Fragment {
                     //just print action
                     Toast.makeText(getActivity().getApplicationContext(), item.getTitle(),
                             Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
             }
         });

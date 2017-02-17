@@ -28,7 +28,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -50,6 +49,7 @@ import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBFavorite;
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.DataOnApp;
 import com.admin.gitframeapacas.Service.GetGasService;
 import com.admin.gitframeapacas.Service.SetGasService;
 import com.arlib.floatingsearchview.FloatingSearchView;
@@ -99,50 +99,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
-    /* private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-         @Override
-         public void onReceive(Context context, Intent intent) {
-
-             latitude = Double.valueOf(intent.getStringExtra("latutide"));
-             longitude = Double.valueOf(intent.getStringExtra("longitude"));
-
-             List<Address> addresses = null;
-
-             try {
-                 addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                 String cityName = addresses.get(0).getAddressLine(0);
-                 String stateName = addresses.get(0).getAddressLine(1);
-                 String countryName = addresses.get(0).getAddressLine(2);
-
-
-                 //Log.i(TAG,"area: "+ addresses.get(0).getAdminArea());
-                 Log.i(TAG, "locality: " + stateName);
-                 Log.i(TAG, "address: " + countryName);
-
-                 snackbar = Snackbar.make(view2, "Hello", Snackbar.LENGTH_LONG)
-                         .setAction("ปิด", new View.OnClickListener() {
-                             @Override
-                             public void onClick(View view) {
-                                 snackbar.dismiss();
-                             }
-                         });
-                 snackbar.show();
-
-
-             } catch (IOException e1) {
-                 e1.printStackTrace();
-             }
-
-
-           *//*  tv_latitude.setText(latitude+"");
-            tv_longitude.setText(longitude+"");
-            tv_address.getText();*//*
-
-
-        }
-    };*/
-    private String mDeviceName;
-    private String mDeviceAddress;
+    private String mDeviceName = "TestFloatNumber";
+    private String mDeviceAddress = "98:4F:EE:0D:1D:2E";
     private BluetoothLeService mBluetoothLeService;
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -161,6 +119,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mBluetoothLeService = null;
         }
     };
+    private BroadcastReceiver broadcastReceiver;
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
                 @Override
@@ -173,8 +132,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 connectBluetooth(device.getAddress().toString(), device.getName().toString());
                             }
                         }
-
-
                     });
                 }
             };
@@ -201,50 +158,49 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
 
-                //displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                //displayDataCO(intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
-                //displayDataNO2(intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+                //displayData(intent.getStringExtra(BluetoothLeService.SENSOR_PM25));
+                //displayDataCO(intent.getStringExtra(BluetoothLeService.SENSOR_CO));
+                //displayDataNO2(intent.getStringExtra(BluetoothLeService.SENSOR_NO2));
 
-                dust = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                CO = intent.getStringExtra(BluetoothLeService.EXTRA_DATA1);
-                NO2 = intent.getStringExtra(BluetoothLeService.EXTRA_DATA2);
+                dust = intent.getStringExtra(BluetoothLeService.SENSOR_PM25);
+                CO = intent.getStringExtra(BluetoothLeService.SENSOR_CO);
+                NO2 = intent.getStringExtra(BluetoothLeService.SENSOR_NO2);
 
                 FeedHomeFragment homefragment = new FeedHomeFragment();
 
-                homefragment.setLocation();
+                //homefragment.setLocation();
                 if (dust != null && !dust.equals("0.00") && !dust.equals("")) {
                     dust = dust.toString().trim();
-                    homefragment.setDust(Float.parseFloat(dust), true);
+                    //  homefragment.setDust(Float.parseFloat(dust), true);
 
                 }
                 if (CO != null && !CO.equals("0.00") && !CO.equals("")) {
                     CO = CO.toString().trim();
-                    homefragment.setCO(Float.parseFloat(CO), true);
+                    //  homefragment.setCO(Float.parseFloat(CO), true);
 
                 }
                 if (NO2 != null && !NO2.equals("0.00") && !NO2.equals("")) {
                     NO2 = NO2.toString().trim();
-                    homefragment.setNO2(Float.parseFloat(NO2), true);
-
+//                    homefragment.setNO2(Float.parseFloat(NO2), true);
                 }
                 Log.d(TAG, "test value dust =" + dust + "," + "CO =" + CO + "," + "NO2 =" + NO2);
 
-                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA) != null) {
-                    arrayDust.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                if (intent.getStringExtra(BluetoothLeService.SENSOR_PM25) != null) {
+                    arrayDust.add(intent.getStringExtra(BluetoothLeService.SENSOR_PM25));
                     Log.d(TAG, "Dust List = " + String.valueOf(arrayDust));
                 }
-                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA1) != null) {
-                    arrayCO.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
+                if (intent.getStringExtra(BluetoothLeService.SENSOR_CO) != null) {
+                    arrayCO.add(intent.getStringExtra(BluetoothLeService.SENSOR_CO));
                     Log.d(TAG, "CO List = " + String.valueOf(arrayCO));
                 }
-                if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA2) != null) {
-                    arrayNO2.add(intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+                if (intent.getStringExtra(BluetoothLeService.SENSOR_NO2) != null) {
+                    arrayNO2.add(intent.getStringExtra(BluetoothLeService.SENSOR_NO2));
                     Log.d(TAG, "NO2 List = " + String.valueOf(arrayNO2));
                 }
 
-                Log.d(TAG, "Dust = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                Log.d(TAG, "CO = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA1));
-                Log.d(TAG, "NO2 = " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA2));
+                Log.d(TAG, "Dust = " + intent.getStringExtra(BluetoothLeService.SENSOR_PM25));
+                Log.d(TAG, "CO = " + intent.getStringExtra(BluetoothLeService.SENSOR_CO));
+                Log.d(TAG, "NO2 = " + intent.getStringExtra(BluetoothLeService.SENSOR_NO2));
 
 
 
@@ -277,6 +233,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         initUI();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
@@ -298,15 +255,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         view2 = (ConstraintLayout) findViewById(R.id.constaint_home);
-        //gps = new GPSTracker(getApplicationContext());
-
 
         /*Fragment myFragment2 = getSupportFragmentManager().findFragmentById(R.id.chartfragment);
         mText = (TextView) myFragment2.getView().findViewById(R.id.txtAQI);*/
 
-        startService(new Intent(getApplicationContext(), SetGasService.class));
+        //startService(new Intent(getApplicationContext(), SetGasService.class));
+        startService(new Intent(getApplicationContext(), DataOnApp.class));
 
-        fn_permission();
+        //fn_permission();
 
         mHandler = new Handler();
         // Use this check to determine whether BLE is supported on the device.  Then you can
@@ -344,11 +300,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //  Intent intent2 = getIntent();
         // mDeviceName = intent2.getStringExtra(EXTRAS_DEVICE_NAME);
         //  mDeviceAddress = intent2.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-
-
+        //}
         //}
 
-        //}
 
 
     }
@@ -377,40 +331,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void fn_permission() {
-        if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION))) {
 
 
-            } else {
-                ActivityCompat.requestPermissions(HomeActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
-
-                        },
-                        REQUEST_PERMISSIONS);
-
-            }
-        } else {
-            boolean_permission = true;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case REQUEST_PERMISSIONS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    boolean_permission = true;
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -668,6 +590,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onResume() {
         super.onResume();
+        if (broadcastReceiver == null) {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Log.i(TAG, "onReceive: " + "\n" + intent.getExtras().get("coordinates"));
+
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
+
             if (!mBluetoothAdapter.isEnabled()) {
                 DBUser dbUser = new DBUser(getApplicationContext());
                 if (dbUser.getHaveSensor() == 1) {
@@ -678,34 +611,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         scanLeDevice(true);
     }
 
-    public void openBlutooth() {
-        if (!mBluetoothAdapter.isEnabled()) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                DBUser dbUser = new DBUser(getApplicationContext());
-                if (dbUser.getHaveSensor() == 1) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-
-            }
-        }
-
-    }
-        scanLeDevice(true);
-    }
 
     @Override
     public void onPause() {
         super.onPause();
         scanLeDevice(false);
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+        }
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
-
     private void updateConnectionState(final int resourceId) {
         runOnUiThread(new Runnable() {
             @Override
@@ -713,25 +633,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
-    private void displayData(String data) {//write textview for Dust
-        if (data != null) {
-
-        }
-    }
-
-    private void displayDataCO(String data) {// write textview for CO
-        if (data != null) {
-
-        }
-    }
-
-    private void displayDataNO2(String data) {// write textview for NO2
-        if (data != null) {
-
-        }
-    }
-
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;
         String uuid = null;
@@ -884,6 +785,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
     private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 
@@ -919,10 +821,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 5;
-    }
-
+        }
     }
 
 
