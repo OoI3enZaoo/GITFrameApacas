@@ -285,7 +285,7 @@ public class FeedFavoriteFragment extends Fragment {
                         DBFavorite dbFavorite = new DBFavorite(getActivity());
                         dbFavorite.deleteData(scodeArray.get(getLayoutPosition()));
                         Log.i(TAG, "Scode: " + scodeArray.get(getLayoutPosition()));
-                        Toast.makeText(getActivity(), "คุณได้ลบ " + snameArray.get(getLayoutPosition()) + "ออกจากรายการโปรดแล้ว", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "คุณได้ลบ " + snameArray.get(getLayoutPosition()) + "ออกจากรายการโปรดแล้ว", Toast.LENGTH_SHORT).show();
 
                     }
                 });

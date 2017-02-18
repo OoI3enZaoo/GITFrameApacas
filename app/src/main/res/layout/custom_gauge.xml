@@ -16,6 +16,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
+        android:layout_marginTop="0dp"
         android:foregroundGravity="center"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
@@ -38,6 +39,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         gauge:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="125dp"
+        android:text="ก๊าซ = ppb, ฝุ่น ug/m3, รังสี = mSv/h"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gaugeMaster" />
 
     <!--
         <org.eazegraph.lib.charts.PieChart xmlns:app="http://schemas.android.com/apk/res-auto"

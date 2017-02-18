@@ -1,6 +1,5 @@
 package com.admin.gitframeapacas.Views;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
@@ -24,7 +23,6 @@ import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -43,7 +41,6 @@ import com.admin.gitframeapacas.Bluetooth.SampleGattAttributes;
 import com.admin.gitframeapacas.Fragment.FeedAboutAQIFragment;
 import com.admin.gitframeapacas.Fragment.FeedFavoriteFragment;
 import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
-import com.admin.gitframeapacas.Fragment.FeedMapNavigateFragment;
 import com.admin.gitframeapacas.Fragment.FeedMapRealtimeFragment;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
@@ -69,6 +66,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+    public static final String mBroadcastStringAction = "com.truiton.broadcast.string";
     private static final int REQUEST_PERMISSIONS = 100;
     private static final long SCAN_PERIOD = 1000;
     private static final int REQUEST_ENABLE_BT = 1;
@@ -76,6 +74,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static String dust = null;
     public static String CO = null;
     public static String NO2 = null;
+    public static String RAD = null;
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     //static TextView mText;
@@ -91,9 +90,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     ConstraintLayout view2;
     int statusCurrent = 1;
     int counter = 0;
-    List<String> arrayDust = new ArrayList<String>();
-    List<String> arrayCO = new ArrayList<String>();
-    List<String> arrayNO2 = new ArrayList<String>();
+    private List<String> arrayDust = new ArrayList<String>();
+    private List<String> arrayCO = new ArrayList<String>();
+    private List<String> arrayNO2 = new ArrayList<String>();
+    private List<String> arrayRAD = new ArrayList<String>();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Snackbar snackbar;
     private BluetoothAdapter mBluetoothAdapter;
@@ -102,6 +102,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String mDeviceName = "TestFloatNumber";
     private String mDeviceAddress = "98:4F:EE:0D:1D:2E";
     private BluetoothLeService mBluetoothLeService;
+
+    //private TextView txtName;
+    //private IntentFilter mIntentFilter;
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
@@ -165,8 +168,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 dust = intent.getStringExtra(BluetoothLeService.SENSOR_PM25);
                 CO = intent.getStringExtra(BluetoothLeService.SENSOR_CO);
                 NO2 = intent.getStringExtra(BluetoothLeService.SENSOR_NO2);
+                RAD = intent.getStringExtra(BluetoothLeService.SENSOR_RAD);
 
-                FeedHomeFragment homefragment = new FeedHomeFragment();
 
                 //homefragment.setLocation();
                 if (dust != null && !dust.equals("0.00") && !dust.equals("")) {
@@ -197,10 +200,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     arrayNO2.add(intent.getStringExtra(BluetoothLeService.SENSOR_NO2));
                     Log.d(TAG, "NO2 List = " + String.valueOf(arrayNO2));
                 }
-
+                if (intent.getStringExtra(BluetoothLeService.SENSOR_RAD) != null) {
+                    arrayRAD.add(intent.getStringExtra(BluetoothLeService.SENSOR_RAD));
+                    Log.d(TAG, "RAD List = " + String.valueOf(arrayRAD));
+                }
                 Log.d(TAG, "Dust = " + intent.getStringExtra(BluetoothLeService.SENSOR_PM25));
                 Log.d(TAG, "CO = " + intent.getStringExtra(BluetoothLeService.SENSOR_CO));
                 Log.d(TAG, "NO2 = " + intent.getStringExtra(BluetoothLeService.SENSOR_NO2));
+                Log.d(TAG, "RAD = " + intent.getStringExtra(BluetoothLeService.SENSOR_RAD));
 
 
 
@@ -256,10 +263,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         view2 = (ConstraintLayout) findViewById(R.id.constaint_home);
 
+        //txtName = (TextView)findViewById(R.id.txtName);
         /*Fragment myFragment2 = getSupportFragmentManager().findFragmentById(R.id.chartfragment);
         mText = (TextView) myFragment2.getView().findViewById(R.id.txtAQI);*/
 
-        //startService(new Intent(getApplicationContext(), SetGasService.class));
+        startService(new Intent(getApplicationContext(), SetGasService.class));
         startService(new Intent(getApplicationContext(), DataOnApp.class));
 
         //fn_permission();
@@ -284,25 +292,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             finish();
             return;
         }
-        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+
+
+
+   /*     int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+*/
+      /*  mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(mBroadcastStringAction);*/
 
 
-        //Intent intent = getIntent();
-        //if (intent.getStringExtra("checkblt") != null) {
-        //String checkbluetooth = intent.getStringExtra("checkblt");
-        //Log.i(TAG, "checkbluetooth: " + checkbluetooth);
-        //if (checkbluetooth.equals("1")) {
-        // DBUser dbUser = new DBUser(getApplicationContext());
-        // dbUser.updateHaveSensor(1);
-        //  Intent intent2 = getIntent();
-        // mDeviceName = intent2.getStringExtra(EXTRAS_DEVICE_NAME);
-        //  mDeviceAddress = intent2.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-        //}
-        //}
-
+        /*DBUser dbUser = new DBUser(getApplicationContext());
+        txtName.setText("Name: " +dbUser.getName());*/
 
 
     }
@@ -328,10 +331,49 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             mScanning = false;
         }
 
-
     }
 
 
+
+/*
+
+
+
+    private void fn_permission() {
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION))) {
+
+
+            } else {
+                ActivityCompat.requestPermissions(HomeActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
+
+                        },
+                        REQUEST_PERMISSIONS);
+
+            }
+        } else {
+            boolean_permission = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_PERMISSIONS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    boolean_permission = true;
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        }
+    }
+*/
 
 
     @Override
@@ -366,7 +408,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         .badgeTitle("My Favorite :D")
                         .build()
         );
-        models.add(
+    /*    models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_navigate),
                         Color.parseColor(colors[2]))
@@ -374,7 +416,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         .title("Navigate")
                         .badgeTitle("go somewhere?")
                         .build()
-        );
+        );*/
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_realtime),
@@ -410,7 +452,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (position) {
                     case 0:
 
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
@@ -419,11 +461,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
-                        }
+                        }*/
                         break;
 
                     case 1:
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                        /*if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
@@ -432,11 +474,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
-                        }
+                        }*/
                         break;
 
                     case 2:
-
+/*
                         if (searchDistrict.getVisibility() == View.VISIBLE) {
                             searchDistrict.setVisibility(View.GONE);
                             searchNavigate.setVisibility(View.VISIBLE);
@@ -445,11 +487,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
-                        }
+                        }*/
                         break;
 
                     case 3://map
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
@@ -459,11 +501,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         if (isMyServiceRunning(GetGasService.class) == false) {
                             startService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
-                        }
+                        }*/
 
                         break;
                     case 4:
-                        if (searchNavigate.getVisibility() == View.VISIBLE) {
+                       /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
                         if (searchDistrict.getVisibility() == View.GONE) {
@@ -472,7 +514,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         if (isMyServiceRunning(GetGasService.class) == true) {
                             stopService(new Intent(getApplicationContext(), GetGasService.class));
                             Log.i(TAG, "is service running: " + isMyServiceRunning(GetGasService.class));
-                        }
+                        }*/
                         break;
 
                 }
@@ -515,23 +557,36 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_notification) {
+      /*  if (id == R.id.nav_notification) {
             Toast.makeText(this, "NotificationActivity", Toast.LENGTH_SHORT).show();
 
-        } /*else if (id == R.id.nav_reward) {
+
+
+        } *//*else if (id == R.id.nav_reward) {
             Toast.makeText(this, "LocationActivity", Toast.LENGTH_SHORT).show();
-        }*/ else if (id == R.id.nav_setting) {
+        }  if (id == R.id.nav_setting) {
 
             Toast.makeText(this, "SettingActivity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_help) {
+        }*/
+        if (id == R.id.nav_help) {
 
             Toast.makeText(this, "HelpActivity", Toast.LENGTH_SHORT).show();
             Intent intent2 = new Intent(getApplicationContext(), HelpActivity.class);
             startActivity(intent2);
         } else if (id == R.id.nav_logout) {
             Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+            if (isMyServiceRunning(SetGasService.class) == true) {
+                stopService(new Intent(getApplicationContext(), SetGasService.class));
+            }
+            if (isMyServiceRunning(GetGasService.class) == true) {
+                stopService(new Intent(getApplicationContext(), GetGasService.class));
+            }
+            if (isMyServiceRunning(DataOnApp.class) == true) {
+                stopService(new Intent(getApplicationContext(), DataOnApp.class));
+            }
+
             DBUser db = new DBUser(getApplicationContext());
             db.updateStatus(0);
             db.updateName("");
@@ -542,12 +597,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             dbFavorite.drop();
             DBCurrentLocation dbCur = new DBCurrentLocation(getApplicationContext());
             dbCur.drop();
-            if (isMyServiceRunning(SetGasService.class) == true) {
-                stopService(new Intent(getApplicationContext(), SetGasService.class));
-            }
-            if (isMyServiceRunning(GetGasService.class) == true) {
-                stopService(new Intent(getApplicationContext(), GetGasService.class));
-            }
+
+
+           /* if (isMyServiceRunning(BluetoothLeService.class) == true) {
+                stopService(new Intent(getApplicationContext(), BluetoothLeService.class));
+            }*/
             Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent2);
         }
@@ -601,14 +655,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         registerReceiver(broadcastReceiver, new IntentFilter("location_update"));
 
-            if (!mBluetoothAdapter.isEnabled()) {
-                DBUser dbUser = new DBUser(getApplicationContext());
-                if (dbUser.getHaveSensor() == 1) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                }
-            }
+        if (!mBluetoothAdapter.isEnabled()) {
+            DBUser dbUser = new DBUser(getApplicationContext());
+            // if (dbUser.getHaveSensor() == 1) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            //  }
+        }
         scanLeDevice(true);
+
     }
 
 
@@ -617,6 +672,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onPause();
         scanLeDevice(false);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -626,6 +682,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }
+
     private void updateConnectionState(final int resourceId) {
         runOnUiThread(new Runnable() {
             @Override
@@ -633,6 +690,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;
         String uuid = null;
@@ -725,21 +783,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         mNotifyCharacteristic = characteristic;
                         mBluetoothLeService.setCharacteristicNotification(
                                 characteristic, true);
+                        if (NO2 != null) {
+                            Log.d(TAG, "loop3 !=null");
+                            if (mNotifyCharacteristic != null) {
+                                mBluetoothLeService.setCharacteristicNotification(
+                                        mNotifyCharacteristic, false);
+                                mNotifyCharacteristic = null;
+                            }
+                            mBluetoothLeService.readCharacteristic(characteristic);
+                            statusCurrent++;
+                        } else {
+                            Log.d(TAG, "loop3 ==null");
+                        }
+                    }
+                    if (statusCurrent == 4) {
+                        counter = 3;
+                        mNotifyCharacteristic = characteristic;
+                        mBluetoothLeService.setCharacteristicNotification(
+                                characteristic, true);
 
                     }
                 } else if (mConnected == false) {// if bluetooth disable
                     try {
                         // thread to sleep for 1000 milliseconds
-                        Thread.sleep(3000);
-                        Log.d(TAG, "BLE is dead");
 
                         Random r = new Random();
                         dust = arrayDust.get(r.nextInt(arrayDust.size()));
                         CO = arrayCO.get(r.nextInt(arrayCO.size()));
                         NO2 = arrayNO2.get(r.nextInt(arrayNO2.size()));
+                        RAD = arrayRAD.get(r.nextInt(arrayRAD.size()));
+
+                        Log.d(TAG, "BLE is dead");
+
+
                         Log.d(TAG, "Dust random = = " + dust);
                         Log.d(TAG, "CO random = = " + CO);
                         Log.d(TAG, "NO2 random = = " + NO2);
+                        Log.d(TAG, "RAD random = = " + RAD);
                     } catch (Exception e) {
 
                     }
@@ -750,7 +830,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             }
         }, 0, 1000);
-
 
     }
 
@@ -804,24 +883,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 case 1:
                     Log.i(TAG, "FeedFavoriteFragment");
                     return new FeedFavoriteFragment();
+
                 case 2:
-                    Log.i(TAG, "FeedFavoriteFragment");
-                    return new FeedMapNavigateFragment();
-                case 3:
                     Log.i(TAG, "FeedMapRealtimeFragment");
                     return new FeedMapRealtimeFragment();
-                case 4:
+                case 3:
                     Log.i(TAG, "FeedAboutAQIFragment");
                     return new FeedAboutAQIFragment();
 
 
-        }
+            }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
     }
 

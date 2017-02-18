@@ -26,6 +26,8 @@ public class SampleGattAttributes {
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
     public static String MANAFACTURER_NAME = "00002a29-0000-1000-8000-00805f9b34fb";
     public static String NO2_NAME = "00002b29-0000-1000-8000-00805f9b34fb";
+    public static String RAD_NAME = "00002c29-0000-1000-8000-00805f9b34fb";
+
     private static HashMap<String, String> attributes = new HashMap();
 
     static {
@@ -37,6 +39,7 @@ public class SampleGattAttributes {
         attributes.put(HEART_RATE_MEASUREMENT, "Dust Measurement");
         attributes.put(MANAFACTURER_NAME, "CO Measurement");
         attributes.put(NO2_NAME, "NO2 Measurement");
+        attributes.put(RAD_NAME, "Radioactive Measurement");
     }
 
     public static String lookup(String uuid, String defaultName) {

@@ -19,19 +19,6 @@
         tools:context="com.admin.gitframeapacas.Fragment.FeedHomeFragment">
 
 
-        <TextView
-            android:id="@+id/txtMode"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="Mode"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtLocation"
@@ -42,9 +29,9 @@
             android:text="Current location"
             android:textSize="17sp"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@id/txtMode"
-            app:layout_constraintRight_toRightOf="@id/txtMode"
-            app:layout_constraintTop_toTopOf="@id/txtMode" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtlastUpdate"
@@ -71,7 +58,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
-
 
         <include
             android:id="@+id/include2"

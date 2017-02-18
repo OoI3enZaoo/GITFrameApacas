@@ -232,12 +232,12 @@ public class DistrictActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Float fco = parseFloat(co);
-            Float fno2 = parseFloat(no2);
-            Float fo3 = parseFloat(o3);
-            Float fso2 = parseFloat(so2);
+            Float fco = parseFloat(co) * 1000;
+            Float fno2 = parseFloat(no2) * 1000;
+            Float fo3 = parseFloat(o3) * 1000;
+            Float fso2 = parseFloat(so2) * 1000;
             Float fpm25 = parseFloat(pm25);
-            Float frad = parseFloat(rad);
+            Float frad = parseFloat(rad) * 1000;
 
             mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
             mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));

@@ -34,19 +34,26 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.GPSTracker;
 import com.admin.gitframeapacas.Service.RandomGas;
 import com.admin.gitframeapacas.Service.SetMqttThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.admin.gitframeapacas.Bluetooth.SampleGattAttributes.MANAFACTURER_NAME;
 import static com.admin.gitframeapacas.Bluetooth.SampleGattAttributes.NO2_NAME;
+import static com.admin.gitframeapacas.Bluetooth.SampleGattAttributes.RAD_NAME;
+
 
 
 /**
@@ -65,12 +72,17 @@ public class BluetoothLeService extends Service {
     public final static String SENSOR_PM25 = "pm25";
     public final static String SENSOR_CO = "co";
     public final static String SENSOR_NO2 = "no2";
+    public final static String SENSOR_RAD = "rad";
+
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
     public final static UUID UUID_MANAFACTURER_NAME =
             UUID.fromString(MANAFACTURER_NAME);
     public final static UUID UUID_NO2 =
             UUID.fromString(NO2_NAME);
+    public final static UUID UUID_RAD_NAME =
+            UUID.fromString(RAD_NAME);
+
     private final static String TAG = "BENBluetoothLeService";
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -79,10 +91,15 @@ public class BluetoothLeService extends Service {
     private static float CO = 0.0f;
     private static float NO2 = 0.0f;
     private static float PM25 = 0.0f;
+    private static float RAD = 0.0f;
     private static boolean CO_Status = false;
     private static boolean NO2_Status = false;
     private static boolean PM25_Status = false;
+    private static boolean RAD_Status = false;
+
     private final IBinder mBinder = new LocalBinder();
+    double lat = 0.0d;
+    double lon = 0.0d;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -93,7 +110,11 @@ public class BluetoothLeService extends Service {
     private String mqttUser = "admin";
     private String mqttPwd = "admin";
     private String sssn = "aparcas_raw";
-
+    private GPSTracker gps;
+    private List<String> arrayDust = new ArrayList<String>();
+    private List<String> arrayCO = new ArrayList<String>();
+    private List<String> arrayNO2 = new ArrayList<String>();
+    private List<String> arrayRAD = new ArrayList<String>();
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -104,7 +125,6 @@ public class BluetoothLeService extends Service {
 
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
-
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
@@ -113,12 +133,32 @@ public class BluetoothLeService extends Service {
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" +
                         mBluetoothGatt.discoverServices());
-
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
+                Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Random r = new Random();
+                        PM25 = Float.parseFloat(arrayDust.get(r.nextInt(arrayDust.size())));
+                        CO = Float.parseFloat(arrayCO.get(r.nextInt(arrayCO.size())));
+                        NO2 = Float.parseFloat(arrayNO2.get(r.nextInt(arrayNO2.size())));
+                        RAD = Float.parseFloat(arrayNO2.get(r.nextInt(arrayRAD.size())));
+                        DBUser dbUser = new DBUser(getApplicationContext());
+
+                        long uid = dbUser.getUserID();
+                        MQTTSender(uid, lat, lon, CO, NO2, PM25, RAD, 0);
+
+                        Log.d(TAG, "Dust random = = " + PM25);
+                        Log.d(TAG, "CO random = = " + CO);
+                        Log.d(TAG, "SENSOR_NO2 random = = " + NO2);
+                        Log.d(TAG, "SENSOR_RAD random = = " + RAD);
+
+                    }
+                }, 0, 3000);
             }
         }
 
@@ -198,19 +238,16 @@ public class BluetoothLeService extends Service {
             Log.d(TAG, "Received length data: " + bytes.length);
             for (int i = 0; i < bytes.length; i++) {
                 if (bytes[i] == 46) {
-                    Log.d(TAG, "Received heart rate " + i + " = " + ".");
+                    Log.d(TAG, "PM2.5: " + i + " = " + ".");
                     test = test + ".";
                 } else {
-                    Log.d(TAG, "Received heart rate " + i + " = " + Integer.toString(bytes[i] - 48));
+                    Log.d(TAG, "PM2.5: " + i + " = " + Integer.toString(bytes[i] - 48));
                     test = test + Integer.toString(bytes[i] - 48);
                 }
-
             }
-
-            Log.d(TAG, "Received heart rate test: " + test);
-
+            Log.d(TAG, "PM2.5: " + test);
             intent.putExtra(SENSOR_PM25, number);
-
+            arrayDust.add(number);
             setPM25(number);
         } else if (UUID_MANAFACTURER_NAME.equals(characteristic.getUuid())) {
             final byte[] bytes = characteristic.getValue();
@@ -239,6 +276,7 @@ public class BluetoothLeService extends Service {
 
             Log.d(TAG, "Received CO test: " + test);
             setCO(test);
+            arrayCO.add(test);
             intent.putExtra(SENSOR_CO, mCo);
 
 
@@ -271,7 +309,37 @@ public class BluetoothLeService extends Service {
             Log.d(TAG, "Received NO2 test: " + test);
             setNo2(test);
             intent.putExtra(SENSOR_NO2, mNo2);
+            arrayNO2.add(test);
 
+        } else if (UUID_RAD_NAME.equals(characteristic.getUuid())) {
+            final byte[] bytes = characteristic.getValue();
+            String number = "";
+            for (int i = 0; i < bytes.length; i++) {
+                if (bytes[i] == 46) {
+                    number = number + ".";
+                } else {
+                    int num = bytes[i] - 48;
+                    number = number + Integer.toString(num);
+                }
+
+            }
+            String test = "";
+            Log.d(TAG, "Received length data: " + bytes.length);
+            for (int i = 0; i < bytes.length; i++) {
+                if (bytes[i] == 46) {
+                    Log.d(TAG, "Received RAD " + i + " = " + ".");
+                    test = test + ".";
+                } else {
+                    Log.d(TAG, "Received RAD " + i + " = " + Integer.toString(bytes[i] - 48));
+                    test = test + Integer.toString(bytes[i] - 48);
+                }
+
+            }
+
+            Log.d(TAG, "Received RAD test: " + test);
+            setRad(test);
+            arrayRAD.add(test);
+            intent.putExtra(SENSOR_RAD, number);
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -336,6 +404,10 @@ public class BluetoothLeService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        gps = new GPSTracker(getApplicationContext());
+
+        lat = gps.getLatitude();
+        lon = gps.getLongitude();
 
     }
 
@@ -456,7 +528,12 @@ public class BluetoothLeService extends Service {
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
         }
-
+        if (UUID_RAD_NAME.equals(characteristic.getUuid())) {
+            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            mBluetoothGatt.writeDescriptor(descriptor);
+        }
     }
 
     /**
@@ -496,41 +573,47 @@ public class BluetoothLeService extends Service {
         combineData();
     }
 
+    private void setRad(String radio) {
+        Log.i(TAG, "setRad: " + radio);
+        RAD = Float.parseFloat(radio.toString().trim());
+        RAD_Status = true;
+        combineData();
+
+    }
+
+
     private void combineData() {
 
-        Log.i(TAG, "PM25_STATUS: " + PM25_Status + " CO_STATUS: " + CO_Status + " NO2_STATUS: " + NO2_Status);
-        if (PM25_Status == true && CO_Status == true && NO2_Status == true) {
+        Log.i(TAG, "PM25_STATUS: " + PM25_Status + " CO_STATUS: " + CO_Status + " NO2_STATUS: " + NO2_Status + " RAD_STATUS: " + RAD_Status);
+
+        if (PM25_Status == true && CO_Status == true && NO2_Status == true && RAD_Status == true) {
             DBUser dbUser = new DBUser(getApplicationContext());
             long uid = dbUser.getUserID();
-            float lat = 0.0f;
-            float lon = 0.0f;
-            MQTTSender(uid, lat, lon, CO, NO2, PM25);
 
+
+            MQTTSender(uid, lat, lon, CO, NO2, PM25, RAD, 1);
             PM25_Status = false;
             CO_Status = false;
             NO2_Status = false;
         }
+
     }
 
-    public void MQTTSender(long Luid, float mlat, float mlon, float mCO, float SNO2, float Spm25) {
+    public void MQTTSender(long Luid, double mlat, double mlon, float mCO, float SNO2, float Spm25, float frad, int status) {
 
         JSONObject obj = new JSONObject();
         try {
 
             float fo3 = new RandomGas().o3();
             float fso2 = new RandomGas().so2();
-            float frad = new RandomGas().rad();
-            float mmlat = new RandomGas().lat(1);
-            float mmlon = new RandomGas().lon(1);
-
             String uid = String.valueOf(Luid);
             String o3 = String.valueOf(fo3);
             String so2 = String.valueOf(fso2);
             String rad = String.valueOf(frad);
             String pm25 = String.valueOf(Spm25);
             String NO2 = String.valueOf(SNO2);
-            String lat = String.valueOf(mmlat);
-            String lon = String.valueOf(mmlon);
+            String lat = String.valueOf(mlat);
+            String lon = String.valueOf(mlon);
             String CO = String.valueOf(mCO);
             int tstamp = new RandomGas().tstamp();
             obj.put("uid", uid);
@@ -543,7 +626,12 @@ public class BluetoothLeService extends Service {
             obj.put("pm25", pm25);
             obj.put("rad", rad);
             obj.put("ts", tstamp);
-            Log.i(TAG, "MQTTSender: uid: " + uid + " lat: " + lat + " lon: " + lon + " co: " + CO + " no2: " + NO2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " ts: " + tstamp);
+            if (status == 1) {
+                Log.i(TAG, "MQTTSender(Sensor): uid: " + uid + " lat: " + lat + " lon: " + lon + " co: " + CO + " no2: " + NO2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " ts: " + tstamp);
+            } else {
+                Log.i(TAG, "MQTTSender(Random): uid: " + uid + " lat: " + lat + " lon: " + lon + " co: " + CO + " no2: " + NO2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " ts: " + tstamp);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
