@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
@@ -43,7 +44,8 @@ public class DataOnApp extends Service {
     private static String pname;
     private static GPSTracker gps;
     private String TAG = "BENDateOnApp";
-
+    private double lat = 0.0d;
+    private double lon = 0.0d;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -53,15 +55,21 @@ public class DataOnApp extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        new DataNearby().execute();
+        gps = new GPSTracker(getApplicationContext());
+        lat = gps.getLatitude();
+        lon = gps.getLongitude();
+
+
+        Toast.makeText(getApplicationContext(), "start Dataonapp lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
 
-
+                new DataNearby().execute();
+                Log.i(TAG, "lat: " + lat + " lon: " + lon);
             }
-        }, 0, 10000);
+        }, 0, 2000);
 
     }
 
@@ -88,10 +96,7 @@ public class DataOnApp extends Service {
 
         @Override
         protected String doInBackground(Object... strings) {
-            gps = new GPSTracker(getApplicationContext());
-            double lat = gps.getLatitude();
-            double lon = gps.getLongitude();
-            Log.i(TAG, "lat: " + lat + " lon: " + lon);
+
             if (lat > 0 && lon > 0) {
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()

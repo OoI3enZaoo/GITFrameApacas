@@ -19,6 +19,7 @@ import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.GPSTracker;
 import com.admin.gitframeapacas.Service.RandomGas;
 import com.admin.gitframeapacas.Views.RecommendActivity;
 import com.google.gson.Gson;
@@ -82,7 +83,10 @@ public class FeedHomeFragment extends Fragment {
     private static TextView lastUpdate;
     private static TextView txtLocation;
     private static TextView txtMode;
+    private static GPSTracker gps;
     ConstraintLayout view3;
+    private double lat = 0.0d;
+    private double lon = 0.0d;
     private FloatingActionButtonPlus mActionButtonPlus;
 
 
@@ -334,6 +338,9 @@ public class FeedHomeFragment extends Fragment {
         }
         @Override
         protected String doInBackground(Object... strings) {
+            gps = new GPSTracker(getActivity());
+            lat = gps.getLatitude();
+            lon = gps.getLongitude();
             double lat = 0.0d;
             double lon = 0.0d;
 
