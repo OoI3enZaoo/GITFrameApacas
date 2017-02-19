@@ -20,6 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_tips"
+
                 app:backgroundTint="#ff9800"
                 app:fabSize="mini" />
         </com.lzp.floatingactionbuttonplus.FabTagLayout>

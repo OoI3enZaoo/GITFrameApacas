@@ -16,14 +16,13 @@
 
 
         <TextView
-
             android:id="@+id/fMap"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="About the AQI"
+            android:text="ดัชนีคุณภาพอากาศ"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -32,7 +31,7 @@
             android:text="" />
 
         <TextView
-            android:background="@color/md_blue_300"
+            android:background="#009AFF"
             android:gravity="center"
             android:text="0-50 คุณภาพดี"
             android:textColor="@color/white"
@@ -46,7 +45,7 @@
         <TextView
             android:layout_height="50dp"
 
-            android:background="@color/md_blue_300"
+            android:background="#009AFF"
             android:paddingTop="5dp"
             android:text="0-50 คุณภาพอากาศอยู่ในเกณฑ์ดี ไม่มีผลกระทบต่อสุขภาพ"
             android:textColor="@color/white"
@@ -59,10 +58,10 @@
 
 
         <TextView
-            android:background="@color/md_green_300"
+            android:background="#00FF00"
             android:gravity="center"
             android:text="51-100 คุณภาพปานกลาง"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_gray"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -73,10 +72,10 @@
         <TextView
             android:layout_height="50dp"
 
-            android:background="@color/md_green_300"
+            android:background="#00FF00"
             android:paddingTop="5dp"
             android:text="51-100 คุณภาพอากาศคุณภาพปานกลาง ไม่มีผลกระทบต่อสุขภาพ"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_gray"
             android:textSize="16sp" />
 
 
@@ -86,10 +85,10 @@
 
 
         <TextView
-            android:background="@color/md_yellow_300"
+            android:background="#FFFF00"
             android:gravity="center"
             android:text="101-200 มีผลกระทบต่อสุขภาพ"
-            android:textColor="@color/black"
+            android:textColor="@color/dark_gray"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -99,11 +98,11 @@
 
         <TextView
             android:layout_height="107dp"
-            android:background="@color/md_yellow_300"
+            android:background="#FFFF00"
             android:paddingTop="5dp"
             android:text="101-200 คุณภาพอากาศมีผลกระทบต่อสุขภาพ ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร
 บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ไม่ควรทำกิจกรรมภายนอกอาคารเป็นเวลานาน"
-            android:textColor="@color/black"
+            android:textColor="@color/dark_gray"
             android:textSize="16sp" />
 
 
@@ -113,7 +112,7 @@
 
 
         <TextView
-            android:background="@color/md_orange_300"
+            android:background="#FF8000"
             android:gravity="center"
             android:text="201-300 มีผลกระทบต่อสุขภาพมาก"
             android:textColor="@color/white"
@@ -125,9 +124,8 @@
             android:text="" />
 
         <TextView
-            android:layout_height="106dp"
-
-            android:background="@color/md_orange_300"
+            android:layout_height="98dp"
+            android:background="#FF8000"
             android:paddingTop="5dp"
             android:text="0-50 คุณภาพอากาศมีผลกระทบต่อสุขภาพมาก ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงกิจกรรมภายนอกอาคาร
 บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ควรจำกัดการออกกำลังภายนอกอาคาร"
@@ -141,7 +139,7 @@
 
 
         <TextView
-            android:background="@color/md_red_300"
+            android:background="#FF0000"
             android:gravity="center"
             android:text="มากกว่า 300 อันตราย"
             android:textColor="@color/white"
@@ -154,7 +152,7 @@
 
         <TextView
             android:layout_height="70dp"
-            android:background="@color/md_red_300"
+            android:background="#FF0000"
             android:paddingTop="5dp"
             android:text="0-50 คุณภาพอากาศอยู่ในอันตราย 	บุคคลทั่วไป ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร
 สำหรับผู้ป่วยโรคระบบทางเดินหายใจ ควรอยู่ภายในอาคาร"
@@ -162,9 +160,94 @@
             android:textSize="16sp" />
 
         <View
-            android:layout_height="50dp"
+            android:layout_height="30dp"
             android:text="" />
 
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="ดัชนีรังสี"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_height="10dp"
+            android:text="" />
+
+        <TextView
+            android:background="#00FF00"
+            android:gravity="center"
+            android:text="ต่ำกว่า 0.5"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_height="5dp"
+            android:text="" />
+
+        <TextView
+            android:layout_height="30dp"
+            android:background="#00FF00"
+            android:paddingTop="5dp"
+            android:text="ไม่ส่งผลกระทบต่อสุขภาพ"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+
+        <View
+            android:layout_height="10dp"
+            android:text="" />
+
+        <TextView
+            android:background="#FFFF00"
+            android:gravity="center"
+            android:text="0.5-0.9"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_height="5dp"
+            android:text="" />
+
+        <TextView
+            android:layout_height="70dp"
+            android:background="#FFFF00"
+            android:paddingTop="5dp"
+            android:text="ไม่ควรอยู่ในพื้นที่ดังกล่าว หากรับในปริมาณที่มากเกินไปจะทำให้เกิดความเสียหายต่อเซลล์ในร่างกายได้"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+
+        <View
+            android:layout_height="10dp"
+            android:text="" />
+
+        <TextView
+            android:background="#FF0000"
+            android:gravity="center"
+            android:text="มากกว่า 1"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_height="5dp"
+            android:text="" />
+
+        <TextView
+            android:layout_height="30dp"
+            android:background="#FF0000"
+            android:paddingTop="5dp"
+            android:text="ควรหลีกเลี่ยงพื้นที่ดังกล่าว ทำให้เสียชีวิต"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
     </TableLayout>
 </android.support.v4.widget.NestedScrollView>

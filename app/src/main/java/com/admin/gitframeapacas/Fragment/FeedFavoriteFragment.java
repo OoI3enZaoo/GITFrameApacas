@@ -40,24 +40,13 @@ public class FeedFavoriteFragment extends Fragment {
 
     public static CardViewAdapter mAdapter;
     int count = 0;
-    /*    private List<String> scodeList;
-        private List<String> snameList;
-        private List<String> messageList;
-        private List<String> timeList;
-        private List<String> COList;
-        private List<String> NO2List;
-        private List<String> O3List;
-        private List<String> SO2List;
-        private List<String> PM25List;
-        private List<String> radList;
-        private List<String> aqiList;
-        private List<String> aqiColorList;*/
+
     private String TAG = "BENFeedFavoriteFragment";
     private int myposition = 0;
 
     /*public void clearData() {
         snameArray.clear(); //clear list
-        mAdapter.notifyDataSetChanged(); //let your adapter know about the changes and reload view.
+        mAdapterAQI.notifyDataSetChanged(); //let your adapter know about the changes and reload view.
 
     }*/
     public static String getAQItoMessage(String strAQI) {
@@ -104,7 +93,7 @@ public class FeedFavoriteFragment extends Fragment {
         OnItemTouchListener itemTouchListener = new OnItemTouchListener() {
             @Override
             public void onCardViewTap(View view, int position) {
-                Toast.makeText(getActivity(), "Tapped " + snameArray.get(position) + "", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Tapped " + snameArray.get(position) + "", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), DistrictActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("district", snameArray.get(position));
@@ -131,7 +120,6 @@ public class FeedFavoriteFragment extends Fragment {
                 Toast.makeText(getActivity(), "Clicked Button2 in " + snameArray.get(position), Toast.LENGTH_SHORT).show();
             }
         };
-
         mAdapter = new CardViewAdapter(snameArray, itemTouchListener);
 
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler_favorite);
@@ -180,42 +168,19 @@ public class FeedFavoriteFragment extends Fragment {
 
             }
         }
+
         return v;
     }
 
-    /**
-     * Interface for the touch events in each item
-     */
     public interface OnItemTouchListener {
-        /**
-         * Callback invoked when the user Taps one of the RecyclerView items
-         *
-         * @param view     the CardView touched
-         * @param position the index of the item touched in the RecyclerView
-         */
+
         void onCardViewTap(View view, int position);
 
-        /**
-         * Callback invoked when the Button1 of an item is touched
-         *
-         * @param view     the Button touched
-         * @param position the index of the item touched in the RecyclerView
-         */
         void onButton1Click(View view, int position);
 
-        /**
-         * Callback invoked when the Button2 of an item is touched
-         *
-         * @param view     the Button touched
-         * @param position the index of the item touched in the RecyclerView
-         */
         void onButton2Click(View view, int position);
     }
 
-    /**
-     * A simple adapter that loads a CardView layout with one TextView and two Buttons, and
-     * listens to clicks on the Buttons or on the CardView
-     */
     public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHolder> {
         private List<String> cards;
         private OnItemTouchListener onItemTouchListener;

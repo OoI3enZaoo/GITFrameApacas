@@ -104,9 +104,11 @@ public class DistrictActivity extends AppCompatActivity {
         if (intent.getStringExtra("co") == null) {
             new getLastDataTask(getApplicationContext()).execute(DistrictCode);
         } else {
+            aqi = intent.getStringExtra("aqi").toString();
+            rad = intent.getStringExtra("rad").toString();
             new getDataInSQLiteTask().execute(intent.getStringExtra("co").toString(), intent.getStringExtra("no2").toString(), intent.getStringExtra("o3").toString(), intent.getStringExtra("so2").toString(),
-                    intent.getStringExtra("pm25").toString(), intent.getStringExtra("rad").toString(), intent.getStringExtra("district").toString(), intent.getStringExtra("scode").toString(),
-                    intent.getStringExtra("tstamp").toString(), intent.getStringExtra("aqi").toString());
+                    intent.getStringExtra("pm25").toString(), rad, intent.getStringExtra("district").toString(), intent.getStringExtra("scode").toString(),
+                    intent.getStringExtra("tstamp").toString(), aqi);
             Log.i(TAG, "NOT NULL");
         }
     }
@@ -118,8 +120,11 @@ public class DistrictActivity extends AppCompatActivity {
             public void onItemClick(FabTagLayout tagView, int position) {
                 switch (position) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Tips", Toast.LENGTH_SHORT).show();
                         Intent intent2 = new Intent(DistrictActivity.this, RecommendActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("aqi", aqi);
+                        bundle.putString("rad", rad);
+                        intent2.putExtras(bundle);
                         startActivity(intent2);
                         break;
                     /*case 1:

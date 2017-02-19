@@ -1,5 +1,6 @@
 package com.admin.gitframeapacas.Views;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
@@ -23,6 +24,7 @@ import android.os.IBinder;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -50,6 +52,8 @@ import com.admin.gitframeapacas.Service.DataOnApp;
 import com.admin.gitframeapacas.Service.GetGasService;
 import com.admin.gitframeapacas.Service.SetGasService;
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.lzp.floatingactionbuttonplus.FabTagLayout;
+import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +63,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import devlight.io.library.ntb.NavigationTabBar;
+
+import static com.admin.gitframeapacas.Fragment.FeedHomeFragment.aqi;
+import static com.admin.gitframeapacas.Fragment.FeedHomeFragment.rad;
 
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -75,6 +82,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static String CO = null;
     public static String NO2 = null;
     public static String RAD = null;
+    public static FloatingActionButtonPlus mActionButtonPlus;
     static FloatingSearchView searchDistrict;
     static FloatingSearchView searchNavigate;
     //static TextView mText;
@@ -102,7 +110,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private String mDeviceName = "TestFloatNumber";
     private String mDeviceAddress = "98:4F:EE:0D:1D:2E";
     private BluetoothLeService mBluetoothLeService;
-
     //private TextView txtName;
     //private IntentFilter mIntentFilter;
     public final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -243,7 +250,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         initUI();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
+        /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,14 +258,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 Toast.makeText(getApplicationContext(), "my Profile", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         Fragment myFragment = getSupportFragmentManager().findFragmentById(R.id.searchfragment);
         searchDistrict = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_district);
-        searchDistrict.attachNavigationDrawerToMenuButton(mDrawerLayout);
+        //searchDistrict.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
         searchNavigate = (FloatingSearchView) myFragment.getView().findViewById(R.id.search_navigate);
-        searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
+        //searchNavigate.attachNavigationDrawerToMenuButton(mDrawerLayout);
 
 
         view2 = (ConstraintLayout) findViewById(R.id.constaint_home);
@@ -267,7 +274,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         /*Fragment myFragment2 = getSupportFragmentManager().findFragmentById(R.id.chartfragment);
         mText = (TextView) myFragment2.getView().findViewById(R.id.txtAQI);*/
 
-        startService(new Intent(getApplicationContext(), SetGasService.class));
+        //startService(new Intent(getApplicationContext(), SetGasService.class));
         startService(new Intent(getApplicationContext(), DataOnApp.class));
 
         //fn_permission();
@@ -294,18 +301,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-
-   /*     int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+        int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-*/
-      /*  mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(mBroadcastStringAction);*/
 
 
-        /*DBUser dbUser = new DBUser(getApplicationContext());
-        txtName.setText("Name: " +dbUser.getName());*/
+        mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.ActionButtonPlus);
+        mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
+
+
+        mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(FabTagLayout tagView, int position) {
+
+                switch (position) {
+                    case 0:
+                        Intent intent2 = new Intent(getApplicationContext(), RecommendActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("aqi", aqi);
+                        bundle.putString("rad", rad);
+                        intent2.putExtras(bundle);
+                        startActivity(intent2);
+                        break;
+                }
+            }
+        });
 
 
     }
@@ -395,8 +417,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         getResources().getDrawable(R.drawable.ic_home),
                         Color.parseColor(colors[0]))
                         //.selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
-                        .title("Home")
-                        .badgeTitle("Home Sweet Home")
+                        .title("หน้าหลัก")
+                        .badgeTitle("เช็คสภาพอากาศ")
                         .build()
         );
         models.add(
@@ -404,8 +426,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         getResources().getDrawable(R.drawable.ic_favorite),
                         Color.parseColor(colors[1]))
 //                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Favorite")
-                        .badgeTitle("My Favorite :D")
+                        .title("รายการโปรด")
+                        .badgeTitle("มาเพิ่มกันเลย")
                         .build()
         );
     /*    models.add(
@@ -422,8 +444,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         getResources().getDrawable(R.drawable.ic_realtime),
                         Color.parseColor(colors[2]))
                         // .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Real time")
-                        .badgeTitle("Real time !!")
+                        .title("ระบบเรียลไทม์")
+                        .badgeTitle("สภาพอากาศแบบเรียลไทม์")
                         .build()
         );
 
@@ -432,8 +454,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         getResources().getDrawable(R.drawable.ic_about),
                         Color.parseColor(colors[3]))
                         // .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("About")
-                        .badgeTitle("AQI")
+                        .title("เกี่ยวกับ")
+                        .badgeTitle("ดัชนีต่างๆ")
                         .build()
         );
 
@@ -452,6 +474,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (position) {
                     case 0:
 
+                        if (mActionButtonPlus.getVisibility() == View.GONE) {
+                            mActionButtonPlus.setVisibility(View.VISIBLE);
+                        }
+
                        /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
@@ -465,6 +491,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         break;
 
                     case 1:
+                        if (mActionButtonPlus.getVisibility() == View.VISIBLE) {
+                            mActionButtonPlus.setVisibility(View.GONE);
+                        }
                         /*if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
@@ -478,6 +507,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         break;
 
                     case 2:
+                        if (mActionButtonPlus.getVisibility() == View.VISIBLE) {
+                            mActionButtonPlus.setVisibility(View.GONE);
+                        }
 /*
                         if (searchDistrict.getVisibility() == View.VISIBLE) {
                             searchDistrict.setVisibility(View.GONE);
@@ -491,6 +523,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         break;
 
                     case 3://map
+                        if (mActionButtonPlus.getVisibility() == View.VISIBLE) {
+                            mActionButtonPlus.setVisibility(View.GONE);
+                        }
                        /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
@@ -505,6 +540,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                         break;
                     case 4:
+                        if (mActionButtonPlus.getVisibility() == View.VISIBLE) {
+                            mActionButtonPlus.setVisibility(View.GONE);
+                        }
                        /* if (searchNavigate.getVisibility() == View.VISIBLE) {
                             searchNavigate.setVisibility(View.GONE);
                         }
@@ -597,11 +635,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             dbFavorite.drop();
             DBCurrentLocation dbCur = new DBCurrentLocation(getApplicationContext());
             dbCur.drop();
-
-
-           /* if (isMyServiceRunning(BluetoothLeService.class) == true) {
-                stopService(new Intent(getApplicationContext(), BluetoothLeService.class));
-            }*/
             Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent2);
         }

@@ -25,7 +25,7 @@ public class FeedMapRealtimeFragment extends Fragment {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
-        mWebView.loadUrl("http://sysnet.utcc.ac.th/aparcas/realtime.html");
+        mWebView.loadUrl("http://sysnet.utcc.ac.th/aparcas/realtime_android.html");
 
         return v;
     }

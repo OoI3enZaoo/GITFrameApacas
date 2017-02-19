@@ -1,5 +1,6 @@
 package com.admin.gitframeapacas.Fragment;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +24,15 @@ import com.admin.gitframeapacas.Data.DistrictResponse;
 import com.admin.gitframeapacas.DataHelper;
 import com.admin.gitframeapacas.DistrictSuggestion;
 import com.admin.gitframeapacas.R;
+import com.admin.gitframeapacas.SQLite.DBCurrentLocation;
+import com.admin.gitframeapacas.SQLite.DBFavorite;
 import com.admin.gitframeapacas.SQLite.DBGrid;
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.admin.gitframeapacas.Service.DataOnApp;
+import com.admin.gitframeapacas.Service.GetGasService;
+import com.admin.gitframeapacas.Service.SetGasService;
 import com.admin.gitframeapacas.Views.DistrictActivity;
+import com.admin.gitframeapacas.Views.LoginActivity;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -205,24 +212,6 @@ public class FeedSearchFragment extends Fragment {
 
         });
 
-        mSearchDistrict.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
-            @Override
-            public void onActionMenuItemSelected(MenuItem item) {
-
-                /*if (item.getItemId() == R.id.iconProfile) {
-                    //mIsDarkSearchTheme = true;
-                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                    startActivity(intent);
-
-                } else {
-
-                    //just print action
-                    Toast.makeText(getActivity().getApplicationContext(), item.getTitle(),
-                            Toast.LENGTH_SHORT).show();
-                }*/
-
-            }
-        });
 
 
         mSearchNavigate.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
@@ -350,7 +339,7 @@ public class FeedSearchFragment extends Fragment {
 
         });
 
-        mSearchNavigate.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+        mSearchDistrict.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
 
@@ -365,6 +354,37 @@ public class FeedSearchFragment extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), item.getTitle(),
                             Toast.LENGTH_SHORT).show();
                 }*/
+                if (item.getItemId() == R.id.action_logout) {
+
+
+                    if (isMyServiceRunning(SetGasService.class) == true) {
+                        getActivity().stopService(new Intent(getActivity(), SetGasService.class));
+                    }
+                    if (isMyServiceRunning(GetGasService.class) == true) {
+                        getActivity().stopService(new Intent(getActivity(), GetGasService.class));
+                    }
+                    if (isMyServiceRunning(DataOnApp.class) == true) {
+                        getActivity().stopService(new Intent(getActivity(), DataOnApp.class));
+                    }
+
+                    DBUser db = new DBUser(getActivity());
+                    db.updateStatus(0);
+                    db.updateName("");
+                    db.updateCheckSensor(0);
+                    db.updateUserID((long) 0);
+                    db.updateHaveSensor(3);
+                    DBFavorite dbFavorite = new DBFavorite(getActivity());
+                    dbFavorite.drop();
+                    DBCurrentLocation dbCur = new DBCurrentLocation(getActivity());
+                    dbCur.drop();
+                    Intent intent2 = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent2);
+                    Toast.makeText(getActivity().getApplicationContext(), "คุณได้ออกจากระบบ",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "คุณได้ออกจากระบบ",
+                            Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -378,6 +398,16 @@ public class FeedSearchFragment extends Fragment {
         return mSearchDistrict.setSearchFocused(false);
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static class JSONFeedLogTask2 extends AsyncTask<String, Void, String> {
 
         private Context mContext;
@@ -385,6 +415,7 @@ public class FeedSearchFragment extends Fragment {
         public JSONFeedLogTask2(Context context) {
             mContext = context;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -420,22 +451,22 @@ public class FeedSearchFragment extends Fragment {
 
                     for (int i = 0; i < result.length; i++) {
                         String sName = result[i].getSname();
-                            sDistrictSuggestions.add(rount2, new DistrictSuggestion(sName + ""));
-                            String scode = result[i].getScode();
-                            String sname = result[i].getSname();
-                            String dcode = result[i].getDcode();
-                            String dname = result[i].getDname();
-                            String pcode = result[i].getPcode();
-                            String pname = result[i].getPname();
-                            Log.i("griddata2", dbGrid.insertData(Integer.parseInt(scode), sname, Integer.parseInt(dcode), dname, Integer.parseInt(pcode), pname) + "");
-                            Log.i("griddata", "SCODE: " + scode);
-                            Log.i("griddata", "sname: " + sname);
-                            Log.i("griddata", "dcode: " + dcode);
-                            Log.i("griddata", "dname: " + dname);
-                            Log.i("griddata", "pcode: " + pcode);
-                            Log.i("griddata", "pname: " + pname);
-                            Log.i("griddata", "number of rows: " + dbGrid.numberOfRows());
-                        }
+                        sDistrictSuggestions.add(rount2, new DistrictSuggestion(sName + ""));
+                        String scode = result[i].getScode();
+                        String sname = result[i].getSname();
+                        String dcode = result[i].getDcode();
+                        String dname = result[i].getDname();
+                        String pcode = result[i].getPcode();
+                        String pname = result[i].getPname();
+                        Log.i("griddata2", dbGrid.insertData(Integer.parseInt(scode), sname, Integer.parseInt(dcode), dname, Integer.parseInt(pcode), pname) + "");
+                        Log.i("griddata", "SCODE: " + scode);
+                        Log.i("griddata", "sname: " + sname);
+                        Log.i("griddata", "dcode: " + dcode);
+                        Log.i("griddata", "dname: " + dname);
+                        Log.i("griddata", "pcode: " + pcode);
+                        Log.i("griddata", "pname: " + pname);
+                        Log.i("griddata", "number of rows: " + dbGrid.numberOfRows());
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -457,8 +488,6 @@ public class FeedSearchFragment extends Fragment {
                 }
 
 
-
-
             }
 
 
@@ -471,7 +500,6 @@ public class FeedSearchFragment extends Fragment {
             dialog.dismiss();
 
         }
-
-
     }
+
 }

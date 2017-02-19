@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.Fragment.FeedHomeFragment;
@@ -63,7 +62,7 @@ public class DataOnApp extends Service {
         lon = gps.getLongitude();
 
 
-        Toast.makeText(getApplicationContext(), "start Dataonapp lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "start Dataonapp lat: " + lat + " lon: " + lon, Toast.LENGTH_SHORT).show();
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
