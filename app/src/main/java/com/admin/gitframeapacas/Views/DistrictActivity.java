@@ -183,7 +183,7 @@ public class DistrictActivity extends AppCompatActivity {
 
     }
 
-    private static class getLastDataTask extends AsyncTask<String, Void, String> {
+    private class getLastDataTask extends AsyncTask<String, Void, String> {
 
         private Context mContext;
 
@@ -287,6 +287,9 @@ public class DistrictActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(mContext, "ไม่พบข้อมูลของแขวงดังกล่าว", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, HomeActivity.class);
+                startActivity(intent);
+
             }
 
 

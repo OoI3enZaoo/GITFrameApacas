@@ -33,6 +33,10 @@
         <TextView
             android:background="#009AFF"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="0-50 คุณภาพดี"
             android:textColor="@color/white"
             android:textSize="17sp"
@@ -43,10 +47,13 @@
             android:text="" />
 
         <TextView
-            android:layout_height="50dp"
+            android:layout_height="60dp"
 
             android:background="#009AFF"
-            android:paddingTop="5dp"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="0-50 คุณภาพอากาศอยู่ในเกณฑ์ดี ไม่มีผลกระทบต่อสุขภาพ"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -60,6 +67,10 @@
         <TextView
             android:background="#00FF00"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="51-100 คุณภาพปานกลาง"
             android:textColor="@color/dark_gray"
             android:textSize="17sp"
@@ -70,10 +81,13 @@
             android:text="" />
 
         <TextView
-            android:layout_height="50dp"
+            android:layout_height="60dp"
 
             android:background="#00FF00"
-            android:paddingTop="5dp"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="51-100 คุณภาพอากาศคุณภาพปานกลาง ไม่มีผลกระทบต่อสุขภาพ"
             android:textColor="@color/dark_gray"
             android:textSize="16sp" />
@@ -87,6 +101,10 @@
         <TextView
             android:background="#FFFF00"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="101-200 มีผลกระทบต่อสุขภาพ"
             android:textColor="@color/dark_gray"
             android:textSize="17sp"
@@ -99,7 +117,11 @@
         <TextView
             android:layout_height="107dp"
             android:background="#FFFF00"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
             android:paddingTop="5dp"
+
             android:text="101-200 คุณภาพอากาศมีผลกระทบต่อสุขภาพ ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร
 บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ไม่ควรทำกิจกรรมภายนอกอาคารเป็นเวลานาน"
             android:textColor="@color/dark_gray"
@@ -114,6 +136,10 @@
         <TextView
             android:background="#FF8000"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="201-300 มีผลกระทบต่อสุขภาพมาก"
             android:textColor="@color/white"
             android:textSize="17sp"
@@ -126,7 +152,10 @@
         <TextView
             android:layout_height="98dp"
             android:background="#FF8000"
-            android:paddingTop="5dp"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="0-50 คุณภาพอากาศมีผลกระทบต่อสุขภาพมาก ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงกิจกรรมภายนอกอาคาร
 บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ควรจำกัดการออกกำลังภายนอกอาคาร"
             android:textColor="@color/white"
@@ -141,6 +170,10 @@
         <TextView
             android:background="#FF0000"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="มากกว่า 300 อันตราย"
             android:textColor="@color/white"
             android:textSize="17sp"
@@ -151,9 +184,12 @@
             android:text="" />
 
         <TextView
-            android:layout_height="70dp"
+            android:layout_height="100dp"
             android:background="#FF0000"
-            android:paddingTop="5dp"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="0-50 คุณภาพอากาศอยู่ในอันตราย 	บุคคลทั่วไป ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร
 สำหรับผู้ป่วยโรคระบบทางเดินหายใจ ควรอยู่ภายในอาคาร"
             android:textColor="@color/white"
@@ -165,12 +201,15 @@
 
 
         <TextView
-
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="ดัชนีรังสี"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -182,6 +221,10 @@
         <TextView
             android:background="#00FF00"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="ต่ำกว่า 0.5"
             android:textColor="@color/black"
             android:textSize="17sp"
@@ -192,10 +235,13 @@
             android:text="" />
 
         <TextView
-            android:layout_height="30dp"
+            android:layout_height="70dp"
             android:background="#00FF00"
-            android:paddingTop="5dp"
-            android:text="ไม่ส่งผลกระทบต่อสุขภาพ"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
+            android:text="ระดับกัมมันตรังสีปกติในธรรมชาติที่มนุษย์สามารถรับได้โดยไม่มีอันตรายต่อสุขภาพ"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -207,6 +253,10 @@
         <TextView
             android:background="#FFFF00"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="0.5-0.9"
             android:textColor="@color/black"
             android:textSize="17sp"
@@ -217,10 +267,13 @@
             android:text="" />
 
         <TextView
-            android:layout_height="70dp"
+            android:layout_height="120dp"
             android:background="#FFFF00"
-            android:paddingTop="5dp"
-            android:text="ไม่ควรอยู่ในพื้นที่ดังกล่าว หากรับในปริมาณที่มากเกินไปจะทำให้เกิดความเสียหายต่อเซลล์ในร่างกายได้"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
+            android:text="ระดับกัมมันตรังสีเกิน 5 เท่าของค่าเฉลี่ยทั้งปี ณ บริเวณนั้นๆ โดยประชาชนควรหลีกเลี่ยงบริเวณดังกล่าว เนื่องจากอาจทำให้มีอัตรายต่อสุขภาพและปริมาณเม็ดเลือดขาวในร่างกายลดลง"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -232,6 +285,10 @@
         <TextView
             android:background="#FF0000"
             android:gravity="center"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
             android:text="มากกว่า 1"
             android:textColor="@color/white"
             android:textSize="17sp"
@@ -242,12 +299,18 @@
             android:text="" />
 
         <TextView
-            android:layout_height="30dp"
+            android:layout_height="150dp"
             android:background="#FF0000"
-            android:paddingTop="5dp"
-            android:text="ควรหลีกเลี่ยงพื้นที่ดังกล่าว ทำให้เสียชีวิต"
+            android:paddingBottom="8sp"
+            android:paddingEnd="8sp"
+            android:paddingStart="8sp"
+            android:paddingTop="8sp"
+            android:text="ระดับกัมมันตรังสีเกินเกณฑ์สูงสุดที่อนุญาตให้ประชาชนรับได้ ประชาชนไม่ควรเดินทางเข้าสู่บริเวณดังกล่าว เนื่องจากอาจมีอาการเคลื่อนเหียน อาเจียน และปริมาณเม็ดเลือดขาวในร่างกายลดลงถ้ารับสารกัมมันตรังสีในปริมาณมากๆ อย่างต่อเนื่องอาจเป็นอันตรายถึงชีวิต"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
+        <View
+            android:layout_height="50dp"
+            android:text="" />
     </TableLayout>
 </android.support.v4.widget.NestedScrollView>
