@@ -86,13 +86,13 @@ public class DistrictActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_district);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         Intent intent = getIntent();
         DistrictName = intent.getStringExtra("district").toString();
         DistrictCode = intent.getStringExtra("scode").toString();
         toolbar.setTitle(DistrictName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         txtLocation = (TextView) findViewById(R.id.txtLocation);
         mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.ActionButtonPlus);
         mBarChart = (BarChart) findViewById(R.id.barchart);
@@ -100,10 +100,14 @@ public class DistrictActivity extends AppCompatActivity {
         view2 = (ConstraintLayout) findViewById(R.id.contraint_district);
         gauge = (CustomGauge) findViewById(R.id.gaugeMaster);
         txtAQI = (TextView) findViewById(R.id.txtAQI);
+
+
         loadData();
         if (intent.getStringExtra("co") == null) {
             new getLastDataTask(getApplicationContext()).execute(DistrictCode);
         } else {
+
+
             aqi = intent.getStringExtra("aqi").toString();
             rad = intent.getStringExtra("rad").toString();
             new getDataInSQLiteTask().execute(intent.getStringExtra("co").toString(), intent.getStringExtra("no2").toString(), intent.getStringExtra("o3").toString(), intent.getStringExtra("so2").toString(),
@@ -112,6 +116,7 @@ public class DistrictActivity extends AppCompatActivity {
             Log.i(TAG, "NOT NULL");
         }
     }
+
     private void loadData() {
         txtLocation.setText(DistrictName);
         mActionButtonPlus.setPosition(FloatingActionButtonPlus.POS_RIGHT_TOP);
@@ -207,25 +212,32 @@ public class DistrictActivity extends AppCompatActivity {
                 Response response;
                 response = client.newCall(request).execute();
                 String result2 = response.body().string();
-                Gson gson = new Gson();
-                Type collectionType = new TypeToken<Collection<LastDataResponse>>() {
-                }.getType();
-                Collection<LastDataResponse> enums = gson.fromJson(result2, collectionType);
-                LastDataResponse[] result = enums.toArray(new LastDataResponse[enums.size()]);
+                String checkResult = result2;
+                checkResult = checkResult.replaceAll("\\s++", "");
 
-                aqi = result[0].getAqi();
-                co = result[0].getCo();
-                no2 = result[0].getNo2();
-                o3 = result[0].getO3();
-                so2 = result[0].getSo2();
-                pm25 = result[0].getPm25();
-                rad = result[0].getRad();
-                tstamp = result[0].getTstamp();
-                uid = result[0].getUser_id();
-                //setData(aqi,co,no2,o3,so2,pm25,rad,tstamp,uid);
+                if (checkResult.length() != 2) {
+                    Gson gson = new Gson();
+                    Type collectionType = new TypeToken<Collection<LastDataResponse>>() {
+                    }.getType();
+                    Collection<LastDataResponse> enums = gson.fromJson(result2, collectionType);
+                    LastDataResponse[] result = enums.toArray(new LastDataResponse[enums.size()]);
 
-                Log.i(TAG, "aqi: " + aqi + " co: " + co + " no2: " + no2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " tstamp: " + tstamp + " uid: " + uid);
+                    aqi = result[0].getAqi();
+                    co = result[0].getCo();
+                    no2 = result[0].getNo2();
+                    o3 = result[0].getO3();
+                    so2 = result[0].getSo2();
+                    pm25 = result[0].getPm25();
+                    rad = result[0].getRad();
+                    tstamp = result[0].getTstamp();
+                    uid = result[0].getUser_id();
+                    //setData(aqi,co,no2,o3,so2,pm25,rad,tstamp,uid);
 
+                    Log.i(TAG, "aqi: " + aqi + " co: " + co + " no2: " + no2 + " o3: " + o3 + " so2: " + so2 + " pm25: " + pm25 + " rad: " + rad + " tstamp: " + tstamp + " uid: " + uid);
+                    return "1";
+                } else {
+                    return "0";
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -235,49 +247,50 @@ public class DistrictActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Float fco = parseFloat(co) * 1000;
-            Float fno2 = parseFloat(no2) * 1000;
-            Float fo3 = parseFloat(o3) * 1000;
-            Float fso2 = parseFloat(so2) * 1000;
-            Float fpm25 = parseFloat(pm25);
-            Float frad = parseFloat(rad) * 1000;
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result.equals("1")) {
+                Float fco = parseFloat(co) * 1000;
+                Float fno2 = parseFloat(no2) * 1000;
+                Float fo3 = parseFloat(o3) * 1000;
+                Float fso2 = parseFloat(so2) * 1000;
+                Float fpm25 = parseFloat(pm25);
+                Float frad = parseFloat(rad) * 1000;
+                mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
+                mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
+                mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
+                mBarChart.addBar(new BarModel("SO2", fso2, Color.parseColor("#ffb74d")));
+                mBarChart.addBar(new BarModel("PM2.5", fpm25, Color.parseColor("#f36c60")));
+                mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
+                mBarChart.startAnimation();
+                Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
+                tstamp = tstamp.substring(0, 16);
+                lastUpdate.setText("เวลาล่าสุด: " + tstamp);
+                txtAQI.setText("AQI: " + aqi);
+                gauge.setValue(Integer.parseInt(aqi));
+                if (gauge.getValue() > 0) {
+                    gauge.setPointStartColor(Color.parseColor("#91a7ff"));
 
-            mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
-            mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
-            mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
-            mBarChart.addBar(new BarModel("SO2", fso2, Color.parseColor("#ffb74d")));
-            mBarChart.addBar(new BarModel("PM2.5", fpm25, Color.parseColor("#f36c60")));
-            mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
-            mBarChart.startAnimation();
-            Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
+                }
+                if (gauge.getValue() > 50) {
+                    gauge.setPointStartColor(Color.parseColor("#42bd41"));
+                }
+                if (gauge.getValue() > 100) {
+                    gauge.setPointStartColor(Color.parseColor("#fff176"));
 
-            tstamp = tstamp.substring(0, 16);
-            lastUpdate.setText("เวลาล่าสุด: " + tstamp);
-            txtAQI.setText("AQI: " + aqi);
-            gauge.setValue(Integer.parseInt(aqi));
-            if (gauge.getValue() > 0) {
-                gauge.setPointStartColor(Color.parseColor("#91a7ff"));
-
-            }
-            if (gauge.getValue() > 50) {
-                gauge.setPointStartColor(Color.parseColor("#42bd41"));
-            }
-            if (gauge.getValue() > 100) {
-                gauge.setPointStartColor(Color.parseColor("#fff176"));
-
-            }
-            if (gauge.getValue() > 200) {
-                gauge.setPointStartColor(Color.parseColor("#ffb74d"));
-            }
-            if (gauge.getValue() > 300) {
-                gauge.setPointStartColor(Color.parseColor("#f36c60"));
+                }
+                if (gauge.getValue() > 200) {
+                    gauge.setPointStartColor(Color.parseColor("#ffb74d"));
+                }
+                if (gauge.getValue() > 300) {
+                    gauge.setPointStartColor(Color.parseColor("#f36c60"));
+                }
+            } else {
+                Toast.makeText(mContext, "ไม่พบข้อมูลของแขวงดังกล่าว", Toast.LENGTH_SHORT).show();
             }
 
 
         }
-
 
 
     }
@@ -290,7 +303,7 @@ public class DistrictActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             DBUser dbuser = new DBUser(getApplicationContext());
-            long uid = dbuser.getUserID();
+            String uid = dbuser.getUserID();
             Log.i(TAG, "doInBackground");
             OkHttpClient client = new OkHttpClient();
             RequestBody formBody = new FormBody.Builder()
@@ -389,12 +402,12 @@ public class DistrictActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            Float fco = parseFloat(mCO);
-            Float fno2 = parseFloat(mNO2);
-            Float fo3 = parseFloat(mO3);
-            Float fso2 = parseFloat(mSO2);
+            Float fco = parseFloat(mCO) * 1000;
+            Float fno2 = parseFloat(mNO2) * 1000;
+            Float fo3 = parseFloat(mO3) * 1000;
+            Float fso2 = parseFloat(mSO2) * 1000;
             Float fpm25 = parseFloat(mPM25);
-            Float frad = parseFloat(mRad);
+            Float frad = parseFloat(mRad) * 1000;
 
             mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
             mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
@@ -404,7 +417,7 @@ public class DistrictActivity extends AppCompatActivity {
             mBarChart.addBar(new BarModel("Radio", frad, Color.parseColor("#ba68c8")));
             mBarChart.startAnimation();
             Log.i(TAG, " co: " + fco + " no2: " + fno2 + " o3: " + fo3 + " so2: " + fso2 + " pm25: " + fpm25 + " rad: " + frad);
-
+            mTime = mTime.substring(0, 16);
             lastUpdate.setText("เวลาล่าสุด: " + mTime);
             txtAQI.setText("AQI: " + mAQI);
             gauge.setValue(Integer.parseInt(mAQI));

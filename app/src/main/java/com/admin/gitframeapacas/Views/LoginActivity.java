@@ -12,10 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Data.MemberResponse;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBUser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Random;
 
 import okhttp3.FormBody;
@@ -27,7 +32,7 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "ben2";
+    private static final String TAG = "BENLoginActtivity";
     EditText mID;
     EditText mPWD;
     TextView txtSkip;
@@ -60,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                 DBUser db = new DBUser(getApplicationContext());
                 db.updateStatus(1);
                 db.updateUserType("user");
-                db.updateUserID(userId);
+                db.updateUserID(String.valueOf(userId));
 
 
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -128,8 +133,28 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 Response response = client.newCall(request).execute();
-                message = response.body().string();
-                // Do something with the response.
+                String result = response.body().string();
+
+                Gson gson = new Gson();
+                Type collectionType = new TypeToken<Collection<MemberResponse>>() {
+                }.getType();
+                Collection<MemberResponse> enums = gson.fromJson(result, collectionType);
+                MemberResponse[] result1 = enums.toArray(new MemberResponse[enums.size()]);
+                if (result1[0].getCnt().equals("0")) {
+                    return "0";
+                } else {
+                    String fullname = result1[0].getFname() + " " + result1[0].getLname();
+                    String uid = result1[0].getUser_id();
+                    DBUser db = new DBUser(getApplicationContext());
+                    db.updateStatus(1);
+                    db.updateName(fullname);
+                    db.updateUserID(uid);
+                    db.updateUserType("member");
+                    Log.i(TAG, "UserId: " + uid);
+                    return "1";
+                }
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -137,27 +162,17 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String x) {
-            super.onPostExecute(x);
-
-            message = message.toString().trim();
-            Log.i("checkLogin", "message: " + message);
-            String status = message.substring(0, 1);
-            Log.i("checkLogin", "status: " + status);
-            String name = message.substring(2);
-            Log.i("checkLogin", "name: " + name);
-            if (status.toString().trim().equals("0")) {
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result.equals("0")) {
                 Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
-
             } else {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                DBUser db = new DBUser(getApplicationContext());
-                db.updateStatus(1);
-                db.updateName(name);
-                db.updateUserType("member");
+
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
             }
+
             dialog.dismiss();
 
 

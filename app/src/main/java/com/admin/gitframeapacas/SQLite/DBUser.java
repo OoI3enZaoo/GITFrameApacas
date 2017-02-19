@@ -35,14 +35,14 @@ public class DBUser extends SQLiteOpenHelper {
                         CONTACTS_COLUMN_GRID + " integer," +
                         CONTACTS_COLUMN_TYPE + " text," +
                         CONTACTS_COLUMN_CHECK_SENSOR + " integer," +
-                        CONTACTS_COLUMN_USERID + " integer," +
+                        CONTACTS_COLUMN_USERID + " text," +
                         CONTACTS_COLUMN_HAVE_SENSOR + " integer," +
                         CONTACTS_COLUMN_COUNT_FAVORITE + " integer" +
                         ")"
         );
 
         db.execSQL(
-                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0,0,3,0)"
+                "INSERT INTO " + CONTACTS_TABLE_NAME + " VALUES ('x',0,0,'',0,'',3,0)"
 
         );
     }
@@ -124,7 +124,7 @@ public class DBUser extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean updateUserID(Long name) {
+    public boolean updateUserID(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONTACTS_COLUMN_USERID, name);
@@ -162,7 +162,7 @@ public class DBUser extends SQLiteOpenHelper {
         return Integer.parseInt(place);
     }
 
-    public long getUserID() {
+    public String getUserID() {
         String place = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select " + CONTACTS_COLUMN_USERID + " from " + CONTACTS_TABLE_NAME, null);
@@ -171,7 +171,7 @@ public class DBUser extends SQLiteOpenHelper {
             place = res.getString(res.getColumnIndex(CONTACTS_COLUMN_USERID));
             res.moveToNext();
         }
-        return Long.parseLong(place);
+        return place;
     }
     public int getGrid() {
         String place = null;

@@ -40,7 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
     public static int startDay;
     private static ProgressDialog dialog;
     private static String TAG = "BENSignUpActivity";
-    private static long userId;
+    private static String userId;
     public EditText lblFName;
     public EditText lblLName;
     public EditText lblBD;
@@ -155,7 +155,8 @@ public class SignUpActivity extends AppCompatActivity {
                 long lowerLimit = 1L;
                 long upperLimit = 9999999999999999L;
                 Random r = new Random();
-                userId = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
+                Long random = lowerLimit + ((long) (r.nextDouble() * (upperLimit - lowerLimit)));
+                userId = String.valueOf(random);
                 Log.i("number", String.valueOf(r));
                 OkHttpClient client = new OkHttpClient();
                 RequestBody formBody = new FormBody.Builder()
@@ -184,9 +185,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.i(TAG, "Email Same");
                 return "Fail";
             }
-
         }
-
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);

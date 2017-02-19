@@ -3,6 +3,7 @@ package com.admin.gitframeapacas.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -16,12 +17,26 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admin.gitframeapacas.Data.FavoriteResponse;
+import com.admin.gitframeapacas.Data.LastDataResponse;
 import com.admin.gitframeapacas.R;
 import com.admin.gitframeapacas.SQLite.DBFavorite;
+import com.admin.gitframeapacas.SQLite.DBUser;
 import com.admin.gitframeapacas.Views.DistrictActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class FeedFavoriteFragment extends Fragment {
@@ -141,10 +156,18 @@ public class FeedFavoriteFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
 
         DBFavorite dbFavorite = new DBFavorite(getActivity());
+        DBUser dbUser = new DBUser(getActivity());
         Cursor res = dbFavorite.getAllData();
 
         if (res.getCount() == 0) {
-            Log.i(TAG, "Nothing found");
+            Log.i(TAG, "count: " + res.getCount());
+            Log.i(TAG, "usertype: " + dbUser.getUserType());
+            if (dbUser.getUserType().equals("member")) {
+                Log.i(TAG, "usertype come");
+                String userid = dbUser.getUserID();
+                Log.i(TAG, "userid: " + userid);
+                new checkFavoriteTask().execute(userid);
+            }
         } else {
             while (res.moveToNext()) {
                 String sName = res.getString(0);
@@ -153,18 +176,18 @@ public class FeedFavoriteFragment extends Fragment {
                 String sTime = res.getString(9);
                 Log.i(TAG, "sname: " + sName + " sAQI: " + sAQI + " stime: " + sTime + " scode: " + sCode);
                 String message = getAQItoMessage(sAQI);
-                timeArray.add(count, sTime.toString());
-                snameArray.add(count, sName.toString());
-                messageArray.add(count, message);
-                scodeArray.add(count, sCode);
-                COArray.add(count, res.getString(3));
-                NO2Array.add(count, res.getString(4));
-                O3Array.add(count, res.getString(5));
-                SO2Array.add(count, res.getString(6));
-                PM25Array.add(count, res.getString(7));
-                radArray.add(count, res.getString(8));
-                aqiArray.add(count, sAQI);
-                aqiColorArray.add(count, getAQIColor(sAQI));
+                timeArray.add(sTime.toString());
+                snameArray.add(sName.toString());
+                messageArray.add(message);
+                scodeArray.add(sCode);
+                COArray.add(res.getString(3));
+                NO2Array.add(res.getString(4));
+                O3Array.add(res.getString(5));
+                SO2Array.add(res.getString(6));
+                PM25Array.add(res.getString(7));
+                radArray.add(res.getString(8));
+                aqiArray.add(sAQI);
+                aqiColorArray.add(getAQIColor(sAQI));
 
             }
         }
@@ -258,6 +281,77 @@ public class FeedFavoriteFragment extends Fragment {
         }
     }
 
+    private class checkFavoriteTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... userid) {
+            OkHttpClient client = new OkHttpClient();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("uid", userid[0])
+                    .build();
+            Request request = new Request.Builder()
+                    .url("http://sysnet.utcc.ac.th/aparcas/api/getFavorite.jsp")
+                    .post(formBody)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                String result2 = response.body().string();
+
+
+                result2 = result2.replaceAll("\\s+", "");
+
+                Gson gson = new Gson();
+                Type collectionType = new TypeToken<Collection<FavoriteResponse>>() {
+                }.getType();
+                Collection<FavoriteResponse> enums = gson.fromJson(result2, collectionType);
+                FavoriteResponse[] result = enums.toArray(new FavoriteResponse[enums.size()]);
+
+                Log.i(TAG, "Result2: " + result2 + " resultt.length: " + result.length);
+                for (int i = 0; i < result.length; i++) {
+                    Request request2 = new Request.Builder()
+                            .url("http://sysnet.utcc.ac.th/aparcas/api/LastDataInRecord.jsp?scode=" + result[i].getScode())
+                            .build();
+                    Response response2 = client.newCall(request2).execute();
+                    String result3 = response2.body().string();
+                    Log.i(TAG, "result3: " + result3);
+                    Gson gson2 = new Gson();
+                    Type collectionType2 = new TypeToken<Collection<LastDataResponse>>() {
+                    }.getType();
+                    Collection<LastDataResponse> enums2 = gson2.fromJson(result3, collectionType2);
+                    LastDataResponse[] res = enums2.toArray(new LastDataResponse[enums2.size()]);
+                    timeArray.add(res[0].getTstamp());
+                    snameArray.add(res[0].getSname());
+                    String message = getAQItoMessage(res[0].getAqi());
+                    messageArray.add(message);
+                    scodeArray.add(result[i].getScode());
+                    COArray.add(res[0].getCo());
+                    NO2Array.add(res[0].getNo2());
+                    O3Array.add(res[0].getO3());
+                    SO2Array.add(res[0].getSo2());
+                    PM25Array.add(res[0].getPm25());
+                    radArray.add(res[0].getRad());
+                    aqiArray.add(res[0].getAqi());
+                    aqiColorArray.add(getAQIColor(res[0].getAqi()));
+                    DBFavorite dbFavorite = new DBFavorite(getActivity());
+                    dbFavorite.insertData(res[0].getSname(), result[i].getScode(), res[0].getAqi(), res[0].getCo(), res[0].getNo2(), res[0].getO3(), res[0].getSo2(), res[0].getPm25(), res[0].getRad(), res[0].getTstamp());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 }
 
 

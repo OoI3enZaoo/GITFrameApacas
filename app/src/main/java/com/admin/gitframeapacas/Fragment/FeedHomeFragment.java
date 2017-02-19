@@ -90,6 +90,7 @@ public class FeedHomeFragment extends Fragment {
                 Float fso2 = parseFloat(so2) * 1000;
                 Float fpm25 = parseFloat(pm25);
                 Float frad = parseFloat(rad) * 1000;
+                mBarChart.clearChart();
                 mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
                 mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
                 mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));
@@ -198,6 +199,7 @@ public class FeedHomeFragment extends Fragment {
                 Float fso2 = parseFloat(sSO2) * 1000;
                 Float fpm25 = parseFloat(sPM25);
                 Float frad = parseFloat(rad) * 1000;
+                mBarChart.clearChart();
                 mBarChart.addBar(new BarModel("CO", fco, Color.parseColor("#91a7ff")));
                 mBarChart.addBar(new BarModel("NO2", fno2, Color.parseColor("#42bd41")));
                 mBarChart.addBar(new BarModel("O3", fo3, Color.parseColor("#fff176")));

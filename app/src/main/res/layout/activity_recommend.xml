@@ -37,7 +37,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="23dp"
             android:gravity="center"
-            android:text="การปรับตัวต่อสภาพอากาศและัมมันตรังสีที่พบเจอ"
+            android:text="การปรับตัวต่อสภาพอากาศและกัมมันตรังสีที่พบเจอ"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"

@@ -371,7 +371,7 @@ public class FeedSearchFragment extends Fragment {
                     db.updateStatus(0);
                     db.updateName("");
                     db.updateCheckSensor(0);
-                    db.updateUserID((long) 0);
+                    db.updateUserID("");
                     db.updateHaveSensor(3);
                     DBFavorite dbFavorite = new DBFavorite(getActivity());
                     dbFavorite.drop();

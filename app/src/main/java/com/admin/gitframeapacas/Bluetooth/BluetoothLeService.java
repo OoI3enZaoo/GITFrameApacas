@@ -149,7 +149,7 @@ public class BluetoothLeService extends Service {
                         RAD = Float.parseFloat(arrayNO2.get(r.nextInt(arrayRAD.size())));
                         DBUser dbUser = new DBUser(getApplicationContext());
 
-                        long uid = dbUser.getUserID();
+                        String uid = dbUser.getUserID();
                         MQTTSender(uid, lat, lon, CO, NO2, PM25, RAD, 0);
 
                         Log.d(TAG, "Dust random = = " + PM25);
@@ -588,7 +588,7 @@ public class BluetoothLeService extends Service {
 
         if (PM25_Status == true && CO_Status == true && NO2_Status == true && RAD_Status == true) {
             DBUser dbUser = new DBUser(getApplicationContext());
-            long uid = dbUser.getUserID();
+            String uid = dbUser.getUserID();
 
 
             MQTTSender(uid, lat, lon, CO, NO2, PM25, RAD, 1);
@@ -599,14 +599,13 @@ public class BluetoothLeService extends Service {
 
     }
 
-    public void MQTTSender(long Luid, double mlat, double mlon, float mCO, float SNO2, float Spm25, float frad, int status) {
+    public void MQTTSender(String uid, double mlat, double mlon, float mCO, float SNO2, float Spm25, float frad, int status) {
 
         JSONObject obj = new JSONObject();
         try {
 
             float fo3 = new RandomGas().o3();
             float fso2 = new RandomGas().so2();
-            String uid = String.valueOf(Luid);
             String o3 = String.valueOf(fo3);
             String so2 = String.valueOf(fso2);
             String rad = String.valueOf(frad);

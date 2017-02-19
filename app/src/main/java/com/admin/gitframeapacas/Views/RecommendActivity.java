@@ -39,16 +39,18 @@ public class RecommendActivity extends AppCompatActivity {
     private TextView txtStatusAQI;
     private TextView txtRAD;
     private TextView txtStatusRAD;
-
+    private Toolbar toolbar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recommend);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("การปฏิบัติตัว");
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         txtStatusAQI = (TextView) findViewById(R.id.txtStatus);
         txtAQI = (TextView) findViewById(R.id.txtAQI);
 
@@ -85,11 +87,11 @@ public class RecommendActivity extends AppCompatActivity {
         picArray_AQI.clear();
         aqiArray_AQI.clear();
         statucArray_AQI.clear();
-        for (int i = 0; i < 2; i++) {
-            aqiArray_AQI.add(i, aqi);
-            picArray_AQI.add(i, getImageRecommentAQI(aqi, i));
-            statucArray_AQI.add(i, getTextRecommendAQI(aqi, i));
-        }
+
+        aqiArray_AQI.add(aqi);
+        picArray_AQI.add(getImageRecommentAQI(aqi, 1));
+        statucArray_AQI.add(getTextRecommendAQI(aqi, 1));
+
 
         aqiArray_RAD.clear();
         picArray_RAD.clear();
@@ -99,7 +101,7 @@ public class RecommendActivity extends AppCompatActivity {
         recyclerViewRAD.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerViewRAD.setAdapter(mAdapterRAD);
         String rad = intent.getStringExtra("rad").toString();
-        txtRAD.setText("Radioactive: " + rad + "mSv/h");
+        txtRAD.setText("Radioactive: " + rad + " uSv/h");
         String statusrad = getStatusRAD(rad);
         txtStatusRAD.setText(statusrad);
         aqiArray_RAD.add(rad);
@@ -149,36 +151,26 @@ public class RecommendActivity extends AppCompatActivity {
     private String getTextRecommendAQI(String aqi1, int round) {
         int aqi = Integer.parseInt(aqi1);
         if (aqi >= -1 && aqi <= 50) {
-            if (round == 0) {
-                return "เหมาะกับการออกไปเที่ยวข้างนอก";
-            } else {
-                return "เหมาะกับพาเด็กๆออกไปนอกบ้าน";
-            }
-
+            return "ไม่มีผลกระทบต่อสุขภาพ";
         } else if (aqi >= 51 && aqi <= 100) {
-            if (round == 0) {
-                return "ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร";
-            } else {
-                return "ไม่ควรทำกิจกรรมภายนอกอาคารเป็นเวลานาน";
-            }
+
+            return "ไม่มีผลกระทบต่อสุขภาพ";
+
         } else if (aqi >= 101 && aqi <= 200) {
-            if (round == 0) {
-                return "ควรสวมหน้ากากอนามัย";
-            } else {
-                return "ไม่ควรทำกิจกรรมภายนอกอาคารเป็นเวลานาน";
-            }
+
+            return "ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร" +
+                    "บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ไม่ควรทำกิจกรรมภายนอกอาคารเป็นเวลานาน";
+
         } else if (aqi >= 201 && aqi <= 300) {
-            if (round == 0) {
-                return "ควรสวมหน้ากากอนามัย";
-            } else {
-                return "ควรหลีกเลี่ยงกิจกรรมภายนอกอาคาร";
-            }
+
+            return "ผู้ป่วยโรคระบบทางเดินหายใจ ควรหลีกเลี่ยงกิจกรรมภายนอกอาคาร " +
+                    "บุคคลทั่วไป โดยเฉพาะเด็กและผู้สูงอายุ ควรจำกัดการออกกำลังภายนอกอาคาร";
+
         } else if (aqi >= 300) {
-            if (round == 0) {
-                return "อันตรายต่อเด็กและผู้ใหญ่";
-            } else {
-                return "ควรอยู่แต่ภายในอาคาร";
-            }
+
+            return "ุคคลทั่วไป ควรหลีกเลี่ยงการออกกำลังภายนอกอาคาร " +
+                    "สำหรับผู้ป่วยโรคระบบทางเดินหายใจ ควรอยู่ภายในอาคาร";
+
         }
 
         return "";
@@ -233,11 +225,15 @@ public class RecommendActivity extends AppCompatActivity {
     private String getTextRecommendRAD(String rad2) {
         float rad = Float.parseFloat(rad2);
         if (rad >= -1 && rad <= 0.5f) {
-            return "คุณภาพดี";
+            return "ระดับกัมมันตรังสีปกติในธรรมชาติที่มนุษย์สามารถรับได้โดยไม่มีอันตรายต่อสุขภาพ";
         } else if (rad >= 0.5f && rad <= 0.9f) {
-            return "เฝ้าระวัง";
+            return "ระดับกัมมันตรังสีเกิน 5 เท่าของค่าเฉลี่ยทั้งปี ณ บริเวณนั้นๆ " +
+                    "โดยประชาชนควรหลีกเลี่ยงบริเวณดังกล่าว เนื่องจากอาจทำให้มีอัตรายต่อสุขภาพและปริมาณเม็ดเลือดขาวในร่างกายลดลง";
         } else if (rad >= 1) {
-            return "อันตราย";
+            return "ระดับกัมมันตรังสีเกินเกณฑ์สูงสุดที่อนุญาตให้ประชาชนรับได้ " +
+                    "ประชาชนไม่ควรเดินทางเข้าสู่บริเวณดังกล่าว เนื่องจากอาจ " +
+                    "มีอาการเคลื่อนเหียน อาเจียน และปริมาณเม็ดเลือดขาวในร่างกายลดลง " +
+                    "ถ้ารับสารกัมมันตรังสีในปริมาณมากๆ อย่างต่อเนื่องอาจเป็นอันตรายถึงชีวิต";
         }
         return "";
     }

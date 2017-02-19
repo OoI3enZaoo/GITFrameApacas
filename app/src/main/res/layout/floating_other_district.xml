@@ -16,7 +16,7 @@
         <com.lzp.floatingactionbuttonplus.FabTagLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tagText="Tips">
+            app:tagText="คำแนะนำในการปฏิบัติตัว">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -41,11 +41,13 @@
 
 
         <com.lzp.floatingactionbuttonplus.FabTagLayout
+            android:id="@+id/fab_favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tagText="Add to favorite">
+            app:tagText="เพิ่มพื้นที่เป็นรายการโปรด">
 
             <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_favorite2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_addfavorite"
